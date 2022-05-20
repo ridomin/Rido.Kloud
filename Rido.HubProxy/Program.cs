@@ -20,6 +20,7 @@ var app = builder.Build();
 
 app.UseSwagger();
 app.UseSwaggerUI();
+app.UseStaticFiles();
 
 //app.UseHttpsRedirection();
 
@@ -43,7 +44,7 @@ app.MapGet("/hub/{did}/props/started", async (string did) =>
     {
         return Results.NotFound();
     }
-    
+
 }).WithName("readProperty_started").WithTags(new string[] { "hub"});
 
 
@@ -75,7 +76,7 @@ app.MapPost("/hub/{did}/props/interval", async (string did, [FromBody]int propVa
     var res = await dtc.UpdateDigitalTwinAsync(did, updOp.Serialize());
     res.Response.EnsureSuccessStatusCode();
     return Results.StatusCode(((int)res.Response.StatusCode));
-    
+
 }).WithName("updateProperty_interval").WithTags(new string[] { "hub" });
 
 app.MapGet("/hub/{did}/props/enabled", async (string did) =>
@@ -116,7 +117,7 @@ app.MapPost("/hub/{did}/commands/getRuntimeStats", async (string did, [FromBody]
     resp.Response.EnsureSuccessStatusCode();
     var result = JsonSerializer.Deserialize<Cmd_getRuntimeStats_Response>(resp.Body.Payload);
     return Results.Ok(result);
-    
+
 }).WithName("command_getRuntimeStats").WithTags(new string[] { "hub" });
 
 app.Run();

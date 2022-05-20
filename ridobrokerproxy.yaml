@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ridobrokerproxy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ridobrokerproxy
+  template:
+    metadata:
+      labels:
+        app: ridobrokerproxy
+    spec:
+      containers:
+      - name: ridobrokerproxy
+        image: k3d-registry.localhost:5500/ridobrokerproxy:v1
+        ports:
+        - name: http
+          containerPort: 8080
+          protocol: TCP
+        env:
+        - name: ConnectionStrings__broker
+          value: "HostName=f8826e3352314ca98102cfbde8aff20e.s2.eu.hivemq.cloud;UserName=demo1;Password=MDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDA1;ClientId=ridobrokerproxy"
+        - name: ASPNETCORE_URLS
+          value: http://+:8080
+
+        resources:
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ridohubproxy
+spec:
+  type: NodePort
+  ports:
+  - port: 8080
+    nodePort: 30080
+    targetPort: http
+    protocol: TCP
+    name: http
+  selector:
+    app: ridohubproxy

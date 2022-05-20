@@ -5,16 +5,16 @@ WORKDIR /app
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
-COPY ["Rido.HubProxy/Rido.HubProxy.csproj", "Rido.HubProxy/"]
-RUN dotnet restore "Rido.HubProxy/Rido.HubProxy.csproj"
+COPY ["Rido.BrokerProxy/Rido.BrokerProxy.csproj", "Rido.BrokerProxy/"]
+RUN dotnet restore "Rido.BrokerProxy/Rido.BrokerProxy.csproj"
 COPY . .
-WORKDIR "/src/Rido.HubProxy"
-RUN dotnet build "Rido.HubProxy.csproj" -c Release -o /app/build
+WORKDIR "/src/Rido.BrokerProxy"
+RUN dotnet build "Rido.BrokerProxy.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "Rido.HubProxy.csproj" -c Release -o /app/publish
+RUN dotnet publish "Rido.BrokerProxy.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "Rido.HubProxy.dll"]
+ENTRYPOINT ["dotnet", "Rido.BrokerProxy.dll"]

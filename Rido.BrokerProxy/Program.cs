@@ -14,14 +14,11 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
 
-app.UseHttpsRedirection();
+app.UseSwagger();
+app.UseSwaggerUI();
+app.UseStaticFiles();
+//app.UseHttpsRedirection();
 
 var mqtt = await new MqttNetClientConnectionFactory().CreateBasicClientAsync(new ConnectionSettings(app.Configuration.GetConnectionString("broker")));
 
@@ -80,7 +77,7 @@ app.MapGet("/pnp/{did}/props/started", async (string did) =>
     {
         var result = JsonSerializer.Deserialize<DateTime>(devices[did]["started"].ToString());
         return Results.Ok(result);
-        
+
     }
     return Results.NotFound();
 }).WithName("readProperty_started").WithTags(new string[] { "pnp" });
@@ -130,4 +127,3 @@ app.MapPost("/pnp/{did}/commands/getRuntimeStats", async (string did, [FromBody]
 
 
 app.Run();
-
