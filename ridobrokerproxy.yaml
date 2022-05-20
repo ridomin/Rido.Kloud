@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: ridobrokerproxy
-        image: k3d-registry.localhost:5500/ridobrokerproxy:v1
+        image: k3d-registry.localhost:5500/ridobrokerproxy:latest
         ports:
         - name: http
           containerPort: 8080
@@ -36,7 +36,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: ridohubproxy
+  name: ridobrokerproxy
 spec:
   type: NodePort
   ports:
@@ -46,4 +46,4 @@ spec:
     protocol: TCP
     name: http
   selector:
-    app: ridohubproxy
+    app: ridobrokerproxy
