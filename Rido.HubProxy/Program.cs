@@ -27,7 +27,7 @@ app.UseStaticFiles();
 
 var dtc = DigitalTwinClient.CreateFromConnectionString(app.Configuration.GetConnectionString("hub"));
 
-app.MapGet("/hub/{did}/props/started", async (string did) =>
+app.MapGet("/pnp/{did}/props/started", async (string did) =>
 {
     var twin = await dtc.GetDigitalTwinAsync<BasicDigitalTwin>(did);
     if (twin.Body.CustomProperties.TryGetValue("started", out object? propValue))
@@ -49,7 +49,7 @@ app.MapGet("/hub/{did}/props/started", async (string did) =>
 }).WithName("readProperty_started").WithTags(new string[] { "hub"});
 
 
-app.MapGet("/hub/{did}/props/interval", async (string did) =>
+app.MapGet("/pnp/{did}/props/interval", async (string did) =>
 {
     var twin = await dtc.GetDigitalTwinAsync<BasicDigitalTwin>(did);
     if (twin.Body.CustomProperties.TryGetValue("interval", out object? propValue))
@@ -70,7 +70,7 @@ app.MapGet("/hub/{did}/props/interval", async (string did) =>
 
 }).WithName("readProperty_interval").WithTags(new string[] { "hub" });
 
-app.MapPost("/hub/{did}/props/interval", async (string did, [FromBody]int propVal) =>
+app.MapPost("/pnp/{did}/props/interval", async (string did, [FromBody]int propVal) =>
 {
     var updOp = new UpdateOperationsUtility();
     updOp.AppendAddPropertyOp("/interval", propVal);
@@ -80,7 +80,7 @@ app.MapPost("/hub/{did}/props/interval", async (string did, [FromBody]int propVa
 
 }).WithName("updateProperty_interval").WithTags(new string[] { "hub" });
 
-app.MapGet("/hub/{did}/props/enabled", async (string did) =>
+app.MapGet("/pnp/{did}/props/enabled", async (string did) =>
 {
     var twin = await dtc.GetDigitalTwinAsync<BasicDigitalTwin>(did);
     if (twin.Body.CustomProperties.TryGetValue("enabled", out object? propValue))
@@ -101,7 +101,7 @@ app.MapGet("/hub/{did}/props/enabled", async (string did) =>
 }).WithName("readProperty_enabled").WithTags(new string[] { "hub" });
 
 
-app.MapPost("/hub/{did}/props/enabled", async (string did, [FromBody] bool propVal) =>
+app.MapPost("/pnp/{did}/props/enabled", async (string did, [FromBody] bool propVal) =>
 {
     var updOp = new UpdateOperationsUtility();
     updOp.AppendAddPropertyOp("/enabled", propVal);
@@ -111,7 +111,7 @@ app.MapPost("/hub/{did}/props/enabled", async (string did, [FromBody] bool propV
 
 }).WithName("updateProperty_enabled").WithTags(new string[] { "hub" });
 
-app.MapPost("/hub/{did}/commands/getRuntimeStats", async (string did, [FromBody] DiagnosticsMode diagMode) =>
+app.MapPost("/pnp/{did}/commands/getRuntimeStats", async (string did, [FromBody] DiagnosticsMode diagMode) =>
 {
     var resp = await dtc.InvokeCommandAsync(did, "getRuntimeStats", JsonSerializer.Serialize(diagMode),
         new DigitalTwinInvokeCommandRequestOptions { ConnectTimeoutInSeconds = 3, ResponseTimeoutInSeconds = 5 });
