@@ -1,0 +1,12 @@
+﻿(async () => {
+    let app = document.getElementById('app')
+    let ids = await (await fetch('devices/list')).json()
+    
+    var html = ''
+    ids.forEach(async id => {
+        let started = await (await fetch(`/pnp/${id}/props/started`)).json()
+        let interval = await (await fetch(`/pnp/${id}/props/interval`)).json()
+        html = `<div><h3>${id}</h3><span>${started}</span> | <span>${interval}</span> </div>`
+        app.innerHTML += html
+    })
+})()

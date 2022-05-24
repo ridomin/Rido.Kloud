@@ -113,12 +113,22 @@ app.MapPost("/pnp/{did}/props/enabled", async (string did, [FromBody] bool propV
 
 app.MapPost("/pnp/{did}/commands/getRuntimeStats", async (string did, [FromBody] DiagnosticsMode diagMode) =>
 {
-    var resp = await dtc.InvokeCommandAsync(did, "getRuntimeStats", JsonSerializer.Serialize(diagMode),
+    var resp = await dtc.InvokeCommandAsync(did, "getRuntimeStats", JsonSerializer.Serialize(2),
         new DigitalTwinInvokeCommandRequestOptions { ConnectTimeoutInSeconds = 3, ResponseTimeoutInSeconds = 5 });
     resp.Response.EnsureSuccessStatusCode();
     var result = JsonSerializer.Deserialize<Cmd_getRuntimeStats_Response>(resp.Body.Payload);
     return Results.Ok(result);
 
 }).WithName("command_getRuntimeStats").WithTags(new string[] { "hub" });
+
+app.MapGet("/devices/list", async () =>
+{
+    var rm = RegistryManager.CreateFromConnectionString(app.Configuration.GetConnectionString("hub"));
+    // var q = rm.CreateQuery("SELECT deviceId FROM c WHERE modelId = 'dtmi:rido:pnp:memmon;1'", 100);
+    // var t = await q.GetNextAsJsonAsync();
+    // return t;
+    var devices = await rm.GetDevicesAsync(1000);
+    return devices.Select(d => d.Id);
+}).WithName("listDevices").WithTags(new string[] { "hub"});
 
 app.Run();
