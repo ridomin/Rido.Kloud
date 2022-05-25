@@ -5,25 +5,21 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RidoHubProxy</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.3/moment.min.js"></script>
+    <script src="https://unpkg.com/vue@3"></script>
 </head>
 <body>
+
     <h1>RidoHubProxy</h1>
     <a href="/swagger">swagger</a>
     <div>latest</div>
 
-    <script type="importmap">
-        {
-          "imports": {
-            "vue": "https://unpkg.com/vue@3/dist/vue.esm-browser.js"
-          }
-        }
-    </script>
 
     <div id="app">
         <ul>
             <li v-for="device in devices">
                 <h3>{{device.deviceId}}</h3>
-                <div>Started: {{device.started}}</div>
+                <div>Started: {{formatDate(device.started)}}</div>
                 <div>Interval: {{device.interval}}</div>
                 <button @click="getStats(device)">Stats</button>
                 <pre>{{device.stats}}</pre>
@@ -32,10 +28,9 @@
     </div>
 
     <script type="module">
-            import {createApp} from 'vue'
-            import MyComponent from './my-component.js'
-
-            createApp(MyComponent).mount('#app')
+            import deviceList from './device-list.js'
+            const { createApp } = Vue
+            createApp(deviceList).mount('#app')
     </script>
 
 </body>

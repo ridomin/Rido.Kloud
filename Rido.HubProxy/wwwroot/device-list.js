@@ -20,6 +20,9 @@
             } catch {
                 d.stats = "Offline"
             }
+        },
+        formatDate(d) {
+            return moment(d).fromNow()
         }
     }
 }
