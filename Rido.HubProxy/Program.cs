@@ -133,9 +133,9 @@ app.MapGet("/devices/list", async () =>
         .Select(t => new DeviceInfo { 
             DeviceId = t.DeviceId, 
             State = t.ConnectionState,
-            Started = Convert.ToDateTime(t.Properties.Reported["started"]),
-            Interval = Convert.ToInt32(t.Properties.Reported["interval"]["value"].ToString()),
-            Enabled = Convert.ToBoolean(t.Properties.Reported["enabled"]["value"].ToString()),
+            Started = t.Properties.Reported.Contains("started") ? Convert.ToDateTime(t.Properties.Reported["started"]) : null,
+            Interval = t.Properties.Reported.Contains("interval") ? Convert.ToInt32(t.Properties.Reported["interval"]["value"].ToString()) : null,
+            Enabled = t.Properties.Reported.Contains("enabled") ? Convert.ToBoolean(t.Properties.Reported["enabled"]["value"].ToString()) : null,
         })
         .OrderByDescending(t => t.State)
         .ToList();
@@ -147,8 +147,8 @@ app.Run();
 class DeviceInfo
 {
     public string? DeviceId { get; set; }
-    public int Interval { get; set; }
-    public DateTime Started { get; set; }
+    public int? Interval { get; set; }
+    public DateTime? Started { get; set; }
     public DeviceConnectionState? State { get; set; }
-    public Boolean Enabled { get; set; }
+    public Boolean? Enabled { get; set; }
 }
