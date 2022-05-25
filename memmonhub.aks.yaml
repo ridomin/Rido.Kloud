@@ -1,18 +1,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: memmonhub
+  name: mmk8
 spec:
   replicas: 4
   selector:
     matchLabels:
-      app: memmonhub
+      app: mmk8
   template:
     metadata:
       labels:
-        app: memmonhub
+        app: mmk8
     spec:
       containers:
-      - name: memmonhub
+      - name: mmk8
         image: ghcr.io/ridomin/pnp-memmon-hub:dps1
         
