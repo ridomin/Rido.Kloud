@@ -1,0 +1,18 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: memmonhub
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: memmonhub
+  template:
+    metadata:
+      labels:
+        app: memmonhub
+    spec:
+      containers:
+      - name: memmonhub
+        image: ghcr.io/ridomin/pnp-memmon-hub:dps1
+        
