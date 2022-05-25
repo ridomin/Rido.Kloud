@@ -14,12 +14,21 @@ spec:
     spec:
       containers:
       - name: ridohubproxy
-        image: ghcr.io/ridomin/ridohubproxy:v05
+        image: ghcr.io/ridomin/ridohubproxy:v06
         ports:
         - containerPort: 80
         env:
         - name: ConnectionStrings__hub
           value: "HostName=ridoext.azure-devices.net;SharedAccessKeyName=iothubowner;SharedAccessKey=iamt3G6gMflQqkBatPD3ZZrTDB24VkjOhUmH0yXscIA="
+
+          resources:
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+
 ---
 apiVersion: v1
 kind: Service
