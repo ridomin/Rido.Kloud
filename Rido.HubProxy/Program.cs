@@ -132,10 +132,12 @@ app.MapGet("/devices/list", async () =>
         .Where(t => t.ModelId == "dtmi:rido:pnp:memmon;1")    
         .Select(t => new DeviceInfo { 
             DeviceId = t.DeviceId, 
+            State = t.ConnectionState,
             Started = Convert.ToDateTime(t.Properties.Reported["started"]),
             Interval = Convert.ToInt32(t.Properties.Reported["interval"]["value"].ToString()),
             Enabled = Convert.ToBoolean(t.Properties.Reported["enabled"]["value"].ToString()),
         })
+        .OrderByDescending(t => t.State)
         .ToList();
     return twins;
 }).WithName("listDevices").WithTags(new string[] { "hub"});
@@ -147,5 +149,6 @@ class DeviceInfo
     public string? DeviceId { get; set; }
     public int Interval { get; set; }
     public DateTime Started { get; set; }
+    public DeviceConnectionState? State { get; set; }
     public Boolean Enabled { get; set; }
 }

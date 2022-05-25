@@ -18,8 +18,8 @@
     <div id="app">
         <ul>
             <li v-for="device in devices">
-                <h3>{{device.deviceId}}</h3>
-                <div>Started: {{formatDate(device.started)}}</div>
+                <h3 :style="{color: device.state === 1 ? 'green' : 'red'}">{{device.deviceId}}</h3> 
+                <div v-bind:title="device.started">Started: {{formatDate(device.started)}}</div>
                 <div>Interval: {{device.interval}}</div>
                 <button @click="getStats(device)">Stats</button>
                 <pre>{{device.stats}}</pre>
