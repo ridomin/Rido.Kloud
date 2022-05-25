@@ -7,12 +7,36 @@
     <title>RidoHubProxy</title>
 </head>
 <body>
-<h1>RidoHubProxy</h1>
-<a href="/swagger">swagger</a>
-<div>latest</div>
+    <h1>RidoHubProxy</h1>
+    <a href="/swagger">swagger</a>
+    <div>latest</div>
 
-<div id="app"></div>
+    <script type="importmap">
+        {
+          "imports": {
+            "vue": "https://unpkg.com/vue@3/dist/vue.esm-browser.js"
+          }
+        }
+    </script>
 
-<script src="index.js"></script>
+    <div id="app">
+        <ul>
+            <li v-for="device in devices">
+                <h3>{{device.deviceId}}</h3>
+                <div>Started: {{device.started}}</div>
+                <div>Interval: {{device.interval}}</div>
+                <button @click="getStats(device)">Stats</button>
+                <pre>{{device.stats}}</pre>
+            </li>
+        </ul>
+    </div>
+
+    <script type="module">
+            import {createApp} from 'vue'
+            import MyComponent from './my-component.js'
+
+            createApp(MyComponent).mount('#app')
+    </script>
+
 </body>
 </html>
