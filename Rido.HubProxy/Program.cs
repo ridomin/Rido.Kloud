@@ -121,14 +121,31 @@ app.MapPost("/pnp/{did}/commands/getRuntimeStats", async (string did, [FromBody]
 
 }).WithName("command_getRuntimeStats").WithTags(new string[] { "hub" });
 
+
+
 app.MapGet("/devices/list", async () =>
 {
     var rm = RegistryManager.CreateFromConnectionString(app.Configuration.GetConnectionString("hub"));
-    // var q = rm.CreateQuery("SELECT deviceId FROM c WHERE modelId = 'dtmi:rido:pnp:memmon;1'", 100);
-    // var t = await q.GetNextAsJsonAsync();
-    // return t;
-    var devices = await rm.GetDevicesAsync(1000);
-    return devices.Select(d => d.Id);
+    var q = rm.CreateQuery("SELECT * FROM devices", 100);
+    var twinsRaw = await q.GetNextAsTwinAsync();
+    var twins = twinsRaw
+        .Where(t => t.ModelId == "dtmi:rido:pnp:memmon;1")    
+        .Select(t => new DeviceInfo { 
+            DeviceId = t.DeviceId, 
+            Started = Convert.ToDateTime(t.Properties.Reported["started"]),
+            Interval = Convert.ToInt32(t.Properties.Reported["interval"]["value"].ToString()),
+            Enabled = Convert.ToBoolean(t.Properties.Reported["enabled"]["value"].ToString()),
+        })
+        .ToList();
+    return twins;
 }).WithName("listDevices").WithTags(new string[] { "hub"});
 
 app.Run();
+
+class DeviceInfo
+{
+    public string? DeviceId { get; set; }
+    public int Interval { get; set; }
+    public DateTime Started { get; set; }
+    public Boolean Enabled { get; set; }
+}
