@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ridohubproxy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ridohubproxy
+  template:
+    metadata:
+      labels:
+        app: ridohubproxy
+    spec:
+      containers:
+      - name: ridohubproxy
+        image: ghcr.io/ridomin/ridohubproxy:v05
+        ports:
+        - containerPort: 80
+        env:
+        - name: ConnectionStrings__hub
+          value: "HostName=ridoext.azure-devices.net;SharedAccessKeyName=iothubowner;SharedAccessKey=iamt3G6gMflQqkBatPD3ZZrTDB24VkjOhUmH0yXscIA="
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ridohubproxy
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+  selector:
+    app: ridohubproxy
