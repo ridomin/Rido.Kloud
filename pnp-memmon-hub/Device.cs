@@ -42,7 +42,7 @@ public class Device : BackgroundService
             var deviceId = Environment.MachineName;
             var masterKey = _configuration.GetValue<string>("masterKey");
             var deviceKey = DpsKey.ComputeDeviceKey(masterKey, deviceId);
-            var newCs = $"IdScope={cs.IdScope};DeviceId={deviceId};SharedAccessKey={deviceKey}";
+            var newCs = $"IdScope={cs.IdScope};DeviceId={deviceId};SharedAccessKey={deviceKey};SasMinutes={cs.SasMinutes}";
             client = await memmon.CreateClientAsync(newCs, stoppingToken);
         }
         else
