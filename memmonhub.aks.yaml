@@ -14,5 +14,12 @@ spec:
     spec:
       containers:
       - name: mmk8
-        image: ghcr.io/ridomin/pnp-memmon-hub:dps1
+        image: ghcr.io/ridomin/pnp-memmon-hub:dps4
+      env:
+      - name: ConnectionStrings__cs
+        value: IdScope=aa;SasMinutes=100
+      - name: masterKey
+        value: asdfasdf
+      hostNetwork: true
+      dnsPolicy: Default
         
