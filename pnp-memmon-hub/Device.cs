@@ -102,13 +102,21 @@ public class Device : BackgroundService
     {
         ArgumentNullException.ThrowIfNull(client);
         twinRecCounter++;
-        var ack = new PropertyAck<int>(p.Name)
+        var ack = new PropertyAck<int>(p.Name);
+        if (p.Value > 0)
         {
-            Description = (client.Property_enabled?.PropertyValue.Value == true) ? "desired notification accepted" : "disabled, not accepted",
-            Status = (client.Property_enabled?.PropertyValue.Value == true) ? 200 : 205,
-            Version = p.Version,
-            Value = p.Value
-        };
+            ack.Description = "desired property accepted";
+            ack.Version = p.Version;
+            ack.Value = p.Value;
+            ack.Status = 200;
+        }
+        else
+        {
+            ack.Description = "negative values not accepted";
+            ack.Version = p.Version;
+            ack.Value = p.LastReported>0 ? p.LastReported : default_interval;
+            ack.Status = 406;
+        }
         client.Property_interval.PropertyValue = ack;
         return await Task.FromResult(ack);
     }
