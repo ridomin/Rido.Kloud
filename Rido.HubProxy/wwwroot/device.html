@@ -4,16 +4,31 @@
     <meta charset="utf-8" />
     <title>device detail</title>
     <script src="https://unpkg.com/vue@3"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.3/moment.min.js"></script>
     <link href="style.css" rel="stylesheet" />
 </head>
 <body>
     <div id="app">
-
+        <h1>{{device.id}}</h1>
+        <h3>Props</h3>
+        <div>started: {{formatDate(device.started)}}</div>
+        <div>
+            interval: {{device.interval}}
+            <input v-model="device.interval" /> <button @click="setInterval()">set prop</button>
+        </div>
+        <div>
+            enabled {{device.enabled}}
+            <input /> <button @click="setEnabled()">set prop</button>
+        </div>
+        <h3>Commands</h3>
+        <button @click="getStats()">getRuntimeStats</button>
+        <pre>{{device.stats}}</pre>
+        
     </div>
     <script type="module">
-        import deviceList from './device-detail.js'
+        import device from './device-detail.js'
         const { createApp } = Vue
-        createApp(deviceList).mount('#app')
+        createApp(device).mount('#app')
     </script>
 </body>
 </html>

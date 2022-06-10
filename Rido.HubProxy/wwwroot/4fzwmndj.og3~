@@ -1,0 +1,29 @@
+﻿const params = new Proxy(new URLSearchParams(window.location.search), {
+    get: (searchParams, prop) => searchParams.get(prop),
+})
+
+export default {
+    data: () => ({
+        device: {}
+    }),
+
+    created() {
+        this.fetchData()
+    },
+
+    methods: {
+        async fetchData() {
+
+            const id = params.id
+            this.device.id = id
+
+            const baseUrl = `pnp/${id}/`
+            this.device.started = await (await fetch(baseUrl + 'props/started')).json()
+            this.device.interval = await (await fetch(baseUrl + 'props/interval')).json()
+            this.device.enabled= await (await fetch(baseUrl + 'props/enabled')).json()
+        },
+        formatDate(d) {
+            return moment(d).fromNow()
+        }
+    }
+}

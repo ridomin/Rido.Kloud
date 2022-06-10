@@ -1,0 +1,19 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>device detail</title>
+    <script src="https://unpkg.com/vue@3"></script>
+    <link href="style.css" rel="stylesheet" />
+</head>
+<body>
+    <div id="app">
+        <h1>{{device.id}}</h1>
+    </div>
+    <script type="module">
+        import deviceList from './device-detail.js'
+        const { createApp } = Vue
+        createApp(deviceList).mount('#app')
+    </script>
+</body>
+</html>

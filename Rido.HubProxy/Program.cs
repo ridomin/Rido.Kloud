@@ -91,7 +91,7 @@ app.MapGet("/pnp/{did}/props/enabled", async (string did) =>
         }
         else
         {
-            return Results.Problem("Property 'enabled' is not an int", propValue.ToString(), 405);
+            return Results.Problem("Property 'enabled' is not an bool", propValue.ToString(), 405);
         }
     }
     else
@@ -136,6 +136,7 @@ app.MapGet("/devices/list", async () =>
             Started = t.Properties.Reported.Contains("started") ? Convert.ToDateTime(t.Properties.Reported["started"]) : null,
             Interval = t.Properties.Reported.Contains("interval") ? Convert.ToInt32(t.Properties.Reported["interval"]["value"].ToString()) : null,
             Enabled = t.Properties.Reported.Contains("enabled") ? Convert.ToBoolean(t.Properties.Reported["enabled"]["value"].ToString()) : null,
+            ModelId = t.ModelId
         })
         .OrderByDescending(t => t.State)
         .ToList();
@@ -151,4 +152,5 @@ class DeviceInfo
     public DateTime? Started { get; set; }
     public DeviceConnectionState? State { get; set; }
     public Boolean? Enabled { get; set; }
+    public string ModelId { get; set; }
 }
