@@ -9,7 +9,7 @@
 
     methods: {
         async fetchData() {
-            const url = `/devices/list`
+            const url = 'test-devices.json' // `/devices/list`
             this.devices = await (await fetch(url)).json()
         },
         async getStats(d) {
