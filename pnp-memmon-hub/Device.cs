@@ -37,7 +37,7 @@ public class Device : BackgroundService
         {
             if (int.TryParse(_configuration["UxRefresh"], out uxRefresh))
             {
-                _logger.LogInformation("UXRefresh: {uxRefresh}", uxRefresh);
+                _logger.LogInformation("UxRefresh: {uxRefresh}", uxRefresh);
             }
         }
     }
