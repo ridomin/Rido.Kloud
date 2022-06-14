@@ -21,6 +21,6 @@ jobs:
       with:
         registry: ghcr.io
         username: ${{ github.repository_owner }}
-        password: ${{ secrets.GITHUB_REGISTRY_TOKEN }}
+        password: ${{ secrets.REGISTRY_TOKEN }}
     - name: push image
       run: docker push ghcr.io/ridomin/pnp-memmon-hub:latest
