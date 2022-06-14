@@ -26,10 +26,20 @@ public class Device : BackgroundService
 
     private memmon client;
 
+    private int uxRefresh = 1;
+
     public Device(ILogger<Device> logger, IConfiguration configuration)
     {
         _logger = logger;
         _configuration = configuration;
+
+        if (_configuration["UxRefresh"] != null)
+        {
+            if (int.TryParse(_configuration["UxRefresh"], out uxRefresh))
+            {
+                _logger.LogInformation("UXRefresh: {uxRefresh}", uxRefresh);
+            }
+        }
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -50,6 +60,8 @@ public class Device : BackgroundService
             client = await memmon.CreateClientAsync(_configuration.GetConnectionString("cs"), stoppingToken);
         }
         _logger.LogInformation("Connected");
+
+        if (uxRefresh < 1) _logger.LogInformation(client.Connection.ConnectionSettings.ToString());
 
         client.Connection.OnMqttClientDisconnected += Connection_OnMqttClientDisconnected;
 
@@ -181,8 +193,19 @@ public class Device : BackgroundService
             return sb.ToString();
         }
 
-        Console.SetCursorPosition(0, 0);
-        Console.WriteLine(RenderData());
-        var screenRefresher = new Timer(RefreshScreen, this, 1000, 0);
+        if (uxRefresh>0)
+        {
+            Console.SetCursorPosition(0, 0);
+            Console.WriteLine(RenderData());
+            var screenRefresher = new Timer(RefreshScreen, this, uxRefresh * 1000, 0);
+        }
+        else
+        {
+            while (true)
+            {
+                _logger.LogInformation($"running for: {TimeSpan.FromMilliseconds(clock.ElapsedMilliseconds).Humanize(3)}. Reconnects: {reconnectCounter}. Telemetry: {telemetryCounter}. Twins: {twinRecCounter}. Commands: {commandCounter}");
+                Task.Delay(5000).Wait();
+            }
+        }
     }
 }
