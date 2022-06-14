@@ -193,6 +193,11 @@ public class Device : BackgroundService
             return sb.ToString();
         }
 
+        void RenderOneLiner()
+        {
+           _logger.LogInformation($"running for: {TimeSpan.FromMilliseconds(clock.ElapsedMilliseconds).Humanize(3)}. Reconnects: {reconnectCounter}. Telemetry: {telemetryCounter}. Twins: {twinRecCounter}. Commands: {commandCounter}");
+        }
+
         if (uxRefresh>0)
         {
             Console.SetCursorPosition(0, 0);
@@ -201,11 +206,8 @@ public class Device : BackgroundService
         }
         else
         {
-            while (true)
-            {
-                _logger.LogInformation($"running for: {TimeSpan.FromMilliseconds(clock.ElapsedMilliseconds).Humanize(3)}. Reconnects: {reconnectCounter}. Telemetry: {telemetryCounter}. Twins: {twinRecCounter}. Commands: {commandCounter}");
-                Task.Delay(5000).Wait();
-            }
+            RenderOneLiner();
+            var screenRefresher = new Timer(RefreshScreen, this, 5000, 0);
         }
     }
 }
