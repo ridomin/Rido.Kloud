@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IoTUX</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.3/moment.min.js"></script>
+    <script src="https://unpkg.com/vue@3"></script>
+    <link href="style.css" rel="stylesheet" />
+</head>
+<body>
+
+    <h1>IoTUX</h1>
+    <a href="/swagger">swagger</a>
+    <div>latest</div>
+
+
+    <div id="app">
+        <table>
+            <thead>
+                <tr>
+                    <th>Device Id</th>
+                    <th>ModelId</th>
+                    <th>Version</th>
+                    <th>Reported V</th>
+                    <th>Desired V</th>
+                    <th>LastActivity</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="(device, index) in devices">
+                    <td><a :href="'device.html?id=' + device.deviceId">{{device.deviceId}}</a></td>
+                    <td>{{device.modelId}}</td>
+                    <td>{{device.version}}</td>
+                    <td>{{device.reportedVersion}}</td>
+                    <td>{{device.desiredVersion}}</td>
+                    <td>{{formatDate(device.lastActivityTime)}}</td>
+                    <td><button @click="remove(index, device.deviceId)">delete</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script type="module">
+            import deviceList from './device-list.js'
+            const { createApp } = Vue
+            createApp(deviceList).mount('#app')
+    </script>
+
+</body>
+</html>
