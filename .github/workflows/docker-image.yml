@@ -16,3 +16,5 @@ jobs:
     - uses: actions/checkout@v3
     - name: Build the Docker image
       run: docker build . --file pnp-memmon-hub/Dockerfile --tag ghcr.io/ridomin/pnp-memmon-hub:$(date +%s)
+    - name: push image
+      run: docker push ghcr.io/ridomin/pnp-memmon-hub:$(date +%s)
