@@ -2,11 +2,9 @@
     data: () => ({
         devices: []
     }),
-
     created() {
         this.fetchData()
     },
-
     methods: {
         async fetchData() {
             this.devices = await (await fetch(`/api/Devices`)).json()

@@ -3,17 +3,53 @@
 <head>
     <meta charset="utf-8" />
     <title>device detail</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.3/moment.min.js"></script>
     <script src="https://unpkg.com/vue@3"></script>
     <link href="style.css" rel="stylesheet" />
 </head>
 <body>
     <div id="app">
+        <h1>{{device.deviceId}}</h1>
+        <div>
+            <span :style="{color: device.connectionState === 'Connected' ? 'green' : 'red'}">{{device.connectionState}} </span>
+            <span>-</span>
+            <span>{{formatDate(device.lastActivityTime)}}</span>
+        </div>
+        Model: <a href="#">{{device.modelId}}</a>
+        <div>
+            <h3>Commands</h3>
+            <div>getRuntimeStats</div>
+            <select>
+                <option>minimal</option>
+                <option>complete</option>
+                <option>full</option>
+            </select>
+            <button @click="invoke()">invoke</button>
+            <pre>
+                
+            </pre>
+        </div>
+
+        <div>
+            <h3>Device Twin</h3>
+
+            <label>started</label>
+            <div>{{formatDate(device.properties.reported.started)}}</div>
+            
+            <label>interval</label>
+            <div>
+                {{device.properties.reported.interval.value}}
+                <div>av: {{device.properties.reported.interval.av}}, ac: {{device.properties.reported.interval.ac}}, d: {{device.properties.reported.interval.ad}}</div>
+            </div>
+
+            <pre>{{device.properties}}</pre>
+        </div>
 
     </div>
     <script type="module">
-        import deviceList from './device-detail.js'
+        import device from './device-details.js'
         const { createApp } = Vue
-        createApp(deviceList).mount('#app')
+        createApp(device).mount('#app')
     </script>
 </body>
 </html>
