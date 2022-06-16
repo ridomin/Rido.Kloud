@@ -1,7 +1,7 @@
 ﻿export default {
     data: () => ({
         device: {},
-        commands: [{}]
+        command: {}
     }),
 
     created() {
@@ -13,17 +13,16 @@
             var urlParams = new URLSearchParams(window.location.search)
             var id = urlParams.get('id')
             const url = `/api/Devices/${id}`
-            console.log(url)
             this.device = await (await fetch(url)).json()
-            console.log(this.device)
         },
         async invoke() {
-            const url = `/api/Devices/${d.deviceId}/commands/getRuntimeStats`
+            const url = `/api/Command/`
+            this.command.response = '.. loading ..'
             try {
-                const resp = await (await fetch(url, { method: 'POST', body: 2, headers: { 'Content-Type': 'application/json' } })).json()
-                commands[0].response = JSON.stringify(resp, null, 2)
+                const resp = await (await fetch(url, { method: 'POST', body: '"2"', headers: { 'Content-Type': 'application/json' } })).json()
+                this.command.response = JSON.stringify(resp, null, 2)
             } catch {
-                commands[0].response = "Offline"
+                this.command.response = "Offline"
             }
         },
         formatDate(d) {

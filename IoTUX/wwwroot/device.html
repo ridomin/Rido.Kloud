@@ -26,21 +26,14 @@
             </select>
             <button @click="invoke()">invoke</button>
             <pre>
-                
+                {{command.response}}
             </pre>
         </div>
 
         <div>
             <h3>Device Twin</h3>
 
-            <label>started</label>
-            <div>{{formatDate(device.properties.reported.started)}}</div>
             
-            <label>interval</label>
-            <div>
-                {{device.properties.reported.interval.value}}
-                <div>av: {{device.properties.reported.interval.av}}, ac: {{device.properties.reported.interval.ac}}, d: {{device.properties.reported.interval.ad}}</div>
-            </div>
 
             <pre>{{device.properties}}</pre>
         </div>
