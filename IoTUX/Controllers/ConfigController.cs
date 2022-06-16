@@ -20,9 +20,9 @@ namespace IoTUX.Controllers
         {
             string host = string.Empty;
             var cs = _configuration.GetConnectionString("hub");
-            if (_configuration["hostName"] != null)
+            if (_configuration["hubName"] != null)
             {
-                host = _configuration.GetValue<string>("hostName");
+                host = _configuration.GetValue<string>("hubName");
             }
             else if (!string.IsNullOrEmpty(cs))
             {

@@ -20,9 +20,9 @@ namespace IoTUX.Controllers
         {
             _configuration = config;
             var cs = config.GetConnectionString("hub");
-            if (config["hostName"] != null)
+            if (config["hubName"] != null)
             {
-                var host = config.GetValue<string>("hostName");
+                var host = config.GetValue<string>("hubName");
                 dc = DigitalTwinClient.Create(host, new DefaultAzureCredential());
             }
             else if (!string.IsNullOrEmpty(cs))
