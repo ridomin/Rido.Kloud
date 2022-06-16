@@ -26,6 +26,7 @@ public class Device : BackgroundService
 
     private memmon client;
 
+    Timer screenRefresher;
     private int uxRefresh = 1;
 
     public Device(ILogger<Device> logger, IConfiguration configuration)
@@ -202,12 +203,12 @@ public class Device : BackgroundService
         {
             Console.SetCursorPosition(0, 0);
             Console.WriteLine(RenderData());
-            var screenRefresher = new Timer(RefreshScreen, this, uxRefresh * 1000, 0);
+            screenRefresher = new Timer(RefreshScreen, this, uxRefresh * 1000, 0);
         }
         else
         {
             RenderOneLiner();
-            var screenRefresher = new Timer(RefreshScreen, this, 5000, 0);
+            screenRefresher = new Timer(RefreshScreen, this, 5000, 0);
         }
     }
 }
