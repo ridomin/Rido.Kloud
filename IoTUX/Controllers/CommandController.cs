@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Azure.Identity;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Devices;
 using Microsoft.Extensions.Configuration;
+using System;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -17,9 +19,21 @@ namespace IoTUX.Controllers
         public CommandController(IConfiguration config)
         {
             _configuration = config;
-            //sc = ServiceClient.CreateFromConnectionString(config.GetConnectionString("hub"));
-            dc = DigitalTwinClient.CreateFromConnectionString(config.GetConnectionString("hub"));
-            //rm = RegistryManager.Create(config.GetValue<string>("hubName"), new DefaultAzureCredential());
+            var cs = config.GetConnectionString("hub");
+            if (config["hostName"] != null)
+            {
+                var host = config.GetValue<string>("hostName");
+                dc = DigitalTwinClient.Create(host, new DefaultAzureCredential());
+            }
+            else if (!string.IsNullOrEmpty(cs))
+            {
+                dc = DigitalTwinClient.CreateFromConnectionString(config.GetConnectionString("hub"));
+            }
+            else
+            {
+                throw new ApplicationException("connectionsString_hub neither hostName found in configuration.");
+            }
+            
         }
 
         [HttpPost("{deviceId}")]

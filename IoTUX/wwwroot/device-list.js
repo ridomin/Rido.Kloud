@@ -1,7 +1,8 @@
 ﻿export default {
     data: () => ({
         config: '',
-        devices: []
+        devices: [],
+        error: ''
     }),
     created() {
         this.fetchData()
@@ -9,11 +10,15 @@
     methods: {
         async fetchData() {
             this.config = await (await fetch('api/Config')).text()
-            this.devices = await (await fetch(`/api/Devices`)).json()
+            try {
+                this.devices = await (await fetch(`/api/Devices`)).json()
+            } catch (e) {
+                console.log(e)
+                this.error = 'Error loading devices'
+            }
         },
         async remove(index, id) {
             const url = `api/Devices/${id}`
-            console.log(url)
             const resp = await (await fetch(url, { method: 'DELETE', headers: { 'Content-type': 'application/json' } }))
             this.devices.splice(index, 1)
         },

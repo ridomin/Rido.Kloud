@@ -23,8 +23,20 @@ namespace IoTUX.Controllers
         public DevicesController(IConfiguration config)
         {
             _configuration = config;
-            rm = RegistryManager.CreateFromConnectionString(config.GetConnectionString("hub"));
-            //rm = RegistryManager.Create(config.GetValue<string>("hubName"), new DefaultAzureCredential());
+            var cs = config.GetConnectionString("hub");
+            if (config["hostName"] != null)
+            {
+                var host = config.GetValue<string>("hostName");
+                rm = RegistryManager.Create(host, new DefaultAzureCredential());
+            }
+            else if (!string.IsNullOrEmpty(cs))
+            {
+                rm = RegistryManager.CreateFromConnectionString(config.GetConnectionString("hub"));
+            }
+            else
+            {
+                throw new ApplicationException("connectionsString_hub neither hostName found in configuration.");
+            }    
         }
 
         // GET: api/<DevicesController>
