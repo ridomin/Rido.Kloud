@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: iotux
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: iotux
+  template:
+    metadata:
+      labels:
+        app: iotux
+    spec:
+      containers:
+      - name: iotux
+        image: ghcr.io/ridomin/iotux:latest
+        imagePullPolicy: Always
+        ports:
+        - name: http
+          containerPort: 80
+          protocol: TCP
+        env:
+        - name: ConnectionStrings__hub
+          value: "HostName=ridoext.azure-devices.net;SharedAccessKeyName=iothubowner;SharedAccessKey=iamt3G6gMflQqkBatPD3ZZrTDB24VkjOhUmH0yXscIA="
+        
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: iotux
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+  selector:
+    app: iotux

@@ -1,5 +1,6 @@
 ﻿export default {
     data: () => ({
+        config: '',
         devices: []
     }),
     created() {
@@ -7,6 +8,7 @@
     },
     methods: {
         async fetchData() {
+            this.config = await (await fetch('api/Config')).text()
             this.devices = await (await fetch(`/api/Devices`)).json()
         },
         async remove(index, id) {
