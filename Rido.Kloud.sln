@@ -9,11 +9,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rido.BrokerProxy", "Rido.Br
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{2C4C9D8B-3703-47BE-89D5-B11C6F2B8B44}"
 	ProjectSection(SolutionItems) = preProject
+		.github\workflows\docker-image.yml = .github\workflows\docker-image.yml
 		hubproxy.aks.yaml = hubproxy.aks.yaml
 		ridohubproxy.yaml = ridohubproxy.yaml
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IoTUX", "IoTUX\IoTUX.csproj", "{B2BF674E-990C-4267-8781-7EB55C76029C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IoTUX", "IoTUX\IoTUX.csproj", "{B2BF674E-990C-4267-8781-7EB55C76029C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

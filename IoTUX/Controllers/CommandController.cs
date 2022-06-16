@@ -22,11 +22,9 @@ namespace IoTUX.Controllers
             //rm = RegistryManager.Create(config.GetValue<string>("hubName"), new DefaultAzureCredential());
         }
 
-        [HttpPost]
-        public async Task<string> Invoke([FromBody] string value)
+        [HttpPost("{deviceId}")]
+        public async Task<string> Invoke(string deviceId, string cmdName, [FromBody] string value)
         {
-            string deviceId = "mm-hub-b9f5856f6-rxjd4";
-            string cmdName = "getRuntimeStats";
             var res = await dc.InvokeCommandAsync(deviceId, cmdName, value);
             return res.Body.Payload;
             //CloudToDeviceMethod c2d = new CloudToDeviceMethod(cmdName);

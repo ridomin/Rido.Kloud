@@ -19,10 +19,10 @@
         <div>
             <h3>Commands</h3>
             <div>getRuntimeStats</div>
-            <select>
-                <option>minimal</option>
-                <option>complete</option>
-                <option>full</option>
+            <select v-model="command.request">
+                <option value="0">minimal</option>
+                <option value="1">complete</option>
+                <option value="2" :selected="command.request===2">full</option>
             </select>
             <button @click="invoke()">invoke</button>
             <pre>

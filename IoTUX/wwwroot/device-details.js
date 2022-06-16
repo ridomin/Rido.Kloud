@@ -1,7 +1,9 @@
 ﻿export default {
     data: () => ({
         device: {},
-        command: {}
+        command: {
+            request: 2
+        }
     }),
 
     created() {
@@ -16,10 +18,11 @@
             this.device = await (await fetch(url)).json()
         },
         async invoke() {
-            const url = `/api/Command/`
+            const url = `/api/Command/${this.device.deviceId}?cmdName=getRuntimeStats`
             this.command.response = '.. loading ..'
+            console.log(this.command.request)
             try {
-                const resp = await (await fetch(url, { method: 'POST', body: '"2"', headers: { 'Content-Type': 'application/json' } })).json()
+                const resp = await (await fetch(url, { method: 'POST', body: `\"${this.command.request}\"` , headers: { 'Content-Type': 'application/json' } })).json()
                 this.command.response = JSON.stringify(resp, null, 2)
             } catch {
                 this.command.response = "Offline"
