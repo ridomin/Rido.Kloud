@@ -1,14 +1,28 @@
 ﻿body {
     font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif
 }
-
 th, td {
     text-align:left;
     padding: 10px
-
 }
-
 .error {
     color: red
 }
+.loader {
+    border: 5px solid grey;
+    border-radius: 50%;
+    border-top: 5px solid darkblue;
+    width: 30px;
+    height: 30px;
+    animation: spinner 1s linear infinite;
+}
 
+@keyframes spinner {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}

@@ -10,11 +10,12 @@
     <link href="style.css" rel="stylesheet" />
 </head>
 <body>
-
     <div id="app">
         <h1>[IoTUX] {{config}}</h1>
         <div class="error">{{error}}</div>
-        <table>
+        <div v-if="loading" class="loader">
+        </div>
+        <table v-if="!loading">
             <thead>
                 <tr>
                     <th>Device Id</th>
@@ -40,9 +41,9 @@
     </div>
 
     <script type="module">
-            import deviceList from './device-list.js'
-            const { createApp } = Vue
-            createApp(deviceList).mount('#app')
+        import deviceList from './device-list.js'
+        const { createApp } = Vue
+        createApp(deviceList).mount('#app')
     </script>
 
 </body>

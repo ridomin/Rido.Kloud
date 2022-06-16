@@ -2,6 +2,7 @@
     data: () => ({
         config: '',
         devices: [],
+        loading: true,
         error: ''
     }),
     created() {
@@ -12,6 +13,7 @@
             this.config = await (await fetch('api/Config')).text()
             try {
                 this.devices = await (await fetch(`/api/Devices`)).json()
+                this.loading = false
             } catch (e) {
                 console.log(e)
                 this.error = 'Error loading devices'
