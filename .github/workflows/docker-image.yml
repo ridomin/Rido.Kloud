@@ -1,4 +1,4 @@
-name: Docker Image CI
+name: memmon Docker Image CI
 
 on:
   push:
