@@ -22,7 +22,7 @@
             <select v-model="command.request">
                 <option value="0">minimal</option>
                 <option value="1">complete</option>
-                <option value="2" :selected="command.request===2">full</option>
+                <option value="2" :selected="command.request === 2">full</option>
             </select>
             <button @click="invoke()">invoke</button>
             <pre>
@@ -32,9 +32,38 @@
 
         <div>
             <h3>Device Twin</h3>
-
-            
-
+            <div class="reported">
+                <div>
+                    <span class="prop-name">started</span>
+                    <span class="prop-value">{{device.properties.reported.started}}</span>
+                    <div class="prop-md">
+                        <span>last updated {{formatDate(device.properties.reported.$metadata.started.$lastUpdated)}}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="desired">
+                <div class="prop">
+                    <span class="prop-name">interval</span>
+                    <span class="prop-value">{{device.properties.reported.interval.value}}</span>
+                    <input size="1" :value="device.properties.desired.interval" type="text" id="in-interval" /> <button @click="updateProp('interval')">Update</button>
+                    <div class="prop-md">
+                        <span>last updated:</span>
+                        <span>{{formatDate(device.properties.reported.$metadata.interval.$lastUpdated)}}</span>
+                    </div>
+                    <div class="prop-md">
+                        <span>version:</span>
+                        <span>{{device.properties.reported.interval.av}}</span>
+                    </div>
+                    <div class="prop-md">
+                        <span>status:</span>
+                        <span>{{device.properties.reported.interval.ac}}</span>
+                    </div>
+                    <div class="prop-md">
+                        <span>descr:</span>
+                        <span>{{device.properties.reported.interval.ad}}</span>
+                    </div>
+                </div>
+            </div>
             <pre>{{device.properties}}</pre>
         </div>
 

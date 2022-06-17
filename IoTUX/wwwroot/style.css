@@ -5,6 +5,34 @@ th, td {
     text-align:left;
     padding: 10px
 }
+
+.reported, .desired{
+    border: 1px solid grey;
+    width: 500px;
+    padding:5px;
+    margin: 5px
+}
+
+.reported>div>span {
+    margin: 5px
+}
+
+span {
+    margin: 5px
+}
+
+.prop-name, .prop-value {
+    font-size:larger
+}
+
+.prop-value {
+    font-weight:bold
+}
+
+.prop-md {
+    text-align:right
+}
+
 .error {
     color: red
 }
