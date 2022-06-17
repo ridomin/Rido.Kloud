@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
@@ -79,6 +80,17 @@ namespace IoTUX.Controllers
         public async Task Delete(string id)
         {
             await rm.RemoveDeviceAsync(await rm.GetDeviceAsync(id));
+        }
+
+        [HttpPut("{id}")]
+        public async Task UpdateTwin(string id, string propName, [FromBody]string twinValue)
+        {
+
+            var twinPatch = new Twin();
+            twinPatch.Properties.Desired[propName] = JsonSerializer.Deserialize<int>(twinValue);
+
+            var twin = await rm.GetTwinAsync(id);
+            await rm.UpdateTwinAsync(id, twinPatch, twin.ETag);
         }
     }
 

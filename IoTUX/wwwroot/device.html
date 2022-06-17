@@ -8,7 +8,7 @@
     <link href="style.css" rel="stylesheet" />
 </head>
 <body>
-    <div id="app">
+    <div id="app" v-cloak>
         <h1>{{device.deviceId}}</h1>
         <div>
             <span :style="{color: device.connectionState === 'Connected' ? 'green' : 'red'}">{{device.connectionState}} </span>
@@ -35,36 +35,38 @@
             <div class="reported">
                 <div>
                     <span class="prop-name">started</span>
-                    <span class="prop-value">{{device.properties.reported.started}}</span>
+                    <span class="prop-value">{{gv(device, 'properties.reported.started')}}</span>
                     <div class="prop-md">
-                        <span>last updated {{formatDate(device.properties.reported.$metadata.started.$lastUpdated)}}</span>
+                        <span>last updated {{formatDate(gv(device, 'properties.reported.$metadata.started.$lastUpdated'))}}</span>
                     </div>
                 </div>
             </div>
             <div class="desired">
                 <div class="prop">
                     <span class="prop-name">interval</span>
-                    <span class="prop-value">{{device.properties.reported.interval.value}}</span>
-                    <input size="1" :value="device.properties.desired.interval" type="text" id="in-interval" /> <button @click="updateProp('interval')">Update</button>
-                    <div class="prop-md">
-                        <span>last updated:</span>
-                        <span>{{formatDate(device.properties.reported.$metadata.interval.$lastUpdated)}}</span>
-                    </div>
-                    <div class="prop-md">
-                        <span>version:</span>
-                        <span>{{device.properties.reported.interval.av}}</span>
-                    </div>
-                    <div class="prop-md">
-                        <span>status:</span>
-                        <span>{{device.properties.reported.interval.ac}}</span>
-                    </div>
-                    <div class="prop-md">
-                        <span>descr:</span>
-                        <span>{{device.properties.reported.interval.ad}}</span>
+                    <span class="prop-value">{{gv(device, 'properties.reported.interval.value')}}</span>
+                    <input size="1" :value="gv(device, 'properties.desired.interval')" type="text" id="in-interval" /> 
+                    <button @click="updateProp('interval')">Update</button>
+                    <div v-if="!propsUpdating" class="props-metadata">
+                        <div class="prop-md">
+                            <span>last updated:</span>
+                            <span>{{formatDate(gv(device, 'properties.reported.$metadata.interval.$lastUpdated'))}}</span>
+                        </div>
+                        <div class="prop-md">
+                            <span>version:</span>
+                            <span>{{gv(device, 'properties.reported.interval.av')}}</span>
+                        </div>
+                        <div class="prop-md">
+                            <span>status:</span>
+                            <span>{{gv(device, 'properties.reported.interval.ac')}}</span>
+                        </div>
+                        <div class="prop-md">
+                            <span>descr:</span>
+                            <span>{{gv(device, 'properties.reported.interval.ad')}}</span>
+                        </div>
                     </div>
                 </div>
             </div>
-            <pre>{{device.properties}}</pre>
         </div>
 
     </div>

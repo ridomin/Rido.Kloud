@@ -6,6 +6,10 @@ th, td {
     padding: 10px
 }
 
+[v-cloak] {
+    display: none;
+}
+
 .reported, .desired{
     border: 1px solid grey;
     width: 500px;
@@ -31,6 +35,12 @@ span {
 
 .prop-md {
     text-align:right
+}
+
+.props-metadata {
+    background-color:#ecf6fc;
+    padding:3px;
+    margin:3px
 }
 
 .error {
