@@ -3,9 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Devices;
 using Microsoft.Azure.Devices.Shared;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
@@ -82,15 +84,15 @@ namespace IoTUX.Controllers
             await rm.RemoveDeviceAsync(await rm.GetDeviceAsync(id));
         }
 
-        [HttpPut("{id}")]
-        public async Task UpdateTwin(string id, string propName, [FromBody]string twinValue)
+        [HttpPost("{id}")]
+        public async Task UpdateTwin(string id, [FromBody]object twinValue)
         {
-
-            var twinPatch = new Twin();
-            twinPatch.Properties.Desired[propName] = JsonSerializer.Deserialize<int>(twinValue);
-
+            Console.WriteLine(twinValue);
+            //var twinPatch = new Twin();
+            //twinPatch.Properties.Desired[propName] = JsonSerializer.Deserialize<int>(twinValue);
+            //var twinPatch = await twinValue.Content.ReadAsStringAsync();
             var twin = await rm.GetTwinAsync(id);
-            await rm.UpdateTwinAsync(id, twinPatch, twin.ETag);
+            await rm.UpdateTwinAsync(id, twinValue.ToString(), twin.ETag);
         }
     }
 

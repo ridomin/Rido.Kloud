@@ -38,7 +38,10 @@ span {
 }
 
 .prop-md {
-    text-align:right
+    text-align:right;
+    font-size:smaller;
+    font-style:italic
+
 }
 
 .props-metadata {

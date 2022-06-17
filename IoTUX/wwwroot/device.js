@@ -36,24 +36,29 @@
         },
         syncDesiredProp(name) {
             const desSet = this.gv(this.device, `properties.desired.${name}`)
-            console.log(name, desSet)
             if (desSet === '') {
                 this.wpSyncs[name] = 'beige'
                 return 
             }
-            const desV = this.gv(this.device, 'properties.desired.$version')
+            const desV = this.gv(this.device, `properties.desired.$metadata.${name}.$lastUpdatedVersion`)
             const repV = this.gv(this.device, `properties.reported.${name}.av`)
-            this.wpSyncs[name] = desV === repV ? 'lightgreen' : 'lightpink'
+            this.wpSyncs[name] =  repV >= desV ? 'lightgreen' : 'lightpink'
         },
-        async updateProp(name) {
+        async updateProp(name, tc) {
             this.propsUpdating = true
-            const url = `/api/Devices/${this.device.deviceId}?propName=${name}`
+            const url = `/api/Devices/${this.device.deviceId}`
             const input = document.getElementById('in-' + name)
-            const desValue = input.value
-            this.device.properties.desired.interval = desValue
+            const desValue = {
+                properties: {
+                    desired: {}
+                }
+            }
+            desValue.properties.desired[name] = tc(input.value)
+            //this.device.properties.desired.interval = desValue
             console.log(desValue)
+            const payload = JSON.stringify(desValue)
             try {
-                await (await fetch(url, { method: 'PUT', body: JSON.stringify(desValue), headers: { 'Content-Type': 'application/json' } }))
+                await (await fetch(url, { method: 'POST', body: payload, headers: { 'Content-Type': 'application/json' } }))
                 setTimeout(async () => {
                     await this.fetchData()
                 }, 2000)
