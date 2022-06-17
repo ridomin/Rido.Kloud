@@ -11,10 +11,7 @@ th, td {
 }
 
 .reported, .desired{
-    border: 1px solid grey;
-    width: 500px;
-    padding:5px;
-    margin: 5px
+   
 }
 
 .reported>div>span {
@@ -22,6 +19,13 @@ th, td {
 }
 
 span {
+    margin: 5px
+}
+
+.prop {
+    border: 1px solid grey;
+    width: 500px;
+    padding: 5px;
     margin: 5px
 }
 

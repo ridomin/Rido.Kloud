@@ -1,7 +1,8 @@
 ﻿export default {
     data: () => ({
         device: {},
-        propsUpdating :false,
+        propsUpdating: false,
+        wpSyncs : [],
         command: {
             request: 2
         }
@@ -13,10 +14,14 @@
 
     methods: {
         async fetchData() {
+            this.propsUpdating = true
             var urlParams = new URLSearchParams(window.location.search)
             var id = urlParams.get('id')
             const url = `/api/Devices/${id}`
             this.device = await (await fetch(url)).json()
+            this.syncDesiredProp('interval')
+            this.syncDesiredProp('enabled')
+            this.propsUpdating = false
         },
         async invoke() {
             const url = `/api/Command/${this.device.deviceId}?cmdName=getRuntimeStats`
@@ -29,6 +34,17 @@
                 this.command.response = "Offline"
             }
         },
+        syncDesiredProp(name) {
+            const desSet = this.gv(this.device, `properties.desired.${name}`)
+            console.log(name, desSet)
+            if (desSet === '') {
+                this.wpSyncs[name] = 'beige'
+                return 
+            }
+            const desV = this.gv(this.device, 'properties.desired.$version')
+            const repV = this.gv(this.device, `properties.reported.${name}.av`)
+            this.wpSyncs[name] = desV === repV ? 'lightgreen' : 'lightpink'
+        },
         async updateProp(name) {
             this.propsUpdating = true
             const url = `/api/Devices/${this.device.deviceId}?propName=${name}`
@@ -38,11 +54,8 @@
             console.log(desValue)
             try {
                 await (await fetch(url, { method: 'PUT', body: JSON.stringify(desValue), headers: { 'Content-Type': 'application/json' } }))
-
                 setTimeout(async () => {
-                    const url = `/api/Devices/${this.device.deviceId}`
-                    this.device = await (await fetch(url)).json()
-                    this.propsUpdating = false
+                    await this.fetchData()
                 }, 2000)
 
 

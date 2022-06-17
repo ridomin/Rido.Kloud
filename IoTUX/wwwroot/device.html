@@ -34,7 +34,7 @@
         <div>
             <h3>Device Twin</h3>
             <div class="reported">
-                <div>
+                <div class="prop">
                     <span class="prop-name">started</span>
                     <span class="prop-value">{{gv(device, 'properties.reported.started')}}</span>
                     <div class="prop-md">
@@ -46,9 +46,11 @@
                 <div class="prop">
                     <span class="prop-name">interval</span>
                     <span class="prop-value">{{gv(device, 'properties.reported.interval.value')}}</span>
-                    <input size="1" :value="gv(device, 'properties.desired.interval')" type="text" id="in-interval" /> 
+                    desired
+                    <input size="1" :value="gv(device, 'properties.desired.interval')" type="text" id="in-interval" />
                     <button @click="updateProp('interval')">Update</button>
-                    <div v-if="!propsUpdating" class="props-metadata">
+                    v: {{gv(device,'properties.desired.$version')}}
+                    <div v-if="!propsUpdating" class="props-metadata" :style="{backgroundColor: wpSyncs['interval']}">
                         <div class="prop-md">
                             <span>last updated:</span>
                             <span>{{formatDate(gv(device, 'properties.reported.$metadata.interval.$lastUpdated'))}}</span>
@@ -67,6 +69,34 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="prop">
+                    <span class="prop-name">enabled</span>
+                    <span class="prop-value">{{gv(device, 'properties.reported.enabled.value')}}</span>
+                    desired
+                    <input size="1" :value="gv(device, 'properties.desired.enabled')" type="text" id="in-enabled" />
+                    <button @click="updateProp('enabled')">Update</button>
+                    v: {{gv(device,'properties.desired.$version')}}
+                    <div v-if="!propsUpdating" class="props-metadata" :style="{backgroundColor: wpSyncs['enabled']}">
+                        <div class="prop-md">
+                            <span>last updated:</span>
+                            <span>{{formatDate(gv(device, 'properties.reported.$metadata.enabled.$lastUpdated'))}}</span>
+                        </div>
+                        <div class="prop-md">
+                            <span>version:</span>
+                            <span>{{gv(device, 'properties.reported.enabled.av')}}</span>
+                        </div>
+                        <div class="prop-md">
+                            <span>status:</span>
+                            <span>{{gv(device, 'properties.reported.enabled.ac')}}</span>
+                        </div>
+                        <div class="prop-md">
+                            <span>descr:</span>
+                            <span>{{gv(device, 'properties.reported.enabled.ad')}}</span>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
 
