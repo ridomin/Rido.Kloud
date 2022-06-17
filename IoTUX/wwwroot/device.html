@@ -4,6 +4,7 @@
     <meta charset="utf-8" />
     <title>device detail</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.3/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
     <script src="https://unpkg.com/vue@3"></script>
     <link href="style.css" rel="stylesheet" />
 </head>
@@ -71,7 +72,7 @@
 
     </div>
     <script type="module">
-        import device from './device-details.js'
+        import device from './device.js'
         const { createApp } = Vue
         createApp(device).mount('#app')
     </script>

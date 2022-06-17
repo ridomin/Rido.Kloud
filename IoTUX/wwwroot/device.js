@@ -1,5 +1,4 @@
-﻿import _ from 'https://unpkg.com/lodash-es'
-export default {
+﻿export default {
     data: () => ({
         device: {},
         propsUpdating :false,
