@@ -1,4 +1,5 @@
-﻿export default {
+﻿
+export default {
     data: () => ({
         device: {},
         propsUpdating: false,
@@ -11,7 +12,6 @@
     created() {
         this.fetchData()
     },
-
     methods: {
         async fetchData() {
             this.propsUpdating = true
