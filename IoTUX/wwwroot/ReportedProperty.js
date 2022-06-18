@@ -15,7 +15,8 @@
         <span class="prop-name">{{propName}}</span>
         <span class="prop-value">{{gv(reportedNode, propName)}}</span>
         <div class="prop-md">
-            <span>last updated {{formatDate(gv(reportedNode, '$metadata.'+ propName +'.$lastUpdated'))}}</span>
+            <div>last updated {{formatDate(gv(reportedNode, '$metadata.'+ propName +'.$lastUpdated'))}}</div>
+            <div>version {{gv(reportedNode, '$version')}}</div>
         </div>
     </div>
     `
