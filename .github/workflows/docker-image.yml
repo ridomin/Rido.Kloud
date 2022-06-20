@@ -4,7 +4,7 @@ on:
   push:
     branches: [ "master" ]
     paths: 
-      - 'pnp-memon-hub/**'
+      - 'pnp-memmon-hub/**'
   pull_request:
     branches: [ "master" ]
 
