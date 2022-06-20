@@ -26,6 +26,8 @@ public class Device : BackgroundService
 
     private memmon client;
 
+    private string lastDiscconectReason = string.Empty;
+
     Timer screenRefresher;
     private int uxRefresh = 1;
 
@@ -94,6 +96,7 @@ public class Device : BackgroundService
 
     private void Connection_OnMqttClientDisconnected(object sender, Rido.MqttCore.DisconnectEventArgs e)
     {
+        lastDiscconectReason = e.ReasonInfo;
         reconnectCounter++;
     }
 
@@ -189,14 +192,15 @@ public class Device : BackgroundService
             AppendLineWithPadRight(sb, $"WorkingSet: {telemetryWorkingSet.Bytes()}");
             AppendLineWithPadRight(sb, " ");
             AppendLineWithPadRight(sb, $"Time Running: {TimeSpan.FromMilliseconds(clock.ElapsedMilliseconds).Humanize(3)}");
-            AppendLineWithPadRight(sb, $"{client.Connection.ConnectionSettings}");
+            AppendLineWithPadRight(sb, $"ConnectionStatus: {client.Connection.IsConnected} {lastDiscconectReason}");
             AppendLineWithPadRight(sb, " ");
             return sb.ToString();
         }
 
         void RenderOneLiner()
         {
-           _logger.LogInformation($"running for: {TimeSpan.FromMilliseconds(clock.ElapsedMilliseconds).Humanize(3)}. Reconnects: {reconnectCounter}. Telemetry: {telemetryCounter}. Twins: {twinRecCounter}. Commands: {commandCounter}");
+            _logger.LogInformation($"running for: {TimeSpan.FromMilliseconds(clock.ElapsedMilliseconds).Humanize(3)}. IsConnected: {client.Connection.IsConnected}. {lastDiscconectReason}");
+           _logger.LogInformation($"Reconnects: {reconnectCounter}. Telemetry: {telemetryCounter}. Twins: {twinRecCounter}. Commands: {commandCounter}");
         }
 
         if (uxRefresh>0)
