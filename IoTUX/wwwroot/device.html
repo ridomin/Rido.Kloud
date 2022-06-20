@@ -10,6 +10,10 @@
 </head>
 <body>
     <div id="app" v-cloak>
+        
+        
+        
+
         <h1>{{device.deviceId}}</h1>
         <div>
             <span :style="{color: device.connectionState === 'Connected' ? 'green' : 'red'}">{{device.connectionState}} </span>
@@ -34,13 +38,7 @@
         <div>
             <h3>Device Twin</h3>
             <div class="reported">
-                <div class="prop">
-                    <span class="prop-name">started</span>
-                    <span class="prop-value">{{gv(device, 'properties.reported.started')}}</span>
-                    <div class="prop-md">
-                        <span>last updated {{formatDate(gv(device, 'properties.reported.$metadata.started.$lastUpdated'))}}</span>
-                    </div>
-                </div>
+                <reported-property prop-name="started" :reported-node="gv(device, 'properties.reported')"></reported-property>
             </div>
             <div class="desired">
                 <div class="prop">
@@ -105,8 +103,11 @@
     </div>
     <script type="module">
         import device from './device.js'
+        import ReportedProperty from './ReportedProperty.js'
         const { createApp } = Vue
-        createApp(device).mount('#app')
+        const app = createApp(device)
+        app.component('ReportedProperty', ReportedProperty)
+        app.mount('#app')
     </script>
 </body>
 </html>
