@@ -199,7 +199,7 @@ public class Device : BackgroundService
 
         void RenderOneLiner()
         {
-            _logger.LogInformation($"running for: {TimeSpan.FromMilliseconds(clock.ElapsedMilliseconds).Humanize(3)}. IsConnected: {client.Connection.IsConnected}. [{lastDiscconectReason}]");
+            _logger.LogInformation($"running for: {TimeSpan.FromMilliseconds(clock.ElapsedMilliseconds).Humanize(3)}. IsConnected: {client.Connection.IsConnected}. [{lastDiscconectReason}] ");
            _logger.LogInformation($"Reconnects: {reconnectCounter}. Telemetry: {telemetryCounter}. Twins: {twinRecCounter}. Commands: {commandCounter}");
         }
 
