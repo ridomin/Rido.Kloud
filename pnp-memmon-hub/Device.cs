@@ -192,14 +192,14 @@ public class Device : BackgroundService
             AppendLineWithPadRight(sb, $"WorkingSet: {telemetryWorkingSet.Bytes()}");
             AppendLineWithPadRight(sb, " ");
             AppendLineWithPadRight(sb, $"Time Running: {TimeSpan.FromMilliseconds(clock.ElapsedMilliseconds).Humanize(3)}");
-            AppendLineWithPadRight(sb, $"ConnectionStatus: {client.Connection.IsConnected} {lastDiscconectReason}");
+            AppendLineWithPadRight(sb, $"ConnectionStatus: {client.Connection.IsConnected} [{lastDiscconectReason}]");
             AppendLineWithPadRight(sb, " ");
             return sb.ToString();
         }
 
         void RenderOneLiner()
         {
-            _logger.LogInformation($"running for: {TimeSpan.FromMilliseconds(clock.ElapsedMilliseconds).Humanize(3)}. IsConnected: {client.Connection.IsConnected}. {lastDiscconectReason}");
+            _logger.LogInformation($"running for: {TimeSpan.FromMilliseconds(clock.ElapsedMilliseconds).Humanize(3)}. IsConnected: {client.Connection.IsConnected}. [{lastDiscconectReason}]");
            _logger.LogInformation($"Reconnects: {reconnectCounter}. Telemetry: {telemetryCounter}. Twins: {twinRecCounter}. Commands: {commandCounter}");
         }
 
