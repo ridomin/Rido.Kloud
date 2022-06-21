@@ -27,18 +27,9 @@
         <div>
             <h3>Device Twin</h3>
             <div class="reported">
-                <reported-property prop-name="started" :reported-node="gv(device, 'properties.reported')"></reported-property>
-
-                <writable-property prop-name="interval"
-                                   :device-id="gv(device,'deviceId')"
-                                   :reported-node="gv(device, 'properties.reported')"
-                                   :desired-node="gv(device,'properties.desired')"
-                                   @prop-updated="created()"></writable-property>
-
-                <writable-property prop-name="enabled"
-                                   :device-id="gv(device,'deviceId')"
-                                   :reported-node="gv(device, 'properties.reported')"
-                                   :desired-node="gv(device,'properties.desired')"></writable-property>
+                <reported-property prop-name="started" :device-props="device.properties"></reported-property>
+                <writable-property prop-name="interval" :device-props="device.properties" @prop-updated="handlePropUpdate"></writable-property>
+                <writable-property prop-name="enabled" :device-props="device.properties" @prop-updated="handlePropUpdate"></writable-property>
             </div>
         </div>
 

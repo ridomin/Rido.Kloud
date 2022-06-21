@@ -1,85 +1,54 @@
 ﻿export default {
-    data() {
-        return {
-            propsUpdating: false,
-            wpSyncs : []
-        }
-    },
-    created() {
-        this.syncDesiredProp(this.propName)
-    },
-    props: ['reportedNode', 'desiredNode', 'propName', 'deviceId'],
+    props: ['deviceProps', 'propName'],
     emits: ['propUpdated'],
     methods: {
         gv(object, string, defaultValue = '') {
             // https://stackoverflow.com/questions/70283134
             return _.get(object, string, defaultValue)
         },
-        syncDesiredProp(name) {
-            const desSet = this.desiredNode[name]
+        getPropColorState(name) {
+            const desSet = this.gv(this.deviceProps, 'desired.' + name)
             if (desSet === '') {
-                this.wpSyncs[name] = 'beige'
-                return
+                return 'beige'
             }
-            const desV = this.gv(this.desiredNode, '$metadata.' + name + '.$lastUpdatedVersion')
-            const repV = this.gv(this.reportedNode, name + '.av')
-            this.wpSyncs[name] = repV >= desV ? 'lightgreen' : 'lightpink'
+            const desV = this.gv(this.deviceProps, 'desired.$metadata.' + name + '.$lastUpdatedVersion')
+            const repV = this.gv(this.deviceProps, 'reported.' + name + '.av')
+            return repV >= desV ? 'lightgreen' : 'lightpink'
         },
-        async updateProp(name, tc) {
-            this.propsUpdating = true
-            const url = `/api/Devices/${this.deviceId}`
-            const input = document.getElementById('in-' + name)
-            const desValue = {
-                properties: {
-                    desired: {}
-                }
-            }
-            desValue.properties.desired[name] = tc(input.value)
-            //this.device.properties.desired.interval = desValue
-            console.log(desValue)
-            const payload = JSON.stringify(desValue)
-            try {
-                await (await fetch(url, { method: 'POST', body: payload, headers: { 'Content-Type': 'application/json' } }))
-                setTimeout(async () => {
-                   // await this.fetchData()
-                    this.$emit('propUpdated')
-                }, 2000)
-
-
-            } catch (e) {
-                console.log(e)
-            }
+        updateProp() {
+            const input = document.getElementById('in-' + this.propName)
+            this.$emit('propUpdated', this.propName, input.value)
         },
         formatDate(d) {
             if (d === '0001-01-01T00:00:00Z') return ''
             return moment(d).fromNow()
-        },
+        }
     },
     template: `
         <div class="prop">
             <span class="prop-name">{{propName}}</span>
-            <span class="prop-value">{{gv(reportedNode, propName +'.value')}}</span>
+            <span class="prop-value">{{gv(deviceProps, 'reported.' + propName + '.value')}}</span>
             desired
-            <input size="1" :value="gv(desiredNode, propName)" type="text" :id="'in-'+propName" />
-            <button @click="updateProp(propName,parseInt)">Update</button>
-            v: {{gv(desiredNode,'$version')}}
-            lu: {{gv(desiredNode,'$metadata.' + propName + '.$lastUpdatedVersion')}}
-            <div v-if="!this.propsUpdating" class="props-metadata" :style="{backgroundColor: this.wpSyncs[propName]}">
+            <input size="1" :value="gv(deviceProps, 'desired.' + propName)" type="text" :id="'in-' + propName" />
+            <button @click="updateProp()">Update</button> 
+            v: {{gv(deviceProps,'desired.$version')}}
+            lu: {{gv(deviceProps,'desired.$metadata.' + propName + '.$lastUpdatedVersion')}}
+            <div class="props-metadata" :style="{backgroundColor: getPropColorState(propName)}">
                 <div class="prop-md">
                     <span>last updated:</span>
-                    <span>{{formatDate(gv(reportedNode, '$metadata.' + this.propName +'.$lastUpdated'))}}</span>
+                    <span>{{formatDate(gv(deviceProps, 'reported.$metadata.' + this.propName +'.$lastUpdated'))}}</span>
                 </div>
                 <div class="prop-md">
                     <span>version:</span>
-                    <span>{{gv(reportedNode, propName + '.av')}}</span>
+                    <span>{{gv(deviceProps, 'reported.' + propName + '.av')}}</span>
                 </div>
                 <div class="prop-md">
                     <span>status:</span>
-                    <span>{{gv(reportedNode, propName + '.ac')}}</span>
+                    <span>{{gv(deviceProps, 'reported.' + propName + '.ac')}}</span>
                 </div>
                 <div class="prop-md">
                     <span>descr:</span>
-                    <span>{{gv(reportedNode, propName + '.ad')}}</span>
+                    <span>{{gv(deviceProps, 'reported.' + propName + '.ad')}}</span>
                 </div>
             </div>
         </div>
