@@ -3,10 +3,7 @@ export default {
     data: () => ({
         device: {},
         propsUpdating: false,
-        wpSyncs : [],
-        command: {
-            request: 2
-        }
+        wpSyncs : []
     }),
 
     created() {
@@ -22,17 +19,6 @@ export default {
             this.syncDesiredProp('interval')
             this.syncDesiredProp('enabled')
             this.propsUpdating = false
-        },
-        async invoke() {
-            const url = `/api/Command/${this.device.deviceId}?cmdName=getRuntimeStats`
-            this.command.response = '.. loading ..'
-            console.log(this.command.request)
-            try {
-                const resp = await (await fetch(url, { method: 'POST', body: `\"${this.command.request}\"`, headers: { 'Content-Type': 'application/json' } })).json()
-                this.command.response = JSON.stringify(resp, null, 2)
-            } catch {
-                this.command.response = "Offline"
-            }
         },
         syncDesiredProp(name) {
             const desSet = this.gv(this.device, `properties.desired.${name}`)

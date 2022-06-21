@@ -10,9 +10,6 @@
 </head>
 <body>
     <div id="app" v-cloak>
-        
-        
-        
 
         <h1>{{device.deviceId}}</h1>
         <div>
@@ -23,16 +20,7 @@
         Model: <a href="#">{{device.modelId}}</a>
         <div>
             <h3>Commands</h3>
-            <div>getRuntimeStats</div>
-            <select v-model="command.request">
-                <option value="0">minimal</option>
-                <option value="1">complete</option>
-                <option value="2" :selected="command.request === 2">full</option>
-            </select>
-            <button @click="invoke()">invoke</button>
-            <pre>
-                {{command.response}}
-            </pre>
+            <command command-name="getRuntimeStats" :device-id="gv(device,'deviceId')"></command>
         </div>
 
         <div>
@@ -104,9 +92,11 @@
     <script type="module">
         import device from './device.js'
         import ReportedProperty from './ReportedProperty.js'
+        import Command from './Command.js'
         const { createApp } = Vue
         const app = createApp(device)
         app.component('ReportedProperty', ReportedProperty)
+        app.component('Command', Command)
         app.mount('#app')
     </script>
 </body>
