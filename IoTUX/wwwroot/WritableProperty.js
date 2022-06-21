@@ -5,19 +5,23 @@
             wpSyncs : []
         }
     },
+    created() {
+        this.syncDesiredProp(this.propName)
+    },
     props: ['reportedNode', 'desiredNode', 'propName', 'deviceId'],
+    emits: ['propUpdated'],
     methods: {
         gv(object, string, defaultValue = '') {
             // https://stackoverflow.com/questions/70283134
             return _.get(object, string, defaultValue)
         },
         syncDesiredProp(name) {
-            const desSet = this.gv(this.desiredNode, name)
+            const desSet = this.desiredNode[name]
             if (desSet === '') {
                 this.wpSyncs[name] = 'beige'
                 return
             }
-            const desV = this.gv(this.desiredNode, '$metadata[name].$lastUpdatedVersion')
+            const desV = this.gv(this.desiredNode, '$metadata.' + name + '.$lastUpdatedVersion')
             const repV = this.gv(this.reportedNode, name + '.av')
             this.wpSyncs[name] = repV >= desV ? 'lightgreen' : 'lightpink'
         },
@@ -38,6 +42,7 @@
                 await (await fetch(url, { method: 'POST', body: payload, headers: { 'Content-Type': 'application/json' } }))
                 setTimeout(async () => {
                    // await this.fetchData()
+                    this.$emit('propUpdated')
                 }, 2000)
 
 
@@ -62,7 +67,7 @@
             <div v-if="!this.propsUpdating" class="props-metadata" :style="{backgroundColor: this.wpSyncs[propName]}">
                 <div class="prop-md">
                     <span>last updated:</span>
-                    <span>{{formatDate(gv(reportedNode, '$metadata[propName].$lastUpdated'))}}</span>
+                    <span>{{formatDate(gv(reportedNode, '$metadata.' + this.propName +'.$lastUpdated'))}}</span>
                 </div>
                 <div class="prop-md">
                     <span>version:</span>

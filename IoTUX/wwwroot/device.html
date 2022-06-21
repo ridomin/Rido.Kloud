@@ -32,7 +32,8 @@
                 <writable-property prop-name="interval"
                                    :device-id="gv(device,'deviceId')"
                                    :reported-node="gv(device, 'properties.reported')"
-                                   :desired-node="gv(device,'properties.desired')"></writable-property>
+                                   :desired-node="gv(device,'properties.desired')"
+                                   @prop-updated="created()"></writable-property>
 
                 <writable-property prop-name="enabled"
                                    :device-id="gv(device,'deviceId')"
