@@ -5,7 +5,6 @@ export default {
         propsUpdating: false,
         wpSyncs : []
     }),
-
     created() {
         this.fetchData()
     },
@@ -14,6 +13,7 @@ export default {
             var id = new URLSearchParams(window.location.search).get('id')
             const url = `/api/Devices/${id}`
             this.device = await (await fetch(url)).json()
+            document.title = this.device.deviceId
         },
         async handlePropUpdate(name, val) {
             this.device.properties.desired[name] = ''
@@ -32,12 +32,9 @@ export default {
                 setTimeout(async () => {
                     await this.fetchData()
                 }, 2000)
-
-
             } catch (e) {
                 console.log(e)
             }
-
         },
         formatDate(d) {
             if (d === '0001-01-01T00:00:00Z') return ''
