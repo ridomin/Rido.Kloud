@@ -26,7 +26,7 @@
 
         <div>
             <h3>Device Twin</h3>
-            <div class="reported">
+            <div>
                 <reported-property prop-name="started" :device-props="device.properties"></reported-property>
                 <writable-property prop-name="interval" :device-props="device.properties" @prop-updated="handlePropUpdate"></writable-property>
                 <writable-property prop-name="enabled" :device-props="device.properties" @prop-updated="handlePropUpdate"></writable-property>

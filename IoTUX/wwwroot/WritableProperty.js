@@ -10,7 +10,7 @@
             const desSet = this.gv(this.deviceProps, 'desired.' + name)
             if (desSet === '') {
                 return 'beige'
-            }
+            } 
             const desV = this.gv(this.deviceProps, 'desired.$metadata.' + name + '.$lastUpdatedVersion')
             const repV = this.gv(this.deviceProps, 'reported.' + name + '.av')
             return repV >= desV ? 'lightgreen' : 'lightpink'

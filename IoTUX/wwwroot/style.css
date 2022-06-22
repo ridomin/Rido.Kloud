@@ -10,13 +10,6 @@ th, td {
     display: none;
 }
 
-.reported, .desired{
-   
-}
-
-.reported>div>span {
-    margin: 5px
-}
 
 span {
     margin: 5px

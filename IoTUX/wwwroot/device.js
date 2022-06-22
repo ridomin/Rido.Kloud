@@ -11,8 +11,7 @@ export default {
     },
     methods: {
         async fetchData() {
-            var urlParams = new URLSearchParams(window.location.search)
-            var id = urlParams.get('id')
+            var id = new URLSearchParams(window.location.search).get('id')
             const url = `/api/Devices/${id}`
             this.device = await (await fetch(url)).json()
         },
