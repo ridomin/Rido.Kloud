@@ -10,20 +10,11 @@
 </head>
 <body>
     <div id="app" v-cloak>
-
-        <h1>{{device.deviceId}}</h1>
-        <div>
-            <span :style="{color: device.connectionState === 'Connected' ? 'green' : 'red'}">{{device.connectionState}} </span>
-            <span>-</span>
-            <span>{{formatDate(device.lastActivityTime)}}</span>
-        </div>
-        Model: <a href="#">{{device.modelId}}</a>
-
+        <device-header :device="device"></device-header>
         <div>
             <h3>Commands</h3>
             <command command-name="getRuntimeStats" :device-id="gv(device,'deviceId')"></command>
         </div>
-
         <div>
             <h3>Device Twin</h3>
             <div>
@@ -32,18 +23,20 @@
                 <writable-property prop-name="enabled" :device-props="device.properties" @prop-updated="handlePropUpdate"></writable-property>
             </div>
         </div>
-
     </div>
+
     <script type="module">
         import device from './device.js'
         import Command from './Command.js'
         import ReportedProperty from './ReportedProperty.js'
         import WritableProperty from './WritableProperty.js'
+        import DeviceHeader from './DeviceHeader.js'
         const { createApp } = Vue
         const app = createApp(device)
         app.component('Command', Command)
         app.component('ReportedProperty', ReportedProperty)
         app.component('WritableProperty', WritableProperty)
+        app.component('DeviceHeader', DeviceHeader)
         app.mount('#app')
     </script>
 </body>
