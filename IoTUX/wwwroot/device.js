@@ -1,16 +1,18 @@
 ﻿
 export default {
     data: () => ({
-        device: {},
-        propsUpdating: false,
-        wpSyncs : []
+        device: {}
     }),
     created() {
         this.fetchData()
     },
     methods: {
+        async initModel() {
+            const modelId = new URLSearchParams(window.location.search).get('modelId')
+
+        },
         async fetchData() {
-            var id = new URLSearchParams(window.location.search).get('id')
+            const id = new URLSearchParams(window.location.search).get('id')
             const url = `/api/Devices/${id}`
             this.device = await (await fetch(url)).json()
             document.title = this.device.deviceId

@@ -28,7 +28,7 @@
             </thead>
             <tbody>
                 <tr v-for="(device, index) in devices">
-                    <td><a :href="'device.html?id=' + device.deviceId">{{device.deviceId}}</a></td>
+                    <td><a :href="'device.html?id=' + device.deviceId + '&model-id=' + device.modelId">{{device.deviceId}}</a></td>
                     <td>{{device.modelId}}</td>
                     <td>{{device.version}}</td>
                     <td>{{device.reportedVersion}}</td>
