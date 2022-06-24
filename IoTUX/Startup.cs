@@ -28,7 +28,7 @@ namespace IoTUX
         {
 
             services.AddControllers();
-            
+            services.AddApplicationInsightsTelemetry();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "IoTUX", Version = "v1" });
