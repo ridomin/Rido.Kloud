@@ -10,18 +10,23 @@
 </head>
 <body>
     <div id="app" v-cloak>
-        <device-header :device="device"></device-header>
+        <device-header :device="device" :modelpath="modelpath"></device-header>
         <div>
             <h3>Commands</h3>
-            <command command-name="getRuntimeStats" :device-id="gv(device,'deviceId')"></command>
+            <ul>
+                <li class="raw" v-for="c in commands">
+                    <command :command-name="c.name" :device-id="gv(device,'deviceId')"></command>
+                </li>
+            </ul>
         </div>
         <div>
             <h3>Device Twin</h3>
-            <div>
-                <reported-property prop-name="started" :device-props="device.properties"></reported-property>
-                <writable-property prop-name="interval" :device-props="device.properties" @prop-updated="handlePropUpdate"></writable-property>
-                <writable-property prop-name="enabled" :device-props="device.properties" @prop-updated="handlePropUpdate"></writable-property>
-            </div>
+            <ul>
+                <li class="raw" v-for="p in properties">
+                    <reported-property v-if="p.writable!=true" :prop-name="p.name" :device-props="device.properties"></reported-property>
+                    <writable-property v-if="p.writable===true" :prop-name="p.name" :device-props="device.properties" @prop-updated="handlePropUpdate"></writable-property>
+                </li>
+            </ul>
         </div>
     </div>
 

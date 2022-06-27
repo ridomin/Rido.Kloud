@@ -10,6 +10,9 @@ th, td {
     display: none;
 }
 
+li.raw {
+    list-style:none
+}
 
 span {
     margin: 5px

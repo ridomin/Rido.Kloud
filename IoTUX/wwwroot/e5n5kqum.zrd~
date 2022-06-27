@@ -7,7 +7,7 @@ export default {
         device: {},
         properties: [],
         commands: [],
-        modelpath: ''
+        modelPath: ''
     }),
     created() {
         this.initModel()
@@ -16,8 +16,8 @@ export default {
     methods: {
         async initModel() {
             const dtmi = new URLSearchParams(window.location.search).get('model-id')
-            this.modelpath = `${repoBaseUrl}${dtmiToPath(dtmi)}`
-            const model = await (await window.fetch(this.modelpath)).json()
+            this.modelPath = `${repoBaseUrl}${dtmiToPath(dtmi)}`
+            const model = await (await window.fetch(modelPath)).json()
             this.properties = model.contents.filter(c => c['@type'].includes('Property'))
             this.commands = model.contents.filter(c => c['@type'].includes('Command'))
         },

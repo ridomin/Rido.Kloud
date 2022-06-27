@@ -1,5 +1,5 @@
 ﻿export default {
-    props: ['device'],
+    props: ['device', 'modelpath'],
     methods: {
         formatDate(d) {
             if (d === '0001-01-01T00:00:00Z') return ''
@@ -13,6 +13,6 @@
             <span>-</span>
             <span>{{formatDate(device.lastActivityTime)}}</span>
         </div>
-        Model: <a href="#">{{device.modelId}}</a>
+        Model: <a :href="modelpath" target="_blank">{{device.modelId}}</a>
     `
 }
