@@ -31,7 +31,8 @@
             desired
             <input size="1" :value="gv(deviceProps, 'desired.' + propName)" type="text" :id="'in-' + propName" />
             <button @click="updateProp()">Update</button> 
-            v: {{gv(deviceProps,'desired.$version')}}
+            rv: {{gv(deviceProps,'reported.$version')}}
+            dv: {{gv(deviceProps,'desired.$version')}}
             lu: {{gv(deviceProps,'desired.$metadata.' + propName + '.$lastUpdatedVersion')}}
             <div class="props-metadata" :style="{backgroundColor: getPropColorState(propName)}">
                 <div class="prop-md">

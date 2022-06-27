@@ -38,6 +38,8 @@ export default {
             }
             if (name === 'interval') desValue.properties.desired[name] = parseInt(val)
             if (name === 'enabled') desValue.properties.desired[name] = val === 'true'
+            if (name === 'lightState') desValue.properties.desired[name] = parseInt(val)
+
             const payload = JSON.stringify(desValue)
             try {
                 await (await fetch(url, { method: 'POST', body: payload, headers: { 'Content-Type': 'application/json' } }))
