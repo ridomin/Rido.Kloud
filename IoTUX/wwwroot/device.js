@@ -4,12 +4,13 @@ export default {
         device: {}
     }),
     created() {
+        this.initModel()
         this.fetchData()
     },
     methods: {
         async initModel() {
-            const modelId = new URLSearchParams(window.location.search).get('modelId')
-
+            const modelId = new URLSearchParams(window.location.search).get('model-id')
+            console.log(modelId)
         },
         async fetchData() {
             const id = new URLSearchParams(window.location.search).get('id')
