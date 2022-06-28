@@ -2,6 +2,20 @@
 const dtmiToPath = function (dtmi) {
     return `/${dtmi.toLowerCase().replace(/:/g, '/').replace(';', '-')}.json`
 }
+
+const isObject = obj => Object.prototype.toString.call(obj) === '[object Object]'
+
+const resolveSchema = s => {
+    if (!isObject(s) && s.startsWith('dtmi:')) {
+        console.log('not supported schema', s)
+        return null
+    } else if (isObject(s) && s['@type'] === 'Enum') {
+        return s.valueSchema
+    } else {
+        return s
+    }
+}
+
 export default {
     data: () => ({
         device: {},
@@ -27,7 +41,9 @@ export default {
             this.device = await (await fetch(url)).json()
             document.title = this.device.deviceId
         },
-        async handlePropUpdate(name, val) {
+        async handlePropUpdate(name, val, schema) {
+            const resSchema = resolveSchema(schema)
+            console.log('upd', name, val, resSchema)
             this.device.properties.desired[name] = ''
             this.device.properties.reported[name] = ''
             const url = `/api/Devices/${this.device.deviceId}`
@@ -36,10 +52,26 @@ export default {
                     desired: {}
                 }
             }
-            if (name === 'interval') desValue.properties.desired[name] = parseInt(val)
-            if (name === 'enabled') desValue.properties.desired[name] = val === 'true'
-            if (name === 'lightState') desValue.properties.desired[name] = parseInt(val)
-
+            let desiredValue = {}
+            switch (resSchema) {
+                case 'string':
+                    desiredValue = val
+                    break
+                case 'integer':
+                    desiredValue = parseInt(val)
+                    break
+                case 'boolean':
+                    desiredValue = (val === 'true')
+                    break
+                case 'double':
+                    desiredValue = parseFloat(val)
+                    break
+                default:
+                    console.log('schema serializer not implemented', resSchema)
+                    throw new Error('Schema serializer not implemented for' + Json.stringify(resSchema))
+            }
+            
+            desValue.properties.desired[name] = desiredValue
             const payload = JSON.stringify(desValue)
             try {
                 await (await fetch(url, { method: 'POST', body: payload, headers: { 'Content-Type': 'application/json' } }))

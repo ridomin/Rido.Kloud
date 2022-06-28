@@ -1,5 +1,5 @@
 ﻿export default {
-    props: ['deviceProps', 'propName'],
+    props: ['deviceProps', 'propName', 'schema'],
     emits: ['propUpdated'],
     methods: {
         gv(object, string, defaultValue = '') {
@@ -9,15 +9,16 @@
         getPropColorState(name) {
             const desSet = this.gv(this.deviceProps, 'desired.' + name)
             if (desSet === '') {
-                return 'beige'
+                return 'silver'
             } 
             const desV = this.gv(this.deviceProps, 'desired.$metadata.' + name + '.$lastUpdatedVersion')
             const repV = this.gv(this.deviceProps, 'reported.' + name + '.av')
+            if (repV === 0) return 'beige'
             return repV >= desV ? 'lightgreen' : 'lightpink'
         },
         updateProp() {
             const input = document.getElementById('in-' + this.propName)
-            this.$emit('propUpdated', this.propName, input.value)
+            this.$emit('propUpdated', this.propName, input.value, this.schema)
         },
         formatDate(d) {
             if (d === '0001-01-01T00:00:00Z') return ''

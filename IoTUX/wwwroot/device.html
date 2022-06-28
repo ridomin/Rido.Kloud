@@ -24,7 +24,7 @@
             <ul>
                 <li class="raw" v-for="p in properties">
                     <reported-property v-if="p.writable!=true" :prop-name="p.name" :device-props="device.properties"></reported-property>
-                    <writable-property v-if="p.writable===true" :prop-name="p.name" :device-props="device.properties" @prop-updated="handlePropUpdate"></writable-property>
+                    <writable-property v-if="p.writable===true" :prop-name="p.name" :device-props="device.properties" :schema="p.schema" @prop-updated="handlePropUpdate"></writable-property>
                 </li>
             </ul>
         </div>
