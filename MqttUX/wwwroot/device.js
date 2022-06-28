@@ -71,6 +71,11 @@ export default {
                         this.device.properties.reported[propName] = msg
                     }
                 }
+                if (topic.startsWith(`pnp/${this.device.deviceId}/commands`)) {
+                    const cmdName = ts[3]
+                    const cmd = this.commands.filter(c => c.name === cmdName)[0]
+                    cmd.responseMsg = msg
+                }
                 if (topic === `pnp/${this.device.deviceId}/telemetry`) {
                     
                 }
@@ -80,7 +85,6 @@ export default {
         },
         async handlePropUpdate(name, val, schema) {
             const resSchema = resolveSchema(schema)
-            console.log('upd', name, val, resSchema)
             this.device.properties.desired[name] = ''
             this.device.properties.reported[name] = ''
             const topic = `pnp/${this.device.deviceId}/props/${name}/set`
@@ -102,8 +106,11 @@ export default {
                     console.log('schema serializer not implemented', resSchema)
                     throw new Error('Schema serializer not implemented for' + Json.stringify(resSchema))
             }
-            console.log(topic, JSON.stringify(desiredValue))
             client.publish(topic,JSON.stringify(desiredValue), {qos:1, retain: true})            
+        },
+        onCommand (cmdName, cmdReq) {
+            const topic = `pnp/${this.device.deviceId}/commands/${cmdName}`
+            client.publish(topic,JSON.stringify(cmdReq), {qos:1, retain: false})            
         },
         formatDate(d) {
             if (d === '0001-01-01T00:00:00Z') return ''

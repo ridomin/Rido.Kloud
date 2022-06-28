@@ -16,7 +16,7 @@
             <h3>Commands</h3>
             <ul>
                 <li class="raw" v-for="c in commands">
-                    <command :command-name="c.name" :device-id="gv(device,'deviceId')"></command>
+                    <command :command-name="c.name" :device-id="gv(device,'deviceId')" @command-invoked="onCommand" :response-msg="c.responseMsg"></command>
                 </li>
             </ul>
         </div>

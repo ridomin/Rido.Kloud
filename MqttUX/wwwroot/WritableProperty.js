@@ -11,10 +11,9 @@
             if (desSet === '') {
                 return 'silver'
             } 
-            const desV = this.gv(this.deviceProps, 'desired.$metadata.' + name + '.$lastUpdatedVersion')
-            const repV = this.gv(this.deviceProps, 'reported.' + name + '.av')
-            if (repV === 0) return 'beige'
-            return repV >= desV ? 'lightgreen' : 'lightpink'
+            const desVal = this.gv(this.deviceProps, 'desired.' + name)
+            const repVal = this.gv(this.deviceProps, 'reported.' + name + '.value')
+            return repVal === desVal ? 'lightgreen' : 'lightpink'
         },
         updateProp() {
             const input = document.getElementById('in-' + this.propName)
@@ -32,17 +31,10 @@
             desired
             <input size="1" :value="gv(deviceProps, 'desired.' + propName)" type="text" :id="'in-' + propName" />
             <button @click="updateProp()">Update</button> 
-            rv: {{gv(deviceProps,'reported.$version')}}
-            dv: {{gv(deviceProps,'desired.$version')}}
-            lu: {{gv(deviceProps,'desired.$metadata.' + propName + '.$lastUpdatedVersion')}}
             <div class="props-metadata" :style="{backgroundColor: getPropColorState(propName)}">
                 <div class="prop-md">
                     <span>last updated:</span>
                     <span>{{formatDate(gv(deviceProps, 'reported.$metadata.' + this.propName +'.$lastUpdated'))}}</span>
-                </div>
-                <div class="prop-md">
-                    <span>version:</span>
-                    <span>{{gv(deviceProps, 'reported.' + propName + '.av')}}</span>
                 </div>
                 <div class="prop-md">
                     <span>status:</span>

@@ -28,8 +28,6 @@
             <option value="2" :selected="request === 2">full</option>
         </select>
         <button @click="invoke()">invoke</button>
-        <pre>
-            {{response}}
-        </pre>
+        <pre>{{response}}</pre>
     `
 }

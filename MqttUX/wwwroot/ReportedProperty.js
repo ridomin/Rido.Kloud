@@ -14,10 +14,7 @@
     <div class="prop">
         <span class="prop-name">{{propName}}</span>
         <span class="prop-value">{{gv(deviceProps, 'reported.' + propName)}}</span>
-        <div class="prop-md">
-            <div>last updated {{formatDate(gv(deviceProps, 'reported.$metadata.'+ propName +'.$lastUpdated'))}}</div>
-            <div>version {{gv(deviceProps, 'reported.$version')}}</div>
-        </div>
+        
     </div>
     `
 }
