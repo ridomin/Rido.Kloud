@@ -1,7 +1,46 @@
 body {
     font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif
 }
+thead>tr>td {
+    font-weight: bold ;
+}
 th, td {
     text-align:left;
     padding: 2px
+}
+
+li.raw {
+    list-style:none
+}
+
+span {
+    margin: 5px
+}
+
+.prop {
+    border: 1px solid grey;
+    width: 500px;
+    padding: 5px;
+    margin: 5px
+}
+
+.prop-name, .prop-value {
+    font-size:larger
+}
+
+.prop-value {
+    font-weight:bold
+}
+
+.prop-md {
+    text-align:right;
+    font-size:smaller;
+    font-style:italic
+
+}
+
+.props-metadata {
+    background-color:#ecf6fc;
+    padding:3px;
+    margin:3px
 }

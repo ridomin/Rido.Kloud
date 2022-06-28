@@ -2,6 +2,7 @@ import * as creds from './creds.js'
 
 export default {
     data: () => ({
+        hostname: '',
         config: '',
         devices: [],
         loading: true,
@@ -12,6 +13,7 @@ export default {
     },
     methods: {
         async fetchData() {
+            this.hostname = creds.hostname
             const client = mqtt.connect(`wss://${creds.hostname}:8884/mqtt`, { 
                 clientId: creds.clientId, username: creds.username, password: creds.pwd })
 
