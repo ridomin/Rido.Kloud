@@ -1,0 +1,40 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>MQTT UX</title>
+      <!-- /dist/vue.global.prod.js -->
+      <script src="https://unpkg.com/vue@latest"></script>
+      <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.3/moment.min.js"></script>
+      <link href="style.css" rel="stylesheet" />
+</head>
+<body>
+    <div id="app">
+        <table>
+            <thead>
+                <tr>
+                    <td>DeviceId</td>
+                    <td>Status</td>
+                    <td>Model</td>
+                    <td>When</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="d in devices">
+                    <td>{{d.deviceId}}</td>
+                    <td :style="{color: d.status === 'online' ? 'green' : 'red'}">{{d.status}}</td>
+                    <td>{{d.modelId}}</td>
+                    <td>{{formatDate(d.when)}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <script type="module">
+        import index from './index.js'
+        const { createApp } = Vue
+        const app = createApp(index)
+        app.mount('#app')
+    </script>
+</body>
+</html>
