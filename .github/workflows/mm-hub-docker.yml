@@ -1,12 +1,10 @@
-name: memmon Docker Image CI
+name: mm hub Docker Image CI
 
 on:
   push:
     branches: [ "master" ]
     paths: 
       - 'pnp-memmon-hub/**'
-  pull_request:
-    branches: [ "master" ]
 
 jobs:
 
