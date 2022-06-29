@@ -12,12 +12,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.github\workflows\docker-image.yml = .github\workflows\docker-image.yml
 		hubproxy.aks.yaml = hubproxy.aks.yaml
 		.github\workflows\iotux-docker.yaml = .github\workflows\iotux-docker.yaml
+		.github\workflows\mqttux-docker.yaml = .github\workflows\mqttux-docker.yaml
 		ridohubproxy.yaml = ridohubproxy.yaml
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IoTUX", "IoTUX\IoTUX.csproj", "{B2BF674E-990C-4267-8781-7EB55C76029C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MqttUX", "MqttUX\MqttUX.csproj", "{6F136857-CB27-43A7-BC0D-0149F9292E87}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MqttUX", "MqttUX\MqttUX.csproj", "{6F136857-CB27-43A7-BC0D-0149F9292E87}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

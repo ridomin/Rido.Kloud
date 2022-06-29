@@ -4,7 +4,7 @@ on:
   push:
     branches: [ "master" ]
     paths: 
-      - 'IoTUX/**'
+      - 'MqttUX/**'
 
 jobs:
 
@@ -15,7 +15,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Build the Docker image
-      run: docker build . --file IoTUX/Dockerfile --tag ghcr.io/ridomin/iotux:latest
+      run: docker build . --file MqttUX/Dockerfile --tag ghcr.io/ridomin/mqttux:latest
 
     - name: Login to GitHub Container Registry
       uses: docker/login-action@v1
@@ -24,4 +24,4 @@ jobs:
         username: ${{ github.repository_owner }}
         password: ${{ secrets.REGISTRY_TOKEN }}
     - name: push image
-      run: docker push ghcr.io/ridomin/iotux:latest
+      run: docker push ghcr.io/ridomin/mqttux:latest
