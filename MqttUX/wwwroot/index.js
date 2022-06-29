@@ -32,7 +32,7 @@ export default {
                 } else {
                     this.devices[dix] = {deviceId, status: msg.status, modelId: msg['model-id'], when: msg.when}
                 }
-                this.devices.sort((a,b) => new Date(a.when) > new Date(b.when) )
+                this.devices.sort((a,b) => new Date(a.when) < new Date(b.when)  ? 1 : -1)
               })
         },
         formatDate(d) {
