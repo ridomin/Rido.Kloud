@@ -1,4 +1,4 @@
-name: IoTUX Docker Image CI
+name: MqttUX Docker Image CI
 
 on:
   push:
