@@ -1,4 +1,6 @@
 using Humanizer;
+using Microsoft.ApplicationInsights;
+using Rido.Mqtt.Client.TopicBindings;
 using Rido.MqttCore.PnP;
 
 using System.Diagnostics;
@@ -10,6 +12,7 @@ public class Device : BackgroundService
 {
     private readonly ILogger<Device> _logger;
     private readonly IConfiguration _configuration;
+    private TelemetryClient _telemetryClient;
 
     private readonly Stopwatch clock = Stopwatch.StartNew();
     private int telemetryCounter = 0;
@@ -21,22 +24,26 @@ public class Device : BackgroundService
     private const bool default_enabled = true;
     private const int default_interval = 5;
 
+    private string lastDiscconectReason = string.Empty;
+
     private memmon client;
 
-    public Device(ILogger<Device> logger, IConfiguration configuration)
+    public Device(ILogger<Device> logger, IConfiguration configuration, TelemetryClient tc)
     {
         _logger = logger;
         _configuration = configuration;
+        _telemetryClient = tc;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
+        _telemetryClient.TrackEvent("Starting");
         _logger.LogInformation("Connecting..");
         client = await memmon.CreateClientAsync(_configuration.GetConnectionString("cs"), stoppingToken);
         _logger.LogInformation("Connected");
+        _telemetryClient.TrackEvent("Connected");
 
         client.Connection.OnMqttClientDisconnected += Connection_OnMqttClientDisconnected;
-
 
         client.Property_enabled.OnProperty_Updated = Property_enabled_UpdateHandler;
         client.Property_interval.OnProperty_Updated = Property_interval_UpdateHandler;
@@ -62,6 +69,7 @@ public class Device : BackgroundService
                 telemetryWorkingSet = Environment.WorkingSet;
                 await client.Telemetry_workingSet.SendTelemetryAsync(telemetryWorkingSet, stoppingToken);
                 telemetryCounter++;
+                _telemetryClient.TrackMetric("WorkingSet", telemetryWorkingSet);
             }
             var interval = client?.Property_interval.PropertyValue?.Value;
             await Task.Delay(interval.HasValue ? interval.Value * 1000 : 1000, stoppingToken);
@@ -70,12 +78,20 @@ public class Device : BackgroundService
 
     private void Connection_OnMqttClientDisconnected(object sender, Rido.MqttCore.DisconnectEventArgs e)
     {
+        _telemetryClient.TrackTrace("Client Disconnected: " + e.ReasonInfo);
+        lastDiscconectReason = e.ReasonInfo;
         reconnectCounter++;
     }
 
     private async Task<PropertyAck<bool>> Property_enabled_UpdateHandler(PropertyAck<bool> p)
     {
         twinRecCounter++;
+        _telemetryClient.TrackEvent("DesiredPropertyReceived", new Dictionary<string, string>()
+        {
+            { "PropName", p.Name },
+            { "NumTwinUpdates", twinRecCounter.ToString() }
+        });
+
         var ack = new PropertyAck<bool>(p.Name)
         {
             Description = "desired notification accepted",
@@ -91,6 +107,11 @@ public class Device : BackgroundService
     {
         ArgumentNullException.ThrowIfNull(client);
         twinRecCounter++;
+        _telemetryClient.TrackEvent("DesiredPropertyReceived", new Dictionary<string, string>()
+        {
+            { "PropName", p.Name },
+            { "NumTwinUpdates", twinRecCounter.ToString() }
+        });
         var ack = new PropertyAck<int>(p.Name);
 
         if (p.Value > 0)
@@ -117,6 +138,11 @@ public class Device : BackgroundService
     private async Task<Cmd_getRuntimeStats_Response> Command_getRuntimeStats_Handler(Cmd_getRuntimeStats_Request req)
     {
         commandCounter++;
+        _telemetryClient.TrackEvent("CommandReceived", new Dictionary<string, string>()
+        {
+            { "CommandName", "getRuntimeStats" },
+            { "NumCommands", commandCounter.ToString() }
+        });
         var result = new Cmd_getRuntimeStats_Response()
         {
             Status = 200
@@ -167,7 +193,7 @@ public class Device : BackgroundService
             AppendLineWithPadRight(sb, $"WorkingSet: {telemetryWorkingSet.Bytes()}");
             AppendLineWithPadRight(sb, " ");
             AppendLineWithPadRight(sb, $"Time Running: {TimeSpan.FromMilliseconds(clock.ElapsedMilliseconds).Humanize(3)}");
-            AppendLineWithPadRight(sb, $"{client.Connection.ConnectionSettings}");
+            AppendLineWithPadRight(sb, $"ConnectionStatus: {client.Connection.IsConnected} [{lastDiscconectReason}]");
             AppendLineWithPadRight(sb, " ");
             return sb.ToString();
         }
