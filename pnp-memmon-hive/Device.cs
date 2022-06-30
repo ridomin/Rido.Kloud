@@ -19,7 +19,7 @@ public class Device : BackgroundService
 
     private double telemetryWorkingSet = 0;
     private const bool default_enabled = true;
-    private const int default_interval = 18;
+    private const int default_interval = 5;
 
     private memmon client;
 
