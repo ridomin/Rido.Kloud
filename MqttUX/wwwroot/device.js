@@ -1,6 +1,6 @@
-const repoBaseUrl = 'https://raw.githubusercontent.com/iotmodels/iot-plugandplay-models/rido/pnp' // 'https://devicemodels.azure.com'
 import * as creds from './creds.js'
 
+const repoBaseUrl = 'https://raw.githubusercontent.com/iotmodels/iot-plugandplay-models/rido/pnp' // 'https://devicemodels.azure.com'
 const dtmiToPath = function (dtmi) {
     return `/${dtmi.toLowerCase().replace(/:/g, '/').replace(';', '-')}.json`
 }
@@ -19,14 +19,16 @@ const resolveSchema = s => {
 }
 
 const client = mqtt.connect(`wss://${creds.hostname}:8884/mqtt`, { 
-    clientId: creds.clientId, username: creds.username, password: creds.pwd })
+    clientId: creds.clientId + Date.now(), username: creds.username, password: creds.pwd })
 
 export default {
     data: () => ({
         device: {},
         properties: [],
         commands: [],
-        modelpath: ''
+        telemetries: [],
+        modelpath: '',
+        telemetryValues: []
     }),
     created() {
         this.initModel()
@@ -46,6 +48,7 @@ export default {
             const model = await (await window.fetch(this.modelpath)).json()
             this.properties = model.contents.filter(c => c['@type'].includes('Property'))
             this.commands = model.contents.filter(c => c['@type'].includes('Command'))
+            this.telemetries = model.contents.filter(c => c['@type'].includes('Telemetry'))
         },
         async fetchData() {
           
@@ -77,7 +80,9 @@ export default {
                     cmd.responseMsg = msg
                 }
                 if (topic === `pnp/${this.device.deviceId}/telemetry`) {
-                    
+                    const maxItems = 10
+                    if (this.telemetryValues.length > maxItems) this.telemetryValues.shift()
+                    this.telemetryValues.push(msg)
                 }
             })
 
