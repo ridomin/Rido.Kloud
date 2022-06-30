@@ -27,6 +27,7 @@
                     <td :style="{color: d.status === 'online' ? 'green' : 'red'}">{{d.status}}</td>
                     <td>{{d.modelId}}</td>
                     <td>{{formatDate(d.when)}}</td>
+                    <td><button @click="removeDevice(d.deviceId)">delete</button></td>
                 </tr>
             </tbody>
         </table>
