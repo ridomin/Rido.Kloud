@@ -150,6 +150,7 @@ public class Device : BackgroundService
 
         result.diagnosticResults.Add("machine name", Environment.MachineName);
         result.diagnosticResults.Add("os version", Environment.OSVersion.ToString());
+        result.diagnosticResults.Add("started", TimeSpan.FromMilliseconds(clock.ElapsedMilliseconds).Humanize(3));
         if (req.DiagnosticsMode == DiagnosticsMode.complete)
         {
             result.diagnosticResults.Add("this app:", System.Reflection.Assembly.GetExecutingAssembly()?.FullName ?? "");
