@@ -4,15 +4,15 @@
             request: 2
         }
     },
-    props: ['commandName', 'deviceId', 'responseMsg'],
+    props: ['command', 'deviceId', 'responseMsg'],
     emits: ['commandInvoked'],
     methods: {
         async invoke() {
-             this.$emit('commandInvoked', this.commandName, parseInt(this.request))
+             this.$emit('commandInvoked', this.command.name, parseInt(this.request))
         }
     },
     template: `
-        <div>{{commandName}}</div>
+        <div :title="command.name">{{command.displayName || command.name}}</div>
         <select v-model="request">
             <option value="0">minimal</option>
             <option value="1">complete</option>

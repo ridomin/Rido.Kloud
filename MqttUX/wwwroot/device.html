@@ -16,7 +16,7 @@
             <h3>Commands</h3>
             <ul>
                 <li class="raw" v-for="c in commands">
-                    <command :command-name="c.name" :device-id="gv(device,'deviceId')" @command-invoked="onCommand" :response-msg="c.responseMsg"></command>
+                    <command :command="c" :device-id="gv(device,'deviceId')" @command-invoked="onCommand" :response-msg="c.responseMsg"></command>
                 </li>
             </ul>
         </div>
@@ -24,8 +24,8 @@
             <h3>Device Properties</h3>
             <ul>
                 <li class="raw" v-for="p in properties">
-                    <reported-property v-if="p.writable!=true" :prop-name="p.name" :device-props="device.properties"></reported-property>
-                    <writable-property v-if="p.writable===true" :prop-name="p.name" :device-props="device.properties" :schema="p.schema" @prop-updated="handlePropUpdate"></writable-property>
+                    <reported-property v-if="p.writable!=true" :property="p" :device-props="device.properties"></reported-property>
+                    <writable-property v-if="p.writable===true" :property="p" :device-props="device.properties" :schema="p.schema" @prop-updated="handlePropUpdate"></writable-property>
                 </li>
             </ul>
         </div>

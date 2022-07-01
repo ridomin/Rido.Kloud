@@ -19,11 +19,14 @@ span {
 
 .prop {
     border: 1px solid grey;
-    width: 500px;
-    padding: 5px;
+    width: 600px;
+    padding: 0px;
     margin: 5px
 }
 
+.prop-desc {
+    padding-top: 15px;
+}
 .prop-name, .prop-value {
     font-size:larger
 }
