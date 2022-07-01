@@ -275,7 +275,7 @@ namespace smart_lightbulb_winforms
                     connectionSettings.ClientId = GetCNFromCertSubject(pwdForm.Certificate.SubjectName.Name);
                     connectionSettings.IdScope = String.Empty;
                     connectionSettings.HostName = dpsRes.RegistrationState.AssignedHub;
-                    ConnectionString = connectionSettings.ToString();
+                    ConnectionString = $"HostName={connectionSettings.HostName};X509Key={connectionSettings.X509Key}";
                 }
                 else
                 {

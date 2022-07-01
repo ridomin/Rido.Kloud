@@ -10,9 +10,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Rido.Mqtt.AwsClient" Version="0.0.10" />
-    <PackageReference Include="Rido.Mqtt.AzIoTClient" Version="0.0.16" />
-    <PackageReference Include="Rido.Mqtt.Client" Version="0.0.10" />
+    <PackageReference Include="Rido.Mqtt.AwsClient" Version="0.1.0" />
+    <PackageReference Include="Rido.Mqtt.AzIoTClient" Version="0.1.0" />
+    <PackageReference Include="Rido.Mqtt.Client" Version="0.1.0" />
   </ItemGroup>
 
   <ItemGroup>
