@@ -5,11 +5,11 @@
             response:''
         }
     },
-    props: ['commandName', 'deviceId'],
+    props: ['command', 'deviceId'],
     methods: {
         
         async invoke() {
-            const url = `/api/Command/${this.deviceId}?cmdName=${this.commandName}`
+            const url = `/api/Command/${this.deviceId}?cmdName=${this.command.name}`
             this.response = '.. loading ..'
             console.log(this.request)
             try {
@@ -21,7 +21,7 @@
         }
     },
     template: `
-        <div>{{commandName}}</div>
+        <div :title="command.name">{{command.displayName || command.name}}</div>
         <select v-model="request">
             <option value="0">minimal</option>
             <option value="1">complete</option>

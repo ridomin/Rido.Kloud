@@ -1,5 +1,5 @@
 ﻿export default {
-    props: ['deviceProps', 'propName', 'schema'],
+    props: ['deviceProps', 'property', 'schema'],
     emits: ['propUpdated'],
     methods: {
         gv(object, string, defaultValue = '') {
@@ -17,8 +17,8 @@
             return repV >= desV ? 'lightgreen' : 'lightpink'
         },
         updateProp() {
-            const input = document.getElementById('in-' + this.propName)
-            this.$emit('propUpdated', this.propName, input.value, this.schema)
+            const input = document.getElementById('in-' + this.property.name)
+            this.$emit('propUpdated', this.property.name, input.value, this.schema)
         },
         formatDate(d) {
             if (d === '0001-01-01T00:00:00Z') return ''
@@ -27,31 +27,34 @@
     },
     template: `
         <div class="prop">
-            <span class="prop-name">{{propName}}</span>
-            <span class="prop-value">{{gv(deviceProps, 'reported.' + propName + '.value')}}</span>
+            <span class="prop-name" :title="property.name">{{property.displayName || property.name}}</span>
+            <span class="prop-value">{{gv(deviceProps, 'reported.' + property.name + '.value')}}</span>
             desired
-            <input size="1" :value="gv(deviceProps, 'desired.' + propName)" type="text" :id="'in-' + propName" />
+            <input size="1" :value="gv(deviceProps, 'desired.' + property.name)" type="text" :id="'in-' + property.name" />
             <button @click="updateProp()">Update</button> 
             rv: {{gv(deviceProps,'reported.$version')}}
             dv: {{gv(deviceProps,'desired.$version')}}
-            lu: {{gv(deviceProps,'desired.$metadata.' + propName + '.$lastUpdatedVersion')}}
-            <div class="props-metadata" :style="{backgroundColor: getPropColorState(propName)}">
+            lu: {{gv(deviceProps,'desired.$metadata.' + property.name + '.$lastUpdatedVersion')}}
+            <div class="props-metadata" :style="{backgroundColor: getPropColorState(property.name)}">
                 <div class="prop-md">
                     <span>last updated:</span>
-                    <span>{{formatDate(gv(deviceProps, 'reported.$metadata.' + this.propName +'.$lastUpdated'))}}</span>
+                    <span>{{formatDate(gv(deviceProps, 'reported.$metadata.' + this.property.name +'.$lastUpdated'))}}</span>
                 </div>
                 <div class="prop-md">
                     <span>version:</span>
-                    <span>{{gv(deviceProps, 'reported.' + propName + '.av')}}</span>
+                    <span>{{gv(deviceProps, 'reported.' + property.name + '.av')}}</span>
                 </div>
                 <div class="prop-md">
                     <span>status:</span>
-                    <span>{{gv(deviceProps, 'reported.' + propName + '.ac')}}</span>
+                    <span>{{gv(deviceProps, 'reported.' + property.name + '.ac')}}</span>
                 </div>
                 <div class="prop-md">
                     <span>descr:</span>
-                    <span>{{gv(deviceProps, 'reported.' + propName + '.ad')}}</span>
+                    <span>{{gv(deviceProps, 'reported.' + property.name + '.ad')}}</span>
                 </div>
+            </div>
+            <div class="prop-desc" v-if="property.description">
+                {{property.description}}
             </div>
         </div>
     `

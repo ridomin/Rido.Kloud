@@ -33,6 +33,10 @@ span {
     font-weight:bold
 }
 
+.prop-desc {
+    padding-top: 15px;
+}
+
 .prop-md {
     text-align:right;
     font-size:smaller;
