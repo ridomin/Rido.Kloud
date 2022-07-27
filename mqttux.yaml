@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mqttux
+  namespace: webs
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mqttux
+  template:
+    metadata:
+      labels:
+        app: mqttux
+    spec:
+      containers:
+      - name: mqttux
+        image: ghcr.io/ridomin/mqttux:latest
+        ports:
+        - name: http
+          containerPort: 80
+          protocol: TCP
+        env:
+        - name: ConnectionStrings__broker
+          value: "HostName=f8826e3352314ca98102cfbde8aff20e.s2.eu.hivemq.cloud;UserName=demo1;Password=MDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDA1;ClientId=mqttux"
+
+        resources:
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mqttux
+  namespace: webs
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+  selector:
+    app: mqttux

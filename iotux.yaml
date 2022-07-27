@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: iotux
+  namespace: webs
 spec:
   replicas: 1
   selector:
@@ -22,13 +23,14 @@ spec:
           protocol: TCP
         env:
         - name: ConnectionStrings__hub
-          value: "HostName=ridoext.azure-devices.net;SharedAccessKeyName=iothubowner;SharedAccessKey=iamt3G6gMflQqkBatPD3ZZrTDB24VkjOhUmH0yXscIA="
+          value: "HostName=rido.azure-devices.net;SharedAccessKeyName=iothubowner;SharedAccessKey=7Fnf/DRygqQ6WxK77+5pIev5McFkfQfE53m2Oxav4Yk="
         
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: iotux
+  namespace: webs
 spec:
   type: LoadBalancer
   ports:
