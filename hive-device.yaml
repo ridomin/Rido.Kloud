@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hive-device
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: hive-device
+  template:
+    metadata:
+      labels:
+        app: hive-device
+    spec:
+      containers:
+      - name: hive-device
+        image: ghcr.io/ridomin/pnp-memmon-hive:latest
+        env:
+        - name: ConnectionStrings__cs
+          value: HostName=f8826e3352314ca98102cfbde8aff20e.s2.eu.hivemq.cloud;UserName=demo1;Password=MDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDA1;ClientId=memmon2
+      hostNetwork: false
+      dnsPolicy: Default
+        

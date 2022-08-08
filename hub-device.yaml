@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hub-device
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: hub-device
+  template:
+    metadata:
+      labels:
+        app: hub-device
+    spec:
+      containers:
+      - name: hub-device
+        image: ghcr.io/ridomin/pnp-memmon-hub:latest
+        env:
+        - name: ConnectionStrings__cs
+          value: IdScope=0ne006CCDE4;SasMinutes=100;SharedAccessKey=invalid
+        - name: masterKey
+          value: /nH1Y+J9WVTi1tyxgS0Yv9Y6yxSITLBiG1v9C/KvtvEPkfV7sCFaJVSCRiGVdslEPwGrf3K9VFo0S1xEicMPLw==
+      hostNetwork: false
+      dnsPolicy: Default
+        

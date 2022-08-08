@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: central-device
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: central-device
+  template:
+    metadata:
+      labels:
+        app: central-device
+    spec:
+      containers:
+      - name: central-device
+        image: ghcr.io/ridomin/pnp-memmon-hub:latest
+        env:
+        - name: ConnectionStrings__cs
+          value: IdScope=0ne006CAFFC;SasMinutes=100;SharedAccessKey=invalid
+        - name: masterKey
+          value: vyB2VqViNdAILXTw5SRiKNiSrrfgPLOy9/sDu2d2ZaP/NSD3Y/0NNrnJ2O7S6wjdxLTCYTIpb3kNsHpipts7ew==
+      hostNetwork: false
+      dnsPolicy: Default
+        
