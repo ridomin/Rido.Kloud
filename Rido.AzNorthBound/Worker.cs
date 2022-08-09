@@ -24,7 +24,8 @@ namespace Rido.AzNorthBound
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             var cs = new ConnectionSettings(_configuration.GetConnectionString("cs"));
-            _telemetryClient.TrackTrace("Starting AZ Northbound connector");
+            _telemetryClient.TrackTrace($"Starting AZ Northbound connector, reading from broker {cs.HostName}");
+            _logger.LogInformation($"Starting AZ Northbound connector, reading from broker {cs.HostName}");
             var cnx = await new MqttNetClientConnectionFactory().CreateBasicClientAsync(cs, stoppingToken);
 
             cnx.OnMessage += Cnx_OnMessage;
