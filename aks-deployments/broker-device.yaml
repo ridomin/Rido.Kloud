@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: broker-device
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: broker-device
+  template:
+    metadata:
+      labels:
+        app: broker-device
+    spec:
+      containers:
+      - name: broker-device
+        image: ghcr.io/ridomin/pnp-memmon-hive:latest
+        env:
+        - name: ConnectionStrings__cs
+          value: HostName=20.106.86.109;UserName=demo1;Password=passs;ClientId=machinename;TcpPort=1883;UseTls=false
+      hostNetwork: false
+      dnsPolicy: Default
+        
