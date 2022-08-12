@@ -33,10 +33,6 @@
             <button @click="updateProp()">Update</button> 
             <div class="props-metadata" :style="{backgroundColor: getPropColorState(property.name)}">
                 <div class="prop-md">
-                    <span>last updated:</span>
-                    <span>{{formatDate(gv(deviceProps, 'reported.$metadata.' + this.property.name +'.$lastUpdated'))}}</span>
-                </div>
-                <div class="prop-md">
                     <span>status:</span>
                     <span>{{gv(deviceProps, 'reported.' + property.name + '.ac')}}</span>
                 </div>
