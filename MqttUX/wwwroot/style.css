@@ -21,11 +21,16 @@ label {
     display: inline-block;
     width: 140px;
     text-align: right;
-    margin-right: 5px
+    margin-right: 5px;
 }
 
 .right-button {
-    margin-left: 80%;
+    margin-left: 85%;
+}
+
+.creds {
+ width: 600px;
+ border: 1px solid grey
 }
 
 .link {

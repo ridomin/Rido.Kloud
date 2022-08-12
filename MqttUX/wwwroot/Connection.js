@@ -38,7 +38,7 @@ export default {
         }
     },
     template: `
-    <div>
+    <div class="creds">
         <p>
             <label for="hostName">HostName</label>
             <input id="hostName" type="text" v-model="hostName" size="60">

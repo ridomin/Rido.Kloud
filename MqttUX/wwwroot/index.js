@@ -25,7 +25,7 @@ export default {
     },
     methods: {
         async fetchData() {
-            console.log(client)
+            console.log(client.options.href)
             client.on('error', e => console.error(e))
             client.on('connect', () => {
                 this.hostName = client.options.href
