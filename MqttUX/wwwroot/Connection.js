@@ -2,12 +2,12 @@ let client
 export default {
     data() {
         return {
-            hostName :'',// 'f8826e3352314ca98102cfbde8aff20e.s2.eu.hivemq.cloud',
-            port: '',//8884,
-            useTls: '',//true,
-            clientId: '',//'mqttUx_' + Date.now(),
-            userName: '',//'demo1',
-            password: '',//'MDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDA1'
+            hostName :'',
+            port: '',
+            useTls: '',
+            clientId: '',
+            userName: '',
+            password: '',
         }
     },
     emits: ['configChanged'],
