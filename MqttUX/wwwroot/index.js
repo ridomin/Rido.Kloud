@@ -2,8 +2,8 @@
 
 // const client = mqtt.connect(`wss://${creds.hostname}:8884/mqtt`, { 
 //     clientId: creds.clientId + Date.now(), username: creds.username, password: creds.pwd })
-
-
+import mqtt from './mqttClient.js'
+let client
 const isBuffer = obj => {
     return obj != null && obj.constructor != null &&
         typeof obj.constructor.isBuffer === 'function' && obj.constructor.isBuffer(obj)
@@ -11,7 +11,7 @@ const isBuffer = obj => {
 
 export default {
     data: () => ({
-        hostname: '',
+        hostName: '',
         config: '',
         devices: [],
         loading: true,
@@ -19,15 +19,19 @@ export default {
         connected: false
     }),
     created() {
-        //this.fetchData()
+        // if (client) {
+        //     this.fetchData()
+        // }
     },
     methods: {
-        async fetchData(client) {
+        async fetchData() {
             console.log(client)
-            // client.on('error', e => console.error(e))
-            // client.on('connect', () => {
-            //     console.log('connected', client.connected)
-            // })
+            client.on('error', e => console.error(e))
+            client.on('connect', () => {
+                this.hostName = client.options.href
+                client.subscribe('pnp/+/birth')
+                this.connected = true
+            })
             client.subscribe('pnp/+/birth')
             client.on('message', (topic, message) => {
                 const deviceId = topic.split('/')[1]
@@ -50,23 +54,15 @@ export default {
             const dix = this.devices.findIndex(d => d.deviceId === did)
             this.devices.splice(dix, 1)
         },
-        async onConnected(isConnected) {
-            console.log('conConnected')
-            this.connected = isConnected
+        onConfigChanged() {
+            console.log('config changed')
+            client = mqtt.start()
+            this.fetchData()
+            
         },
-        onNewMessage(topic, message) {
-            const deviceId = topic.split('/')[1]
-            const dix = this.devices.findIndex(d => d.deviceId === deviceId)
-            if (isBuffer(message) && message.byteLength > 0) {
-                const msg = JSON.parse(message)
-                // console.log(topic, msg)
-                if (dix === -1) {
-                    this.devices.push({ deviceId, status: msg.status, modelId: msg['model-id'], when: msg.when })
-                } else {
-                    this.devices[dix] = { deviceId, status: msg.status, modelId: msg['model-id'], when: msg.when }
-                }
-                this.devices.sort((a, b) => new Date(a.when) < new Date(b.when) ? 1 : -1)
-            }
+        disconnect() {
+            this.connected = false
+            client.end()
         },
         formatDate(d) {
             if (d === '0001-01-01T00:00:00Z') return ''

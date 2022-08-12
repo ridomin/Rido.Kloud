@@ -22,7 +22,17 @@ label {
     width: 140px;
     text-align: right;
     margin-right: 5px
-  }​
+}
+
+.right-button {
+    margin-left: 80%;
+}
+
+.link {
+    text-decoration: underline;
+    color: blue;
+    cursor: pointer;
+}​
 
 .prop {
     border: 1px solid grey;

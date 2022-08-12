@@ -1,4 +1,5 @@
-import * as creds from './creds.js'
+import mqtt from './mqttClient.js'
+let client
 
 const repoBaseUrl = 'https://raw.githubusercontent.com/iotmodels/iot-plugandplay-models/rido/pnp' // 'https://devicemodels.azure.com'
 const dtmiToPath = function (dtmi) {
@@ -18,8 +19,6 @@ const resolveSchema = s => {
     }
 }
 
-const client = mqtt.connect(`wss://${creds.hostname}:8884/mqtt`, { 
-    clientId: creds.clientId + Date.now(), username: creds.username, password: creds.pwd })
 
 export default {
     data: () => ({
@@ -31,6 +30,7 @@ export default {
         telemetryValues: []
     }),
     created() {
+        client = mqtt.start()
         this.initModel()
         this.fetchData()
     },
