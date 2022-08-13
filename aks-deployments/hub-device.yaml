@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: hub-device
 spec:
-  replicas: 2
+  replicas: 4
   selector:
     matchLabels:
       app: hub-device
@@ -20,6 +20,5 @@ spec:
           value: IdScope=0ne006CCDE4;SasMinutes=100;SharedAccessKey=invalid
         - name: masterKey
           value: /nH1Y+J9WVTi1tyxgS0Yv9Y6yxSITLBiG1v9C/KvtvEPkfV7sCFaJVSCRiGVdslEPwGrf3K9VFo0S1xEicMPLw==
-      hostNetwork: false
-      dnsPolicy: Default
+      
         

@@ -68,7 +68,7 @@ public class Device : BackgroundService
 
         client.Connection.OnMqttClientDisconnected += Connection_OnMqttClientDisconnected;
 
-
+        
         client.Property_enabled.OnProperty_Updated = Property_enabled_UpdateHandler;
         client.Property_interval.OnProperty_Updated = Property_interval_UpdateHandler;
         client.Command_getRuntimeStats.OnCmdDelegate = Command_getRuntimeStats_Handler;

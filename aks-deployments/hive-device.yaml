@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: hive-device
 spec:
-  replicas: 2
+  replicas: 4
   selector:
     matchLabels:
       app: hive-device
@@ -18,6 +18,5 @@ spec:
         env:
         - name: ConnectionStrings__cs
           value: HostName=f8826e3352314ca98102cfbde8aff20e.s2.eu.hivemq.cloud;UserName=demo1;Password=MDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDA1;ClientId=memmon2
-      hostNetwork: false
-      dnsPolicy: Default
+      
         
