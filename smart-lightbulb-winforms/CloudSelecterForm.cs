@@ -108,7 +108,7 @@ namespace smart_lightbulb_winforms
             this.textBox3.Name = "textBox3";
             this.textBox3.Size = new System.Drawing.Size(280, 23);
             this.textBox3.TabIndex = 5;
-            this.textBox3.Text = "ridoext.azure-devices.net";
+            this.textBox3.Text = "rido.azure-devices.net";
             // 
             // textBox2
             // 
@@ -126,7 +126,7 @@ namespace smart_lightbulb_winforms
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(279, 23);
             this.textBox1.TabIndex = 3;
-            this.textBox1.Text = "0ne003861C6";
+            this.textBox1.Text = "0ne006CAFFC";
             // 
             // radioButton3
             // 
@@ -291,7 +291,7 @@ namespace smart_lightbulb_winforms
             if (radioButton3.Checked)
             {
                 label2.Text = "Provisioning...";
-                ConnectionString = "HostName=ridoext.azure-devices.net;DeviceId=lightbulb01;SharedAccessKey=wxhHIqlPVQt3OifhQm/eDFqNQuq9Cju3869izMGswvk=";
+                ConnectionString = "HostName=rido.azure-devices.net;DeviceId=lightbulb01;SharedAccessKey=MDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDA=";
                 connectionSettings = ConnectionSettings.FromConnectionString(ConnectionString);
             }
             if (radioButton4.Checked)

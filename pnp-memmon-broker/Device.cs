@@ -12,7 +12,7 @@ public class Device : BackgroundService
 {
     private readonly ILogger<Device> _logger;
     private readonly IConfiguration _configuration;
-    private TelemetryClient _telemetryClient;
+    private readonly TelemetryClient _telemetryClient;
 
     private readonly Stopwatch clock = Stopwatch.StartNew();
     private int telemetryCounter = 0;
@@ -37,11 +37,9 @@ public class Device : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        _telemetryClient.TrackEvent("Starting");
-        _logger.LogInformation("Connecting..");
+        _logger.LogWarning("Connecting..");
         client = await memmon.CreateClientAsync(_configuration.GetConnectionString("cs"), stoppingToken);
-        _logger.LogInformation("Connected");
-        _telemetryClient.TrackEvent("Connected");
+        _logger.LogWarning("Connected");
 
         client.Connection.OnMqttClientDisconnected += Connection_OnMqttClientDisconnected;
 
@@ -157,7 +155,9 @@ public class Device : BackgroundService
         }
         if (req.DiagnosticsMode == DiagnosticsMode.full)
         {
-            result.diagnosticResults.Add($"twin receive: ", twinRecCounter.ToString());
+            result.diagnosticResults.Add("interval: ", client.Property_interval.PropertyValue.Value.ToString());
+            result.diagnosticResults.Add("enabled: ", client.Property_enabled.PropertyValue.Value.ToString());
+            result.diagnosticResults.Add("twin receive: ", twinRecCounter.ToString());
             //result.diagnosticResults.Add($"twin sends: ", RidCounter.Current.ToString());
             result.diagnosticResults.Add("telemetry: ", telemetryCounter.ToString());
             result.diagnosticResults.Add("command: ", commandCounter.ToString());
@@ -166,6 +166,9 @@ public class Device : BackgroundService
         return await Task.FromResult(result);
     }
 
+#pragma warning disable IDE0052 // Remove unread private members
+    private Timer screenRefresher;
+#pragma warning restore IDE0052 // Remove unread private members
     private void RefreshScreen(object state)
     {
         string RenderData()
@@ -201,6 +204,6 @@ public class Device : BackgroundService
 
         Console.SetCursorPosition(0, 0);
         Console.WriteLine(RenderData());
-        var screenRefresher = new Timer(RefreshScreen, this, 1000, 0);
+        screenRefresher = new Timer(RefreshScreen, this, 1000, 0);
     }
 }

@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: e4k-device
-        image: ghcr.io/ridomin/pnp-memmon-hive:latest
+        image: ghcr.io/ridomin/pnp-memmon-broker:latest
         env:
         - name: ConnectionStrings__cs
           value: HostName=mqttbroker-svc;TcpPort=1883;UseTls=false
