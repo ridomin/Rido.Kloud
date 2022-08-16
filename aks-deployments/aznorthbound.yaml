@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: aznorthbound
+  namespace: mosquitto
 spec:
   replicas: 1
   selector:
@@ -17,7 +18,6 @@ spec:
         image: ghcr.io/ridomin/ridoaznorthbound:latest
         env:
         - name: ConnectionStrings__cs
-          value: HostName=mqttbroker-svc;ClientId=NorthBoundConnector;TcpPort=1883;UseTls=false
+          value: HostName=mosquitto-service;ClientId=NorthBoundConnector;TcpPort=1883;UseTls=false
         - name: APPLICATIONINSIGHTS_CONNECTION_STRING
           value: InstrumentationKey=065bcb1a-bf6d-43c8-b541-e374a92b082a;IngestionEndpoint=https://westus3-1.in.applicationinsights.azure.com/
-        
