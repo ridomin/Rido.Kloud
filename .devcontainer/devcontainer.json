@@ -25,8 +25,6 @@
 	// forward ports for the app
 	"forwardPorts": [
 		30000,
-		30080,
-		30081,
 		31080,
 		32000
 	],
@@ -34,8 +32,6 @@
 	// add labels
 	"portsAttributes": {
 		"30000": { "label": "Prometheus" },
-		"30080": { "label": "RidoBrokerProxy" },
-		"30081": { "label": "RidoHubProxy" },
 		"31080": { "label": "Heartbeat" },
 		"32000": { "label": "Grafana" }
 	},

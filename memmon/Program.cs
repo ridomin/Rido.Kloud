@@ -1,8 +1,9 @@
-using pnp_memmon_hub;
+using memmon;
 
 IHost host = Host.CreateDefaultBuilder(args)
     .ConfigureServices(services =>
     {
+        services.AddApplicationInsightsTelemetryWorkerService();
         services.AddHostedService<Device>();
     })
     .Build();
