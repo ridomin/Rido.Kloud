@@ -5,16 +5,16 @@ WORKDIR /app
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
-COPY ["pnp-memmon-broker/pnp-memmon-broker.csproj", "pnp-memmon-broker/"]
-RUN dotnet restore "pnp-memmon-broker/pnp-memmon-broker.csproj"
+COPY ["memmon/memmon.csproj", "memmon/"]
+RUN dotnet restore "memmon/memmon.csproj"
 COPY . .
-WORKDIR "/src/pnp-memmon-broker"
-RUN dotnet build "pnp-memmon-broker.csproj" -c Release -o /app/build
+WORKDIR "/src/memmon"
+RUN dotnet build "memmon.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "pnp-memmon-broker.csproj" -c Release -o /app/publish
+RUN dotnet publish "memmon.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "pnp-memmon-broker.dll"]
+ENTRYPOINT ["dotnet", "memmon.dll"]
