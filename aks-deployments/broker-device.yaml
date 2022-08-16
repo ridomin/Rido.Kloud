@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: broker-device
-        image: ghcr.io/ridomin/pnp-memmon-broker:latest
+        image: ghcr.io/ridomin/memmon:latest
         env:
         - name: ConnectionStrings__cs
           value: HostName=mosquitto-service;TcpPort=1883;UseTls=false
