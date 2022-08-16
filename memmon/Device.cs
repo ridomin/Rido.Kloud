@@ -1,12 +1,12 @@
-using Humanizer;
+using System.Text;
+using System.Diagnostics;
 using Microsoft.ApplicationInsights;
-using Rido.Mqtt.Client.TopicBindings;
+using Humanizer;
 using Rido.MqttCore.PnP;
 
-using System.Diagnostics;
-using System.Text;
+using dtmi_rido_pnp_memmon;
 
-namespace pnp_memmon_hive;
+namespace memmon;
 
 public class Device : BackgroundService
 {
@@ -26,7 +26,7 @@ public class Device : BackgroundService
 
     private string lastDiscconectReason = string.Empty;
 
-    private memmon client;
+    private Imemmon client;
 
     public Device(ILogger<Device> logger, IConfiguration configuration, TelemetryClient tc)
     {
@@ -38,7 +38,7 @@ public class Device : BackgroundService
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         _logger.LogWarning("Connecting..");
-        client = await memmon.CreateClientAsync(_configuration.GetConnectionString("cs"), stoppingToken);
+        client = await new MemMonFactory(_configuration).CreateMemMonClientAsync(_configuration.GetConnectionString("cs"), stoppingToken);
         _logger.LogWarning("Connected");
 
         client.Connection.OnMqttClientDisconnected += Connection_OnMqttClientDisconnected;
@@ -47,9 +47,9 @@ public class Device : BackgroundService
         client.Property_interval.OnProperty_Updated = Property_interval_UpdateHandler;
         client.Command_getRuntimeStats.OnCmdDelegate = Command_getRuntimeStats_Handler;
 
-        //await client.Property_enabled.InitPropertyAsync(client.InitialState, default_enabled, stoppingToken);
-        //await client.Property_interval.InitPropertyAsync(client.InitialState, default_interval, stoppingToken);
-        client.Property_interval.PropertyValue.SetDefault(default_interval);
+        await client.Property_enabled.InitPropertyAsync(client.InitialState, default_enabled, stoppingToken);
+        await client.Property_interval.InitPropertyAsync(client.InitialState, default_interval, stoppingToken);
+        
         await client.Property_interval.ReportPropertyAsync(stoppingToken);
 
         client.Property_enabled.PropertyValue.SetDefault(default_enabled);

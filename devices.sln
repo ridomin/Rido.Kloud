@@ -3,17 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32414.318
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "pnp-memmon-hub", "pnp-memmon-hub\pnp-memmon-hub.csproj", "{DD132998-9A6E-492C-BD92-3838C53457D5}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{9573AAF7-4504-404B-93CB-DB4C66B24BC9}"
 	ProjectSection(SolutionItems) = preProject
-		.github\workflows\mm-hub-docker.yml = .github\workflows\mm-hub-docker.yml
 		.github\workflows\mm-broker-docker.yml = .github\workflows\mm-broker-docker.yml
+		.github\workflows\mm-hub-docker.yml = .github\workflows\mm-hub-docker.yml
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "smart-lightbulb-winforms", "smart-lightbulb-winforms\smart-lightbulb-winforms.csproj", "{08D97692-C21E-4504-8EF0-C91C2B2BB5D3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "pnp-memmon-broker", "pnp-memmon-broker\pnp-memmon-broker.csproj", "{CBCE8718-EADD-48B6-B8F5-2CFEA8ABF0EA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "memmon", "memmon\memmon.csproj", "{298B34B9-977B-4C5A-851D-AB0EF4C21D78}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,18 +19,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{DD132998-9A6E-492C-BD92-3838C53457D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DD132998-9A6E-492C-BD92-3838C53457D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DD132998-9A6E-492C-BD92-3838C53457D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DD132998-9A6E-492C-BD92-3838C53457D5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{08D97692-C21E-4504-8EF0-C91C2B2BB5D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{08D97692-C21E-4504-8EF0-C91C2B2BB5D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{08D97692-C21E-4504-8EF0-C91C2B2BB5D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{08D97692-C21E-4504-8EF0-C91C2B2BB5D3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CBCE8718-EADD-48B6-B8F5-2CFEA8ABF0EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CBCE8718-EADD-48B6-B8F5-2CFEA8ABF0EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CBCE8718-EADD-48B6-B8F5-2CFEA8ABF0EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CBCE8718-EADD-48B6-B8F5-2CFEA8ABF0EA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{298B34B9-977B-4C5A-851D-AB0EF4C21D78}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{298B34B9-977B-4C5A-851D-AB0EF4C21D78}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{298B34B9-977B-4C5A-851D-AB0EF4C21D78}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{298B34B9-977B-4C5A-851D-AB0EF4C21D78}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
