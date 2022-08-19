@@ -11,13 +11,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - name: Build the Docker image
-      run: docker build . --file memmon/Dockerfile --tag ghcr.io/ridomin/memmon:latest
     - name: Login to GitHub Container Registry
       uses: docker/login-action@v1
       with:
         registry: ghcr.io
         username: ${{ github.repository_owner }}
         password: ${{ secrets.REGISTRY_TOKEN }}
+    - name: Build the Docker image
+      run: docker build . --file memmon/Dockerfile --tag ghcr.io/ridomin/memmon:latest
     - name: push image
       run: docker push ghcr.io/ridomin/memmon:latest
