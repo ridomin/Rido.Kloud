@@ -6,28 +6,28 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: iotux
+      app: iothubux
   template:
     metadata:
       labels:
-        app: iotux
+        app: iothubux
     spec:
       containers:
-      - name: iotux
+      - name: iothubux
         image: ghcr.io/ridomin/iotux:latest
         ports:
         - containerPort: 80
         env:
         - name: ConnectionStrings__hub
-          value: "HostName=ridoext.azure-devices.net;SharedAccessKeyName=iothubowner;SharedAccessKey=iamt3G6gMflQqkBatPD3ZZrTDB24VkjOhUmH0yXscIA="
+          value: "HostName=rido.azure-devices.net;SharedAccessKeyName=iothubowner;SharedAccessKey=7Fnf/DRygqQ6WxK77+5pIev5McFkfQfE53m2Oxav4Yk="
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: iotux-svc
+  name: iothubux-svc
 spec:
   type: ClusterIP
   ports:
   - port: 80
   selector:
-    app: iotux
+    app: iothubux

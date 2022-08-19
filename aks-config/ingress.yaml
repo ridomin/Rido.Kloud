@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: iotux-ingress
+  name: iothubux-ingress
   annotations:
     kubernetes.io/ingress.class: nginx
     cert-manager.io/cluster-issuer: letsencrypt
@@ -10,28 +10,17 @@ metadata:
 spec:
   tls:
   - hosts:
-    - iotux.rido.dev
-    - mqttux.rido.dev
+    - iothubux.rido.dev
     secretName: tls-secret
   rules:
-  - host: iotux.rido.dev
+  - host: iothubux.rido.dev
     http:
       paths:
       - path: /(.*)
         pathType: Prefix
         backend:
           service:
-            name: iotux-svc
-            port:
-              number: 80
-  - host: mqttux.rido.dev
-    http:
-      paths:
-      - path: /(.*)
-        pathType: Prefix
-        backend:
-          service:
-            name: mqttux-svc
+            name: iothubux-svc
             port:
               number: 80
       
