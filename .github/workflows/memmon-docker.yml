@@ -2,7 +2,7 @@ name: memmon Docker Image CI
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "master", "dev" ]
     paths: 
       - 'memmon/**'
 
