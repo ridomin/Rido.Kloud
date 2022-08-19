@@ -10,6 +10,7 @@ internal class MemMonFactory
             Convert.ToBase64String(new System.Security.Cryptography.HMACSHA256(Convert.FromBase64String(masterKey)).ComputeHash(System.Text.Encoding.UTF8.GetBytes(deviceId)));
 
     IConfiguration _configuration;
+    
     public MemMonFactory(IConfiguration configuration)
     {
         this._configuration = configuration;
