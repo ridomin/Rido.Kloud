@@ -15,6 +15,7 @@
 		<PackageReference Include="Rido.Mqtt.AzIoTClient" Version="0.2.0-beta" />
 		<PackageReference Include="Rido.Mqtt.Client" Version="0.2.0-beta" />
 	</ItemGroup>
+	
 	<ItemGroup>
 		<Compile Update="dtmi_rido_pnp_memmon-1.mqtt.g.cs">
 			<DependentUpon>dtmi_rido_pnp_memmon-1.json</DependentUpon>
