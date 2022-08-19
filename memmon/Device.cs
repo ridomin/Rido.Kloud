@@ -5,6 +5,8 @@ using Humanizer;
 using Rido.MqttCore.PnP;
 
 using dtmi_rido_pnp_memmon;
+using Rido.MqttCore;
+using System.Reflection;
 
 namespace memmon;
 
@@ -37,6 +39,9 @@ public class Device : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
+        var v = typeof(ConnectionSettings).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
+        _logger.LogWarning("Starting Client with Rido.MqttCore Version: " + v);
+        
         _logger.LogWarning("Connecting..");
         client = await new MemMonFactory(_configuration).CreateMemMonClientAsync(_configuration.GetConnectionString("cs"), stoppingToken);
         _logger.LogWarning("Connected");

@@ -17,4 +17,4 @@ spec:
         image: ghcr.io/ridomin/memmon:latest
         env:
         - name: ConnectionStrings__cs
-          value: HostName=mqttbroker-svc;TcpPort=1883;UseTls=false
+          value: HostName=e4k-frontend;TcpPort=1883;UseTls=false;Username=client1;Password=password

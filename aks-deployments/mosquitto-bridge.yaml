@@ -10,7 +10,7 @@ metadata:
   namespace: mosquitto
 data:
   mosquitto.conf: |-
-    listener 1883
+    listener 8883
     allow_anonymous true
 
     connection bridge-toHiveMQ
@@ -81,7 +81,7 @@ spec:
         - name: mosquitto
           image: eclipse-mosquitto:latest
           ports:
-          - containerPort: 1883
+          - containerPort: 8883
           volumeMounts:
           - name: mosquitto-config
             mountPath: /mosquitto/config/mosquitto.conf
@@ -109,8 +109,8 @@ spec:
   ports:
     - name: mosquitto
       protocol: TCP
-      port: 1883
-      targetPort: 1883
+      port: 8883
+      targetPort: 8883
       # nodePort: 30007  <--- LoadBalancer will figure this out
 ---
 apiVersion: apps/v1
@@ -133,4 +133,4 @@ spec:
         image: ghcr.io/ridomin/memmon:latest
         env:
         - name: ConnectionStrings__cs
-          value: HostName=mosquitto-service;TcpPort=1883;UseTls=false
+          value: HostName=mosquitto-service;TcpPort=8883;UseTls=false
