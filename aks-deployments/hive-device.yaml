@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: hive-device-depl
 spec:
-  replicas: 2
+  replicas: 4
   selector:
     matchLabels:
       app: hive-device
@@ -18,10 +18,4 @@ spec:
         env:
         - name: ConnectionStrings__cs
           value: HostName=f8826e3352314ca98102cfbde8aff20e.s2.eu.hivemq.cloud;UserName=demo1;Password=MDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDA1
-        resources:
-          requests:
-            memory: "32Mi"
-            cpu: "1000m"
-          limits:
-            memory: "128Mi"
-            cpu: "1500m"
+
