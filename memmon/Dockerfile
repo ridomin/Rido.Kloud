@@ -6,6 +6,7 @@ WORKDIR /app
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
 COPY ["memmon/memmon.csproj", "memmon/"]
+COPY ["./nuget.config", "memmon/"]
 RUN dotnet restore "memmon/memmon.csproj"
 COPY . .
 WORKDIR "/src/memmon"
