@@ -49,18 +49,20 @@ namespace IoTUX.Controllers
             var q = rm.CreateQuery("SELECT * FROM devices", 100);
             var twinsRaw = await q.GetNextAsTwinAsync();
             return twinsRaw
-                .OrderByDescending(t => t.LastActivityTime)
                 .Select(t => new DeviceInfo
-                {  
-                    DeviceId = t.DeviceId, 
-                    ModelId = t.ModelId, 
-                    Status = t.Status.Value, 
-                    AuthenticationType =  t.AuthenticationType.Value, 
-                    LastActivityTime =  t.LastActivityTime.Value, 
+                {
+                    DeviceId = t.DeviceId,
+                    ModelId = t.ModelId,
+                    Status = t.Status.Value,
+                    State = t.ConnectionState.Value.ToString(),
+                    AuthenticationType = t.AuthenticationType.Value,
+                    LastActivityTime = t.LastActivityTime.Value,
                     Version = t.Version.Value,
                     ReportedVersion = t.Properties.Reported.Version,
                     DesiredVersion = t.Properties.Desired.Version
-                });
+                })
+                .OrderByDescending(t => t.LastActivityTime)
+                .OrderBy(t => t.State);
             //return new string[] { "value1", "value2" };
         }
 
@@ -100,6 +102,7 @@ namespace IoTUX.Controllers
     {
         public string DeviceId { get; set; }
         public string ModelId { get; set; }
+        public string State { get; set; }
         public DateTime LastActivityTime{ get; set; }
         public long Version { get; set; }
         public long ReportedVersion { get; set; }

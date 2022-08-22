@@ -28,7 +28,7 @@ namespace Rido.AzNorthBound
             _telemetryClient.TrackTrace($"Starting AZ Northbound connector, reading from broker {cs.HostName}");
             _logger.LogInformation($"Starting AZ Northbound connector, reading from broker {cs.HostName}");
 
-            var cnx = await new MqttNetClientConnectionFactory().CreateBasicClientAsync(cs, stoppingToken);
+            var cnx = await new MqttNetClientConnectionFactory().CreateBasicClientAsync(cs, false, stoppingToken);
 
             cnx.OnMessage += Cnx_OnMessage;
 
