@@ -21,4 +21,4 @@ jobs:
     - name: Build the Docker image
       run: docker build . --file memmon/Dockerfile --tag ghcr.io/ridomin/memmon:$(git rev-parse --abbrev-ref HEAD | sed 's/[^a-zA-Z0-9]/-/g')
     - name: push image
-      run: docker push ghcr.io/ridomin/memmon:latest
+      run: docker push ghcr.io/ridomin/memmon:$(git rev-parse --abbrev-ref HEAD | sed 's/[^a-zA-Z0-9]/-/g')
