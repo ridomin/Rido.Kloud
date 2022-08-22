@@ -8,7 +8,7 @@ WORKDIR /src
 COPY ["memmon/memmon.csproj", "memmon/"]
 COPY ["./nuget.config", "memmon/"]
 
-RUN dotnet restore "memmon/memmon.csproj" -v normal
+RUN dotnet restore "memmon/memmon.csproj"
 COPY . .
 WORKDIR "/src/memmon"
 RUN dotnet build "memmon.csproj" -c Release -o /app/build
