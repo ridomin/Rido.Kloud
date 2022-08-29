@@ -29,19 +29,18 @@ public class Device : BackgroundService
     private string lastDiscconectReason = string.Empty;
 
     private Imemmon client;
+    private string infoVersion = string.Empty;
 
     public Device(ILogger<Device> logger, IConfiguration configuration, TelemetryClient tc)
     {
         _logger = logger;
         _configuration = configuration;
         _telemetryClient = tc;
+        infoVersion = typeof(ConnectionSettings).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        var v = typeof(ConnectionSettings).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
-        _logger.LogWarning("Starting Client with Rido.MqttCore Version: " + v);
-        
         _logger.LogWarning("Connecting..");
         client = await new MemMonFactory(_configuration).CreateMemMonClientAsync(_configuration.GetConnectionString("cs"), stoppingToken);
         _logger.LogWarning("Connected");
@@ -203,6 +202,7 @@ public class Device : BackgroundService
             AppendLineWithPadRight(sb, " ");
             AppendLineWithPadRight(sb, $"Time Running: {TimeSpan.FromMilliseconds(clock.ElapsedMilliseconds).Humanize(3)}");
             AppendLineWithPadRight(sb, $"ConnectionStatus: {client.Connection.IsConnected} [{lastDiscconectReason}]");
+            AppendLineWithPadRight(sb, $"Rido.Mqtt version: {infoVersion}");
             AppendLineWithPadRight(sb, " ");
             return sb.ToString();
         }

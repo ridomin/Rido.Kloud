@@ -12,8 +12,8 @@
 		<PackageReference Include="Microsoft.ApplicationInsights.WorkerService" Version="2.21.0" />
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
 		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.16.1" />
-		<PackageReference Include="Rido.Mqtt.AzIoTClient" Version="0.2.0-beta" />
-		<PackageReference Include="Rido.Mqtt.Client" Version="0.2.0-beta" />
+		<PackageReference Include="Rido.Mqtt.AzIoTClient" Version="*" />
+		<PackageReference Include="Rido.Mqtt.Client" Version="*" />
 	</ItemGroup>
 	
 	<ItemGroup>
