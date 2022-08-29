@@ -12,6 +12,9 @@ data:
     certfile /mosquitto/certs/tls.crt
     keyfile /mosquitto/certs/tls.key
     tls_version tlsv1.2
+
+    listener 8884
+    protocol websockets
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -45,3 +48,25 @@ spec:
       - name: mosquitto-tls
         secret:
           secretName: mosquitto-certs
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mosquitto-service
+spec:
+  type: ClusterIP # <-- Changed
+  selector:
+    name: mosquitto
+  ports:
+    - name: mosquitto-tcp
+      protocol: TCP
+      port: 1883
+      targetPort: 1883
+    - name: mosquitto-tls
+      protocol: TCP
+      port: 8883
+      targetPort: 8883
+    - name: mosquitto-wss
+      protocol: TCP
+      port: 8884
+      targetPort: 8884
