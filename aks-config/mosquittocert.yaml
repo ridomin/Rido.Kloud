@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mosquittoweb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mosquittoweb
+  template:
+    metadata:
+      labels:
+        app: mosquittoweb
+    spec:
+      containers:
+      - name: mosquittoweb
+        image: mcr.microsoft.com/azuredocs/aks-helloworld:v1
+        ports:
+        - containerPort: 80
+        env:
+        - name: TITLE
+          value: "Welcome to Azure Kubernetes Service (AKS)"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mosquittoweb-svc
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+  selector:
+    app: mosquittoweb
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: mosquittocert-ingress
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: letsencrypt
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+    nginx.ingress.kubernetes.io/use-regex: "true"
+spec:
+  tls:
+  - hosts:
+    - mosquitto.rido.dev
+    secretName: tls-secret
+  rules:
+  - host: mosquitto.rido.dev
+    http:
+      paths:
+      - path: /(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: mosquittoweb-svc
+            port:
+              number: 80
+      
