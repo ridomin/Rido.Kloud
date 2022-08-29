@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flespi-device-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: flespi-device
+  template:
+    metadata:
+      labels:
+        app: flespi-device
+    spec:
+      containers:
+      - name: flespi-device-pod
+        image: ghcr.io/ridomin/memmon:latest
+        env:
+        - name: ConnectionStrings__cs
+          value: "HostName=mqtt.flespi.io;TlsPort=883;UserName=FlespiToken NgEpF39XLNzBgqc6LbWkQ4jXHVyZbKFMO70k0Z5CDu1HJ4Di5ptLhAwPlTCnr5X6"
+        resources:
+          requests:
+            memory: "32Mi"
+            cpu: "1000m"
+          limits:
+            memory: "128Mi"
+            cpu: "1500m"

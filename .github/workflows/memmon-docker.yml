@@ -4,7 +4,7 @@ on:
   push:
     branches: [ "master", "dev" ]
     tags: ['v.*']
-    paths: 
+    paths:
       - 'memmon/**'
 
 jobs:
@@ -19,6 +19,10 @@ jobs:
         username: ${{ github.repository_owner }}
         password: ${{ secrets.REGISTRY_TOKEN }}
     - name: Build the Docker image
-      run: docker build . --file memmon/Dockerfile --tag ghcr.io/ridomin/memmon:$(git rev-parse --abbrev-ref HEAD | sed 's/[^a-zA-Z0-9]/-/g')
+      run: docker build . --file memmon/Dockerfile --tag ghcr.io/ridomin/memmon:x64
     - name: push image
-      run: docker push ghcr.io/ridomin/memmon:$(git rev-parse --abbrev-ref HEAD | sed 's/[^a-zA-Z0-9]/-/g')
+      run: docker push ghcr.io/ridomin/memmon:x64
+    - name: Build the Docker image ARM
+      run: docker build . --file memmon/Dockerfile.pi --tag ghcr.io/ridomin/memmon:arm
+    - name: push image arm
+      run: docker push ghcr.io/ridomin/memmon:arm
