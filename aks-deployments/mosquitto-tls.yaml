@@ -34,20 +34,14 @@ spec:
           - containerPort: 1883
           - containerPort: 8883
           volumeMounts:
-          - name: mosquitto-config
+          - name: mosquitto-conf
             mountPath: /mosquitto/config
-            subPath: mosquitto.conf
-          - name: mosquitto-tls-pem
-            mountPath: /mosquitto/certs
-          - name: mosquitto-tls-key
+          - name: mosquitto-tls
             mountPath: /mosquitto/certs
       volumes:
-      - name: mosquitto-config
+      - name: mosquitto-conf
         configMap:
           name: mosquitto-config-file
-      - name: mosquitto-tls-pem
+      - name: mosquitto-tls
         secret:
-          secretName: tls.crt
-      - name: mosquitto-tls-key
-        secret:
-          secretName: tls.key
+          secretName: mosquitto-certs
