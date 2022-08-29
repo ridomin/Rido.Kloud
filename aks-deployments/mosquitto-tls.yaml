@@ -1,0 +1,53 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mosquitto-config-file
+data:
+  mosquitto.conf: |-
+    listener 1883
+    allow_anonymous true
+
+    listener 8883
+    cafile /mosquitto/certs/tls.crt
+    certfile /mosquitto/certs/tls.crt
+    keyfile /mosquitto/certs/tls.key
+    tls_version tlsv1.2
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mosquitto
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: mosquitto
+  template:
+    metadata:
+      labels:
+        name: mosquitto
+    spec:
+      containers:
+        - name: mosquitto
+          image: eclipse-mosquitto:latest
+          ports:
+          - containerPort: 1883
+          - containerPort: 8883
+          volumeMounts:
+          - name: mosquitto-config
+            mountPath: /mosquitto/config
+            subPath: mosquitto.conf
+          - name: mosquitto-tls-pem
+            mountPath: /mosquitto/certs
+          - name: mosquitto-tls-key
+            mountPath: /mosquitto/certs
+      volumes:
+      - name: mosquitto-config
+        configMap:
+          name: mosquitto-config-file
+      - name: mosquitto-tls-pem
+        secret:
+          secretName: tls.crt
+      - name: mosquitto-tls-key
+        secret:
+          secretName: tls.key
