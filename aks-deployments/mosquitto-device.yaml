@@ -17,4 +17,4 @@ spec:
         image: ghcr.io/ridomin/memmon:latest
         env:
         - name: ConnectionStrings__cs
-          value: HostName=mosquitto-service;TcpPort=8883
+          value: HostName=mosquitto-service;TcpPort=1883;UseTls=false

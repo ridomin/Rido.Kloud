@@ -1,0 +1,57 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mosquitto-config-file
+data:
+  mosquitto.conf: |-
+    listener 1883
+    allow_anonymous true
+   
+    listener 8883
+    protocol websockets   
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mosquitto
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: mosquitto
+  template:
+    metadata:
+      labels:
+        name: mosquitto
+    spec:
+      containers:
+        - name: mosquitto
+          image: eclipse-mosquitto:latest
+          ports:
+          - containerPort: 1883
+          - containerPort: 8883
+          volumeMounts:
+          - name: mosquitto-conf
+            mountPath: /mosquitto/config
+      volumes:
+      - name: mosquitto-conf
+        configMap:
+          name: mosquitto-config-file
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mosquitto-service
+spec:
+  type: LoadBalancer # <-- Changed
+  selector:
+    name: mosquitto
+  ports:
+    - name: mosquitto-tcp
+      protocol: TCP
+      port: 1883
+      targetPort: 1883
+    - name: mosquitto-ws
+      protocol: TCP
+      port: 8883
+      targetPort: 8883
