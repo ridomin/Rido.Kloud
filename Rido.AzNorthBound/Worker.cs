@@ -28,17 +28,17 @@ namespace Rido.AzNorthBound
             _configuration = configuration;
             _telemetryClient = telemetryClient;
 
-            producerClient = new EventHubProducerClient(configuration.GetConnectionString("eh"), configuration.GetValue<string>("eh-name"));
         }
 
         int numMessages = 0;
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            producerClient = new EventHubProducerClient(_configuration.GetConnectionString("eh"), _configuration.GetValue<string>("eh-name"));
+
             var cs = new ConnectionSettings(_configuration.GetConnectionString("cs"));
             
-            _telemetryClient.TrackTrace($"Starting AZ Northbound connector, reading from broker {cs.HostName}");
-            _logger.LogInformation($"Starting AZ Northbound connector, reading from broker {cs.HostName}");
+            _logger.LogWarning($"Starting AZ Northbound connector, reading from broker {cs.HostName}, writing to {producerClient.EventHubName}");
 
             var cnx = await new MqttNetClientConnectionFactory().CreateBasicClientAsync(cs, false, stoppingToken);
 
@@ -66,7 +66,7 @@ namespace Rido.AzNorthBound
             }
         }
 
-        private Task Cnx_OnMessage(MqttMessage m)
+        private async Task Cnx_OnMessage(MqttMessage m)
         {
             numMessages++;
             var segments = m.Topic.Split('/');
@@ -78,12 +78,12 @@ namespace Rido.AzNorthBound
                 _telemetryClient.TrackEvent("telemetry",
                     new Dictionary<string, string> { { "deviceId", deviceId } },
                     JsonSerializer.Deserialize<Dictionary<string,double>>(m.Payload));
-                _ = SendToEH(deviceId,m);
+                await SendToEHAsync(deviceId,m);
             }
-            return Task.FromResult(0);
+            //return Task.FromResult(0);
         }
 
-        async Task SendToEH(string did, MqttMessage m)
+        async Task SendToEHAsync(string did, MqttMessage m)
         {
             var batch = await producerClient.CreateBatchAsync();
             var ed = new EventData(Encoding.UTF8.GetBytes(m.Payload));
