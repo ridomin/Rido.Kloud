@@ -5,6 +5,7 @@ using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.DataContracts;
 using Rido.Mqtt.MqttNet4Adapter;
 using Rido.MqttCore;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Text;
 using System.Text.Json;
@@ -43,7 +44,11 @@ namespace Rido.AzNorthBound
 
             cnx.OnMessage += Cnx_OnMessage;
 
-            _ = cnx.SubscribeAsync("pnp/+/telemetry", stoppingToken);
+            var connAck = await cnx.SubscribeAsync("pnp/+/telemetry", stoppingToken);
+            if (connAck == 0)
+            {
+                _logger.LogWarning($"Subscribed for telemetry at broker {cnx.ConnectionSettings.HostName}");
+            }
 
             while (!stoppingToken.IsCancellationRequested)
             {
@@ -57,24 +62,25 @@ namespace Rido.AzNorthBound
                     _telemetryClient.TrackException(new ApplicationException("MQTT Client Not Connected"));
                 }
 
-                await Task.Delay(1000, stoppingToken);
+                await Task.Delay(30000, stoppingToken);
             }
         }
 
-        private async Task Cnx_OnMessage(MqttMessage m)
+        private Task Cnx_OnMessage(MqttMessage m)
         {
+            numMessages++;
             var segments = m.Topic.Split('/');
             var deviceId = segments[1];
             var msgType = segments[2];
+            _logger.LogInformation("New message from {0}", deviceId);
             if (msgType == "telemetry")
             {
-                await SendToEH(deviceId,m);
                 _telemetryClient.TrackEvent("telemetry",
                     new Dictionary<string, string> { { "deviceId", deviceId } },
                     JsonSerializer.Deserialize<Dictionary<string,double>>(m.Payload));
-                numMessages++;
+                _ = SendToEH(deviceId,m);
             }
-            await Task.Yield();
+            return Task.FromResult(0);
         }
 
         async Task SendToEH(string did, MqttMessage m)
@@ -82,7 +88,6 @@ namespace Rido.AzNorthBound
             var batch = await producerClient.CreateBatchAsync();
             var ed = new EventData(Encoding.UTF8.GetBytes(m.Payload));
             ed.Properties.Add("deviceId", did);
-            ed.Properties.Add("modelId", "dtmi:1");
             if (batch.TryAdd(ed))
             {
                 await producerClient.SendAsync(batch);
