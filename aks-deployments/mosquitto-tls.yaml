@@ -15,6 +15,10 @@ data:
 
     listener 8884
     protocol websockets
+    cafile /mosquitto/certs/tls.crt
+    certfile /mosquitto/certs/tls.crt
+    keyfile /mosquitto/certs/tls.key
+    tls_version tlsv1.2
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -36,6 +40,7 @@ spec:
           ports:
           - containerPort: 1883
           - containerPort: 8883
+          - containerPort: 8884
           volumeMounts:
           - name: mosquitto-conf
             mountPath: /mosquitto/config
@@ -54,7 +59,7 @@ kind: Service
 metadata:
   name: mosquitto-service
 spec:
-  type: ClusterIP # <-- Changed
+  type: LoadBalancer # <-- Changed
   selector:
     name: mosquitto
   ports:

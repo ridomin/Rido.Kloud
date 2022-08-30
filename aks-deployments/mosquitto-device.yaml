@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: mosq-device
-  namespace: mosquitto
 spec:
   replicas: 2
   selector:
@@ -18,4 +17,4 @@ spec:
         image: ghcr.io/ridomin/memmon:latest
         env:
         - name: ConnectionStrings__cs
-          value: HostName=mosquitto-service;TcpPort=1883;UseTls=false
+          value: HostName=mosquitto-service;TcpPort=8883
