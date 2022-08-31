@@ -19,6 +19,8 @@ spec:
         - name: ConnectionStrings__cs
           value: HostName=mosquitto-service;ClientId=NorthBoundConnector;TcpPort=1883;UseTls=false
         - name: ConnectionStrings__eh
-          value: Endpoint=sb://iotconnectors.servicebus.windows.net/;SharedAccessKeyName=PreviewDataPolicy;SharedAccessKey=f7w1mhTYF4icfOY7gndE0E6uUM1JAsr2WcSVyaA27ZE=;EntityPath=frommosquitto
+          value: Endpoint=sb://iotconnectors.servicebus.windows.net/;SharedAccessKeyName=SendData;SharedAccessKey=qjeaOkZqGfvyMn11aAAo39fqukFtvQEqrv+k+KnqUx4=;EntityPath=frommosquitto
+        - name: eh-name
+          value: frommosquitto
         - name: APPLICATIONINSIGHTS_CONNECTION_STRING
           value: InstrumentationKey=065bcb1a-bf6d-43c8-b541-e374a92b082a;IngestionEndpoint=https://westus3-1.in.applicationinsights.azure.com/
