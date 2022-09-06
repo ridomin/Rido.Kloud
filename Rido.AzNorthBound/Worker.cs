@@ -34,16 +34,21 @@ namespace Rido.AzNorthBound
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            producerClient = new EventHubProducerClient(_configuration.GetConnectionString("eh"), _configuration.GetValue<string>("eh-name"));
+
             var cs = new ConnectionSettings(_configuration.GetConnectionString("cs"));
             
-            _telemetryClient.TrackTrace($"Starting AZ Northbound connector, reading from broker {cs.HostName}");
-            _logger.LogInformation($"Starting AZ Northbound connector, reading from broker {cs.HostName}");
+            _logger.LogWarning($"Starting AZ Northbound connector, reading from broker {cs.HostName}, writing to {producerClient.EventHubName}");
 
             var cnx = await new MqttNetClientConnectionFactory().CreateBasicClientAsync(cs, false, stoppingToken);
 
             cnx.OnMessage += Cnx_OnMessage;
 
-            _ = cnx.SubscribeAsync("pnp/+/telemetry", stoppingToken);
+            var connAck = await cnx.SubscribeAsync("pnp/+/telemetry", stoppingToken);
+            if (connAck == 0)
+            {
+                _logger.LogWarning($"Subscribed for telemetry at broker {cnx.ConnectionSettings.HostName}");
+            }
 
             while (!stoppingToken.IsCancellationRequested)
             {
@@ -63,18 +68,31 @@ namespace Rido.AzNorthBound
 
         private async Task Cnx_OnMessage(MqttMessage m)
         {
+            numMessages++;
             var segments = m.Topic.Split('/');
             var deviceId = segments[1];
             var msgType = segments[2];
+            _logger.LogInformation("New message from {0}", deviceId);
             if (msgType == "telemetry")
             {
                 await SendToEH(deviceId,m);
                 _telemetryClient.TrackEvent("telemetry",
                     new Dictionary<string, string> { { "deviceId", deviceId } },
                     JsonSerializer.Deserialize<Dictionary<string,double>>(m.Payload));
-                numMessages++;
+                await SendToEHAsync(deviceId,m);
             }
-            await Task.Yield();
+            //return Task.FromResult(0);
+        }
+
+        async Task SendToEHAsync(string did, MqttMessage m)
+        {
+            var batch = await producerClient.CreateBatchAsync();
+            var ed = new EventData(Encoding.UTF8.GetBytes(m.Payload));
+            ed.Properties.Add("deviceId", did);
+            if (batch.TryAdd(ed))
+            {
+                await producerClient.SendAsync(batch);
+            }
         }
 
         async Task SendToEH(string did, MqttMessage m)
