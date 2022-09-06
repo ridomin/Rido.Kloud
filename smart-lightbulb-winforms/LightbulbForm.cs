@@ -243,7 +243,10 @@ public partial class LightbulbForm : Form
 
     private async void buttonChangeCloud_Click(object sender, EventArgs e)
     {
-        await client.Connection.DisconnectAsync();
+        if (client.Connection.IsConnected)
+        {
+            await client.Connection.DisconnectAsync();
+        }
         UpdateUI();
 
         if (cloudSelecterForm.ShowDialog() == DialogResult.OK)
