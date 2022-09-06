@@ -25,7 +25,7 @@ data:
     certfile /mosquitto/secrets/tls.crt
     keyfile /mosquitto/secrets/tls.key
 
-    listener 8080
+    listener 8880
     allow_anonymous false
     password_file /mosquitto/secrets/passwords.txt
     protocol websockets
@@ -61,7 +61,7 @@ spec:
           - containerPort: 1883
           - containerPort: 8883
           - containerPort: 8884
-          - containerPort: 8080
+          - containerPort: 8880
           - containerPort: 8443
           volumeMounts:
           - name: mosquitto-conf
@@ -95,8 +95,8 @@ spec:
       targetPort: 8885
     - name: mosquitto-ws
       protocol: TCP
-      port: 8080
-      targetPort: 8080
+      port: 8880
+      targetPort: 8880
     - name: mosquitto-wss
       protocol: TCP
       port: 8443
