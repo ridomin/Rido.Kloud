@@ -65,9 +65,9 @@ spec:
           - containerPort: 8443
           volumeMounts:
           - name: mosquitto-conf
-            mountPath: /mosquitto/config
+            mountPath: /mosquitto/config/mosquitto.config
           - name: mosquitto-passwords
-            mountPath: /mosquitto/config
+            mountPath: /mosquitto/config/passwords.txt
           - name: mosquitto-tls
             mountPath: /mosquitto/certs
       volumes:
