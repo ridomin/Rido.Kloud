@@ -15,14 +15,14 @@ data:
     password_file /mosquitto/secrets/passwords.txt
     require_certificate false
     cafile /mosquitto/secrets/tls.crt
-    certfile /mosquitto/secrets/tls.pem
+    certfile /mosquitto/secrets/tls.crt
     keyfile /mosquitto/secrets/tls.key
 
     listener 8884
     require_certificate true
     use_identity_as_username true
     cafile /mosquitto/secrets/tls.crt
-    certfile /mosquitto/secrets/tls.pem
+    certfile /mosquitto/secrets/tls.crt
     keyfile /mosquitto/secrets/tls.key
 
     listener 8080
@@ -36,7 +36,7 @@ data:
     password_file /mosquitto/secrets/passwords.txt
     protocol websockets
     cafile /mosquitto/secrets/tls.crt
-    certfile /mosquitto/secrets/tls.pem
+    certfile /mosquitto/secrets/tls.crt
     keyfile /mosquitto/secrets/tls.key
 
 ---
