@@ -29,7 +29,6 @@ data:
     allow_anonymous false
     password_file /mosquitto/secrets/passwords.txt
     protocol websockets
-    http_dir wwwroot
 
     listener 8443
     allow_anonymous false
