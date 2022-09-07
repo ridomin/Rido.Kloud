@@ -14,16 +14,18 @@ data:
     allow_anonymous false
     password_file /mosquitto/secrets/passwords.txt
     require_certificate false
-    cafile /mosquitto/secrets/tls.crt
+    cafile /mosquitto/secrets/ca.crt
     certfile /mosquitto/secrets/tls.crt
     keyfile /mosquitto/secrets/tls.key
+    tls_version tlsv1.2
 
     listener 8884
     require_certificate true
     use_identity_as_username true
-    cafile /mosquitto/secrets/tls.crt
+    cafile /mosquitto/secrets/ca.crt
     certfile /mosquitto/secrets/tls.crt
     keyfile /mosquitto/secrets/tls.key
+    tls_version tlsv1.2
 
     listener 8880
     allow_anonymous false
@@ -34,7 +36,7 @@ data:
     allow_anonymous false
     password_file /mosquitto/secrets/passwords.txt
     protocol websockets
-    cafile /mosquitto/secrets/tls.crt
+    cafile /mosquitto/secrets/ca.crt
     certfile /mosquitto/secrets/tls.crt
     keyfile /mosquitto/secrets/tls.key
 
