@@ -14,10 +14,9 @@ spec:
     spec:
       containers:
       - name: broker-device
-        image: ghcr.io/ridomin/memmon:latest
+        image: ghcr.io/ridomin/memmon:x64
         env:
         - name: ConnectionStrings__cs
-          value: HostName=mosquitto-service;TcpPort=1883;UseTls=false
-      hostNetwork: false
-      dnsPolicy: Default
+          value: HostName=mosquitto-service;TcpPort=1883;UseTls=false;Username=client2;Password=Pass@Word2
+      
         
