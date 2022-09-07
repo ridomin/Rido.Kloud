@@ -12,8 +12,8 @@
 		<PackageReference Include="Microsoft.ApplicationInsights.WorkerService" Version="2.21.0" />
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
 		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0" />
-		<PackageReference Include="Rido.Mqtt.AzIoTClient" Version="0.3.*" />
-		<PackageReference Include="Rido.Mqtt.Client" Version="0.3.*" />
+		<PackageReference Include="Rido.Mqtt.AzIoTClient" Version="0.4.*" />
+		<PackageReference Include="Rido.Mqtt.Client" Version="0.4.*" />
 	</ItemGroup>
 	
 	<ItemGroup>
@@ -30,6 +30,9 @@
 	
 	<ItemGroup>
 	  <None Update="memmon1.pfx">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="RidoFY23CA.pem">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
 	</ItemGroup>
