@@ -17,7 +17,7 @@ spec:
         image: ghcr.io/ridomin/ridoaznorthbound:latest
         env:
         - name: ConnectionStrings__cs
-          value: HostName=mosquitto-service;ClientId=NorthBoundConnector;TcpPort=1883;UseTls=false
+          value: HostName=mosquitto-service;ClientId=NorthBoundConnector;TcpPort=1883;UseTls=false;Username=client1;Password=Pass@Word1
         - name: ConnectionStrings__eh
           value: Endpoint=sb://iotconnectors.servicebus.windows.net/;SharedAccessKeyName=SendData;SharedAccessKey=qjeaOkZqGfvyMn11aAAo39fqukFtvQEqrv+k+KnqUx4=;EntityPath=frommosquitto
         - name: eh-name

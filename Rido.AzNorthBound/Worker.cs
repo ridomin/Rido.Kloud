@@ -63,7 +63,7 @@ namespace Rido.AzNorthBound
                     _telemetryClient.TrackException(new ApplicationException("MQTT Client Not Connected"));
                 }
 
-                await Task.Delay(1000, stoppingToken);
+                await Task.Delay(60000, stoppingToken);
             }
         }
 
