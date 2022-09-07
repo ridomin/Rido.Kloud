@@ -5,6 +5,8 @@ using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.DataContracts;
 using Rido.Mqtt.MqttNet4Adapter;
 using Rido.MqttCore;
+using Rido.MqttCore.Birth;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Text;
 using System.Text.Json;
@@ -20,6 +22,8 @@ namespace Rido.AzNorthBound
         private TelemetryClient _telemetryClient;
 
         EventHubProducerClient producerClient;
+
+        Dictionary<string, string> devices = new Dictionary<string, string>();
 
         public Worker(ILogger<Worker> logger, IConfiguration configuration, TelemetryClient telemetryClient)
         {
@@ -44,11 +48,8 @@ namespace Rido.AzNorthBound
 
             cnx.OnMessage += Cnx_OnMessage;
 
-            var connAck = await cnx.SubscribeAsync("pnp/+/telemetry", stoppingToken);
-            if (connAck == 0)
-            {
-                _logger.LogWarning($"Subscribed for telemetry at broker {cnx.ConnectionSettings.HostName}");
-            }
+            await cnx.SubscribeAsync("pnp/+/telemetry", stoppingToken);
+            await cnx.SubscribeAsync("pnp/+/birth", stoppingToken);
 
             while (!stoppingToken.IsCancellationRequested)
             {
@@ -73,12 +74,28 @@ namespace Rido.AzNorthBound
             var deviceId = segments[1];
             var msgType = segments[2];
             _logger.LogInformation("New message from {0}", deviceId);
+
+            if (msgType == "birth")
+            {
+                var  birthMsg = JsonDocument.Parse(m.Payload);
+
+                if (birthMsg != null)
+                {
+                    if (!devices.ContainsKey(deviceId))
+                    {
+                        string? mid = birthMsg.RootElement.GetProperty("model-id").GetString();
+                        devices.Add(deviceId, mid ?? "");
+                    }
+                }
+            }
+
             if (msgType == "telemetry")
             {
                 await SendToEH(deviceId,m);
                 _telemetryClient.TrackEvent("telemetry",
                     new Dictionary<string, string> { { "deviceId", deviceId } },
                     JsonSerializer.Deserialize<Dictionary<string,double>>(m.Payload));
+
                 await SendToEHAsync(deviceId,m);
             }
             //return Task.FromResult(0);
@@ -89,6 +106,11 @@ namespace Rido.AzNorthBound
             var batch = await producerClient.CreateBatchAsync();
             var ed = new EventData(Encoding.UTF8.GetBytes(m.Payload));
             ed.Properties.Add("deviceId", did);
+            var mid = devices[did];
+            if (mid != null)
+            {
+                ed.Properties.Add("modelId", mid);
+            }
             if (batch.TryAdd(ed))
             {
                 await producerClient.SendAsync(batch);

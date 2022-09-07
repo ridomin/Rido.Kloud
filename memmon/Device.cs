@@ -55,10 +55,7 @@ public class Device : BackgroundService
         await client.Property_interval.InitPropertyAsync(client.InitialState, default_interval, stoppingToken);
         
         await client.Property_interval.ReportPropertyAsync(stoppingToken);
-
-        client.Property_enabled.PropertyValue.SetDefault(default_enabled);
-        await client.Property_enabled.ReportPropertyAsync(stoppingToken);
-
+        
         client.Property_started.PropertyValue = DateTime.Now;
         await client.Property_started.ReportPropertyAsync(stoppingToken);
 
