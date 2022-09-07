@@ -31,6 +31,7 @@ namespace Rido.AzNorthBound
             _configuration = configuration;
             _telemetryClient = telemetryClient;
 
+            producerClient = new EventHubProducerClient(configuration.GetConnectionString("eh"), configuration.GetValue<string>("eh-name"));
         }
 
         int numMessages = 0;
@@ -62,7 +63,7 @@ namespace Rido.AzNorthBound
                     _telemetryClient.TrackException(new ApplicationException("MQTT Client Not Connected"));
                 }
 
-                await Task.Delay(30000, stoppingToken);
+                await Task.Delay(1000, stoppingToken);
             }
         }
 
@@ -90,6 +91,7 @@ namespace Rido.AzNorthBound
 
             if (msgType == "telemetry")
             {
+                await SendToEH(deviceId,m);
                 _telemetryClient.TrackEvent("telemetry",
                     new Dictionary<string, string> { { "deviceId", deviceId } },
                     JsonSerializer.Deserialize<Dictionary<string,double>>(m.Payload));
@@ -109,6 +111,18 @@ namespace Rido.AzNorthBound
             {
                 ed.Properties.Add("modelId", mid);
             }
+            if (batch.TryAdd(ed))
+            {
+                await producerClient.SendAsync(batch);
+            }
+        }
+
+        async Task SendToEH(string did, MqttMessage m)
+        {
+            var batch = await producerClient.CreateBatchAsync();
+            var ed = new EventData(Encoding.UTF8.GetBytes(m.Payload));
+            ed.Properties.Add("deviceId", did);
+            ed.Properties.Add("modelId", "dtmi:1");
             if (batch.TryAdd(ed))
             {
                 await producerClient.SendAsync(batch);

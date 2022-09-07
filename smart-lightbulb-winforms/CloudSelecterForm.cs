@@ -1,4 +1,4 @@
-﻿using Rido.Mqtt.DpsClient;
+﻿using Rido.Mqtt.AzIoTClient;
 using Rido.MqttCore;
 using System;
 using System.Collections.Generic;

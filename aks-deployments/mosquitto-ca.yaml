@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: mosquitto-config-file
+  name: my-mosquitto-config-file
 data:
   mosquitto.conf: |-
     per_listener_settings true
@@ -13,6 +13,7 @@ data:
     listener 8883
     allow_anonymous false
     password_file /mosquitto/secrets/passwords.txt
+    require_certificate false
     cafile /mosquitto/secrets/ca.crt
     certfile /mosquitto/secrets/tls.crt
     keyfile /mosquitto/secrets/tls.key
@@ -21,9 +22,9 @@ data:
     listener 8884
     require_certificate true
     use_identity_as_username true
-    cafile /mosquitto/secrets/ca2.crt
-    certfile /mosquitto/secrets/tls2.crt
-    keyfile /mosquitto/secrets/tls2.key
+    cafile /mosquitto/secrets/ca.crt
+    certfile /mosquitto/secrets/tls.crt
+    keyfile /mosquitto/secrets/tls.key
     tls_version tlsv1.2
 
     listener 8880
@@ -38,20 +39,21 @@ data:
     cafile /mosquitto/secrets/ca.crt
     certfile /mosquitto/secrets/tls.crt
     keyfile /mosquitto/secrets/tls.key
+
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: mosquitto
+  name: my-mosquitto
 spec:
   replicas: 1
   selector:
     matchLabels:
-      name: mosquitto
+      name: my-mosquitto
   template:
     metadata:
       labels:
-        name: mosquitto
+        name: my-mosquitto
     spec:
       containers:
         - name: mosquitto
@@ -65,15 +67,15 @@ spec:
           volumeMounts:
           - name: mosquitto-conf
             mountPath: /mosquitto/config
-          - name: mosquitto-tls
+          - name: mosquitto-secrets
             mountPath: /mosquitto/secrets
       volumes:
       - name: mosquitto-conf
         configMap:
-          name: mosquitto-config-file
-      - name: mosquitto-tls
+          name: my-mosquitto-config-file
+      - name: mosquitto-secrets
         secret:
-          secretName: mosquitto-certs
+          secretName: my-mosquitto-secrets
 ---
 apiVersion: v1
 kind: Service
@@ -84,18 +86,14 @@ spec:
   selector:
     name: mosquitto
   ports:
-    - name: mosquitto-tcp
-      protocol: TCP
-      port: 1883
-      targetPort: 1883
     - name: mosquitto-tls
       protocol: TCP
       port: 8883
       targetPort: 8883
-    - name: mosquitto-tls-cc
+    - name: mosquitto-tls-withcerts
       protocol: TCP
       port: 8884
-      targetPort: 8884
+      targetPort: 8885
     - name: mosquitto-ws
       protocol: TCP
       port: 8880
@@ -104,3 +102,4 @@ spec:
       protocol: TCP
       port: 8443
       targetPort: 8443
+
