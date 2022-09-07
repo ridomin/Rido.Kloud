@@ -4,21 +4,40 @@ metadata:
   name: mosquitto-config-file
 data:
   mosquitto.conf: |-
+    per_listener_settings true
+
     listener 1883
-    allow_anonymous true
+    allow_anonymous false
+    password_file /mosquitto/secrets/passwords.txt
 
     listener 8883
-    cafile /mosquitto/certs/tls.crt
-    certfile /mosquitto/certs/tls.crt
-    keyfile /mosquitto/certs/tls.key
+    allow_anonymous false
+    password_file /mosquitto/secrets/passwords.txt
+    cafile /mosquitto/secrets/ca.crt
+    certfile /mosquitto/secrets/tls.crt
+    keyfile /mosquitto/secrets/tls.key
     tls_version tlsv1.2
 
     listener 8884
-    protocol websockets
-    cafile /mosquitto/certs/tls.crt
-    certfile /mosquitto/certs/tls.crt
-    keyfile /mosquitto/certs/tls.key
+    require_certificate true
+    use_identity_as_username true
+    cafile /mosquitto/secrets/ca2.crt
+    certfile /mosquitto/secrets/tls2.crt
+    keyfile /mosquitto/secrets/tls2.key
     tls_version tlsv1.2
+
+    listener 8880
+    allow_anonymous false
+    password_file /mosquitto/secrets/passwords.txt
+    protocol websockets
+
+    listener 8443
+    allow_anonymous false
+    password_file /mosquitto/secrets/passwords.txt
+    protocol websockets
+    cafile /mosquitto/secrets/ca.crt
+    certfile /mosquitto/secrets/tls.crt
+    keyfile /mosquitto/secrets/tls.key
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -41,11 +60,13 @@ spec:
           - containerPort: 1883
           - containerPort: 8883
           - containerPort: 8884
+          - containerPort: 8880
+          - containerPort: 8443
           volumeMounts:
           - name: mosquitto-conf
             mountPath: /mosquitto/config
           - name: mosquitto-tls
-            mountPath: /mosquitto/certs
+            mountPath: /mosquitto/secrets
       volumes:
       - name: mosquitto-conf
         configMap:
@@ -71,7 +92,15 @@ spec:
       protocol: TCP
       port: 8883
       targetPort: 8883
-    - name: mosquitto-wss
+    - name: mosquitto-tls-cc
       protocol: TCP
       port: 8884
       targetPort: 8884
+    - name: mosquitto-ws
+      protocol: TCP
+      port: 8880
+      targetPort: 8880
+    - name: mosquitto-wss
+      protocol: TCP
+      port: 8443
+      targetPort: 8443
