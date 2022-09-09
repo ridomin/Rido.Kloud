@@ -2,11 +2,11 @@ using System.Text;
 using System.Diagnostics;
 using Microsoft.ApplicationInsights;
 using Humanizer;
-using Rido.MqttCore.PnP;
 
 using dtmi_rido_pnp_memmon;
-using Rido.MqttCore;
 using System.Reflection;
+using MQTTnet.Extensions.Connections;
+using MQTTnet.Extensions.Clients;
 
 namespace memmon;
 
@@ -27,7 +27,7 @@ public class Device : BackgroundService
     private const int default_interval = 5;
 
     private string lastDiscconectReason = string.Empty;
-
+    private ConnectionSettings connectionSettings;
     private Imemmon client;
     private string infoVersion = string.Empty;
 
@@ -41,11 +41,12 @@ public class Device : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
+        connectionSettings = new ConnectionSettings(_configuration.GetConnectionString("cs"));
         _logger.LogWarning("Connecting..");
         client = await new MemMonFactory(_configuration).CreateMemMonClientAsync(_configuration.GetConnectionString("cs"), stoppingToken);
         _logger.LogWarning("Connected");
 
-        client.Connection.OnMqttClientDisconnected += Connection_OnMqttClientDisconnected;
+        client.Connection.DisconnectedAsync += Connection_DisconnectedAsync; 
 
         client.Property_enabled.OnProperty_Updated = Property_enabled_UpdateHandler;
         client.Property_interval.OnProperty_Updated = Property_interval_UpdateHandler;
@@ -75,12 +76,14 @@ public class Device : BackgroundService
         }
     }
 
-    private void Connection_OnMqttClientDisconnected(object sender, Rido.MqttCore.DisconnectEventArgs e)
+    private async Task Connection_DisconnectedAsync(MQTTnet.Client.MqttClientDisconnectedEventArgs arg)
     {
-        _telemetryClient.TrackTrace("Client Disconnected: " + e.ReasonInfo);
-        lastDiscconectReason = e.ReasonInfo;
+        _telemetryClient.TrackTrace("Client Disconnected: " + arg.ReasonString);
+        lastDiscconectReason = arg.ReasonString;
         reconnectCounter++;
+        await Task.Yield();
     }
+
 
     private async Task<PropertyAck<bool>> Property_enabled_UpdateHandler(PropertyAck<bool> p)
     {
@@ -99,6 +102,7 @@ public class Device : BackgroundService
             Value = p.Value
         };
         client.Property_enabled.PropertyValue = ack;
+        await client.Property_enabled.ReportPropertyAsync();
         return await Task.FromResult(ack);
     }
 
@@ -131,6 +135,7 @@ public class Device : BackgroundService
                             default_interval;
         };
         client.Property_interval.PropertyValue = ack;
+        await client.Property_interval.ReportPropertyAsync();
         return await Task.FromResult(ack);
     }
 
@@ -180,8 +185,8 @@ public class Device : BackgroundService
             string interval_value = client?.Property_interval.PropertyValue?.Value.ToString();
             StringBuilder sb = new();
             AppendLineWithPadRight(sb, " ");
-            AppendLineWithPadRight(sb, client?.Connection.ConnectionSettings?.HostName);
-            AppendLineWithPadRight(sb, $"{client?.Connection.ConnectionSettings.ClientId} ({client.Connection.ConnectionSettings.Auth})");
+            AppendLineWithPadRight(sb, connectionSettings?.HostName);
+            AppendLineWithPadRight(sb, $"{connectionSettings.ClientId} ({connectionSettings.Auth})");
             AppendLineWithPadRight(sb, " ");
             AppendLineWithPadRight(sb, string.Format("{0:8} | {1:15} | {2}", "Property", "Value".PadRight(15), "Version"));
             AppendLineWithPadRight(sb, string.Format("{0:8} | {1:15} | {2}", "--------", "-----".PadLeft(15, '-'), "------"));
