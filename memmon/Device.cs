@@ -27,8 +27,10 @@ public class Device : BackgroundService
     private const int default_interval = 5;
 
     private string lastDiscconectReason = string.Empty;
-    private ConnectionSettings connectionSettings;
+
     private Imemmon client;
+    private ConnectionSettings connectionSettings;
+
     private string infoVersion = string.Empty;
 
     public Device(ILogger<Device> logger, IConfiguration configuration, TelemetryClient tc)
@@ -36,17 +38,20 @@ public class Device : BackgroundService
         _logger = logger;
         _configuration = configuration;
         _telemetryClient = tc;
-        infoVersion = typeof(ConnectionSettings).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
+        //infoVersion = typeof(ConnectionSettings).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        connectionSettings = new ConnectionSettings(_configuration.GetConnectionString("cs"));
         _logger.LogWarning("Connecting..");
-        client = await new MemMonFactory(_configuration).CreateMemMonClientAsync(_configuration.GetConnectionString("cs"), stoppingToken);
+        var memmonFactory = new MemMonFactory(_configuration);
+        client = await memmonFactory.CreateMemMonClientAsync(_configuration.GetConnectionString("cs"), stoppingToken);
+        client.Connection.DisconnectedAsync += Connection_DisconnectedAsync;
+        connectionSettings = MemMonFactory.connectionSettings;
         _logger.LogWarning("Connected");
 
-        client.Connection.DisconnectedAsync += Connection_DisconnectedAsync; 
+        Type baseClient = client.GetType().BaseType;
+        infoVersion = $"{baseClient.Namespace} {baseClient.Assembly.GetType("ThisAssembly")!.GetField("NuGetPackageVersion",BindingFlags.NonPublic | BindingFlags.Static)!.GetValue(null)}";  
 
         client.Property_enabled.OnProperty_Updated = Property_enabled_UpdateHandler;
         client.Property_interval.OnProperty_Updated = Property_interval_UpdateHandler;
@@ -56,7 +61,10 @@ public class Device : BackgroundService
         await client.Property_interval.InitPropertyAsync(client.InitialState, default_interval, stoppingToken);
         
         await client.Property_interval.ReportPropertyAsync(stoppingToken);
-        
+
+        client.Property_enabled.PropertyValue.SetDefault(default_enabled);
+        await client.Property_enabled.ReportPropertyAsync(stoppingToken);
+
         client.Property_started.PropertyValue = DateTime.Now;
         await client.Property_started.ReportPropertyAsync(stoppingToken);
 
@@ -84,6 +92,7 @@ public class Device : BackgroundService
         await Task.Yield();
     }
 
+    
 
     private async Task<PropertyAck<bool>> Property_enabled_UpdateHandler(PropertyAck<bool> p)
     {
@@ -185,8 +194,8 @@ public class Device : BackgroundService
             string interval_value = client?.Property_interval.PropertyValue?.Value.ToString();
             StringBuilder sb = new();
             AppendLineWithPadRight(sb, " ");
-            AppendLineWithPadRight(sb, connectionSettings?.HostName);
-            AppendLineWithPadRight(sb, $"{connectionSettings.ClientId} ({connectionSettings.Auth})");
+            AppendLineWithPadRight(sb, $"{connectionSettings?.HostName}:{connectionSettings?.TcpPort}");
+            AppendLineWithPadRight(sb, $"{connectionSettings.ClientId} (Auth:{connectionSettings.Auth}/ TLS:{connectionSettings.UseTls})");
             AppendLineWithPadRight(sb, " ");
             AppendLineWithPadRight(sb, string.Format("{0:8} | {1:15} | {2}", "Property", "Value".PadRight(15), "Version"));
             AppendLineWithPadRight(sb, string.Format("{0:8} | {1:15} | {2}", "--------", "-----".PadLeft(15, '-'), "------"));
@@ -204,7 +213,7 @@ public class Device : BackgroundService
             AppendLineWithPadRight(sb, " ");
             AppendLineWithPadRight(sb, $"Time Running: {TimeSpan.FromMilliseconds(clock.ElapsedMilliseconds).Humanize(3)}");
             AppendLineWithPadRight(sb, $"ConnectionStatus: {client.Connection.IsConnected} [{lastDiscconectReason}]");
-            AppendLineWithPadRight(sb, $"{typeof(ConnectionSettings).FullName}: {infoVersion}");
+            AppendLineWithPadRight(sb, $"NuGet: {infoVersion}");
             AppendLineWithPadRight(sb, " ");
             return sb.ToString();
         }

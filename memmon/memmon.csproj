@@ -12,8 +12,9 @@
 		<PackageReference Include="Microsoft.ApplicationInsights.WorkerService" Version="2.21.0" />
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
 		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0" />
-		<PackageReference Include="MQTTnet.Extensions.IoTHubClient" Version="0.1.*" />
-		<PackageReference Include="MQTTnet.Extensions.PnPClient" Version="0.1.*" />
+		<PackageReference Include="MQTTnet.Extensions.AwsClient" Version="0.1.39-gc9a6a39a96" />
+		<PackageReference Include="MQTTnet.Extensions.IoTHubClient" Version="0.1.39-gc9a6a39a96" />
+		<PackageReference Include="MQTTnet.Extensions.PnPClient" Version="0.1.39-gc9a6a39a96" />
 	</ItemGroup>
 	
 	<ItemGroup>
