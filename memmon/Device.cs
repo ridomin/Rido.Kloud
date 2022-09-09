@@ -204,7 +204,7 @@ public class Device : BackgroundService
             AppendLineWithPadRight(sb, " ");
             AppendLineWithPadRight(sb, $"Time Running: {TimeSpan.FromMilliseconds(clock.ElapsedMilliseconds).Humanize(3)}");
             AppendLineWithPadRight(sb, $"ConnectionStatus: {client.Connection.IsConnected} [{lastDiscconectReason}]");
-            AppendLineWithPadRight(sb, $"Rido.Mqtt version: {infoVersion}");
+            AppendLineWithPadRight(sb, $"{typeof(ConnectionSettings).FullName}: {infoVersion}");
             AppendLineWithPadRight(sb, " ");
             return sb.ToString();
         }
