@@ -1,6 +1,8 @@
-﻿using Rido.MqttCore;
-using Rido.Mqtt.AzIoTClient;
+﻿
 using dtmi_rido_pnp_memmon;
+using MQTTnet.Extensions.Connections;
+using MQTTnet.Extensions.IoTHubClient;
+using MQTTnet.Extensions.PnPClient;
 
 namespace memmon;
 
@@ -45,8 +47,8 @@ internal class MemMonFactory
     static async Task<dtmi_rido_pnp_memmon.mqtt.memmon> CreateBrokerClientAsync(string connectionString, CancellationToken cancellationToken = default)
     {
         var cs = new ConnectionSettings(connectionString) { ModelId = Imemmon.ModelId };
-        var mqtt = await new Rido.Mqtt.MqttNet4Adapter.MqttNetClientConnectionFactory().CreateBasicClientAsync(cs, true);
-        var client = new dtmi_rido_pnp_memmon.mqtt.memmon(mqtt);
+        var mqtt = await BrokerClientFactory.CreatePnPBrokerClientAsync(cs, true, cancellationToken);
+        var client = new dtmi_rido_pnp_memmon.mqtt.memmon(mqtt.Connection);
         return client;
     }
 
