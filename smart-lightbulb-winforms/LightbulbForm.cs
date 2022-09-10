@@ -1,6 +1,5 @@
 using MQTTnet.Client;
-using Rido.MqttCore;
-using Rido.MqttCore.PnP;
+using MQTTnet.Extensions.MultiCloud.Clients;
 using System.Drawing.Design;
 
 namespace smart_lightbulb_winforms;
@@ -56,7 +55,7 @@ public partial class LightbulbForm : Form
                  break;
         }
 
-        client.Connection.OnMqttClientDisconnected += (o,d) => UpdateUI();
+        client.Connection.DisconnectedAsync += d => UpdateUI();
 
         buttonConnectDisconnect.Text = "Disconnect";
 
@@ -65,7 +64,7 @@ public partial class LightbulbForm : Form
             currentBattery = Properties.Settings.Default.battery;
         }
 
-        labelStatus.Text = $"{client.Connection.ConnectionSettings.DeviceId} connected to {client.Connection.ConnectionSettings.HostName}";
+        //labelStatus.Text = $"{client.Connection.Options.ClientId} connected to {client.Connection}";
         client.Property_lightState.OnProperty_Updated = Property_lightState_UpdateHandler;
 
         await client.Property_lightState.InitPropertyAsync(client.InitialState,1);
@@ -73,7 +72,7 @@ public partial class LightbulbForm : Form
         client.Property_lastBatteryReplacement.PropertyValue = DateTime.Now;
         await client.Property_lastBatteryReplacement.ReportPropertyAsync();
 
-        UpdateUI();
+        await UpdateUI();
 
         while (client.Connection.IsConnected)
         {
@@ -106,7 +105,7 @@ public partial class LightbulbForm : Form
     {
         ArgumentNullException.ThrowIfNull(client);
         Toggle();
-        UpdateUI();
+        await UpdateUI();
         var ack = new PropertyAck<int>(client.Property_lightState.PropertyValue.Name)
         {
             Description = "Changed by user",
@@ -132,7 +131,7 @@ public partial class LightbulbForm : Form
          
     }
 
-    private void UpdateUI()
+    private async Task UpdateUI()
     {
         ArgumentNullException.ThrowIfNull(client);
         string selectedImg = string.Empty;
@@ -142,7 +141,7 @@ public partial class LightbulbForm : Form
         if (client.Connection.IsConnected)
         {
             buttonConnectText = "Disconnect";
-            connectedText = $"{client.Connection.ConnectionSettings.ClientId} connected to {client.Connection.ConnectionSettings.HostName}"; ;
+            connectedText = $"{client.Connection.Options.ClientId}";
         } 
         else
         {
@@ -186,6 +185,7 @@ public partial class LightbulbForm : Form
             buttonReplaceBateries.Enabled = client.Connection.IsConnected;
             progressBar1.Enabled = client.Connection.IsConnected;
         }
+        await Task.Yield();
     }
 
     private async Task<PropertyAck<int>> Property_lightState_UpdateHandler(PropertyAck<int> p)
@@ -193,7 +193,7 @@ public partial class LightbulbForm : Form
         ArgumentNullException.ThrowIfNull(client);
         client.Property_lightState.PropertyValue.Value = p.Value;
         
-        UpdateUI();
+        await UpdateUI();
         var ack = new PropertyAck<int>(p.Name)
         {
             Description = "light state Accepted",
@@ -232,7 +232,7 @@ public partial class LightbulbForm : Form
         if (client.Connection.IsConnected)
         {
             await client.Connection.DisconnectAsync();
-            UpdateUI();
+            await UpdateUI();
         }
         else
         {
@@ -247,7 +247,7 @@ public partial class LightbulbForm : Form
         {
             await client.Connection.DisconnectAsync();
         }
-        UpdateUI();
+        await UpdateUI();
 
         if (cloudSelecterForm.ShowDialog() == DialogResult.OK)
         {

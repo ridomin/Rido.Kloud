@@ -2,9 +2,9 @@
 
 
 using MQTTnet.Client;
-using MQTTnet.Extensions.Clients;
-using MQTTnet.Extensions.PnPClient;
-using MQTTnet.Extensions.PnPClient.TopicBindings;
+using MQTTnet.Extensions.MultiCloud.BrokerIoTClient;
+using MQTTnet.Extensions.MultiCloud.BrokerIoTClient.TopicBindings;
+using MQTTnet.Extensions.MultiCloud.Clients;
 
 namespace dtmi_rido_pnp_memmon.mqtt;
 

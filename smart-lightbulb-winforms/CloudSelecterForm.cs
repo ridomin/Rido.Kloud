@@ -1,5 +1,6 @@
-﻿using Rido.Mqtt.AzIoTClient;
-using Rido.MqttCore;
+﻿using MQTTnet;
+using MQTTnet.Extensions.MultiCloud.AzureIoTClient.Dps;
+using MQTTnet.Extensions.MultiCloud.Connections;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,7 +33,7 @@ namespace smart_lightbulb_winforms
         private Label label2;
         private Button button2;
 
-        public ConnectionSettings connectionSettings { get; set; } = new ConnectionSettings() { Auth = AuthType.X509};
+        public ConnectionSettings connectionSettings { get; set; } = new ConnectionSettings();
         public string ConnectionString = string.Empty;
         public CloudType CloudType = CloudType.IoTHubDps;
         private TextBox textBox4;
@@ -270,8 +271,9 @@ namespace smart_lightbulb_winforms
                 {
                     connectionSettings.IdScope = textBox1.Text.Trim();
                     string connectionString = $"IdScope={connectionSettings.IdScope};X509Key={connectionSettings.X509Key}";
-                    var dpsMqtt = await new Rido.Mqtt.MqttNet4Adapter.MqttNetClientConnectionFactory().CreateDpsClientAsync(connectionString);
-                    var dpsRes = await new MqttDpsClient(dpsMqtt).ProvisionDeviceIdentity();
+                    var dpsMqtt = new MqttFactory().CreateMqttClient();
+                    await dpsMqtt.ConnectAsync(new MQTTnet.Client.MqttClientOptionsBuilder().WithAzureDpsCredentials(connectionSettings).Build());
+                    var dpsRes = await new MqttDpsClient(dpsMqtt, Ismartlightbulb.modelId).ProvisionDeviceIdentity();
                     connectionSettings.ClientId = GetCNFromCertSubject(pwdForm.Certificate.SubjectName.Name);
                     connectionSettings.IdScope = String.Empty;
                     connectionSettings.HostName = dpsRes.RegistrationState.AssignedHub;

@@ -10,9 +10,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Rido.Mqtt.AwsClient" Version="0.3.11" />
-    <PackageReference Include="Rido.Mqtt.AzIoTClient" Version="0.3.11" />
-    <PackageReference Include="Rido.Mqtt.Client" Version="0.3.11" />
+    <PackageReference Include="MQTTnet.Extensions.MultiCloud.AwsIoTClient" Version="0.1.3-gf1686a1ff2" />
+    <PackageReference Include="MQTTnet.Extensions.MultiCloud.AzureIoTClient" Version="0.1.3-gf1686a1ff2" />
+    <PackageReference Include="MQTTnet.Extensions.MultiCloud.BrokerIoTClient" Version="0.1.3-gf1686a1ff2" />
   </ItemGroup>
 
   <ItemGroup>
