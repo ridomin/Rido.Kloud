@@ -1,7 +1,7 @@
 ﻿using MQTTnet.Client;
 using MQTTnet.Extensions.MultiCloud.AwsIoTClient;
 using MQTTnet.Extensions.MultiCloud.AwsIoTClient.TopicBindings;
-using MQTTnet.Extensions.MultiCloud.Clients;
+using MQTTnet.Extensions.MultiCloud;
 using smart_lightbulb_winforms;
 
 namespace smart_lightbulb_winforms_aws

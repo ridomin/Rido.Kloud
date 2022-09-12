@@ -1,7 +1,7 @@
 ﻿using MQTTnet.Client;
 using MQTTnet.Extensions.MultiCloud.AzureIoTClient;
-using MQTTnet.Extensions.MultiCloud.BrokerIoTClient.TopicBindings;
-using MQTTnet.Extensions.MultiCloud.Clients;
+using MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings;
+using MQTTnet.Extensions.MultiCloud;
 using smart_lightbulb_winforms;
 
 namespace smart_lightbulb_winforms_hub
@@ -28,7 +28,6 @@ namespace smart_lightbulb_winforms_hub
             var cs = connectionString + ";ModelId=" + modelId;
             var hub = await HubDpsFactory.CreateFromConnectionSettingsAsync(connectionString, cancellationToken);
             var client = new smartlightbulb(hub);
-            client.InitialState = await client.GetTwinAsync(cancellationToken);
             return client;
         }
 

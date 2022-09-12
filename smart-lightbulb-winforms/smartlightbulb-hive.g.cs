@@ -1,7 +1,7 @@
 ﻿using MQTTnet.Client;
 using MQTTnet.Extensions.MultiCloud.BrokerIoTClient;
 using MQTTnet.Extensions.MultiCloud.BrokerIoTClient.TopicBindings;
-using MQTTnet.Extensions.MultiCloud.Clients;
+using MQTTnet.Extensions.MultiCloud;
 using smart_lightbulb_winforms;
 using System.Text.Json;
 

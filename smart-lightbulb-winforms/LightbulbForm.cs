@@ -1,5 +1,6 @@
 using MQTTnet.Client;
-using MQTTnet.Extensions.MultiCloud.Clients;
+using MQTTnet.Extensions.MultiCloud;
+using MQTTnet.Extensions.MultiCloud.Connections;
 using System.Drawing.Design;
 
 namespace smart_lightbulb_winforms;
@@ -8,8 +9,9 @@ public partial class LightbulbForm : Form
 {
     //const string cs = "IdScope=0ne003861C6;Auth=X509;X509key=cert.pfx|1234";
     //const string cs = "HostName=a38jrw6jte2l2x-ats.iot.us-west-1.amazonaws.com;ClientId=bulb1;Auth=X509;X509Key=cert.pfx|1234";
-    const string cs = "IdScope=0ne004CB66B;Auth=X509;X509key=cert.pfx|1234";
+    //const string cs = "IdScope=0ne004CB66B;Auth=X509;X509key=cert.pfx|1234";
 
+    ConnectionSettings connectionSettings;
 
     CloudSelecterForm cloudSelecterForm;
 
@@ -39,6 +41,7 @@ public partial class LightbulbForm : Form
 
     private async Task RunDevice(string connectionString, CloudType cloud)
     {
+        connectionSettings = new ConnectionSettings(connectionString);
         switch (cloud)
         {
             case CloudType.IoTHubDps:
@@ -141,7 +144,7 @@ public partial class LightbulbForm : Form
         if (client.Connection.IsConnected)
         {
             buttonConnectText = "Disconnect";
-            connectedText = $"{client.Connection.Options.ClientId}";
+            connectedText = $"{connectionSettings}";
         } 
         else
         {
@@ -237,7 +240,7 @@ public partial class LightbulbForm : Form
         else
         {
             await RunDevice(cloudSelecterForm.ConnectionString, cloudSelecterForm.CloudType);
-            _ = UpdateUI();
+            await UpdateUI();
         }
     }
 

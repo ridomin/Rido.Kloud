@@ -1,6 +1,6 @@
 ﻿
 using MQTTnet.Client;
-using MQTTnet.Extensions.MultiCloud.Clients;
+using MQTTnet.Extensions.MultiCloud;
 
 namespace smart_lightbulb_winforms
 {
