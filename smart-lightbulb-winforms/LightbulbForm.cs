@@ -86,7 +86,7 @@ public partial class LightbulbForm : Form
                     Version = 0
                 };
                 await client.Property_lightState.ReportPropertyAsync();
-                UpdateUI();
+                _ = UpdateUI().ConfigureAwait(false);
 
             }
 
@@ -237,7 +237,7 @@ public partial class LightbulbForm : Form
         else
         {
             await RunDevice(cloudSelecterForm.ConnectionString, cloudSelecterForm.CloudType);
-            UpdateUI();
+            _ = UpdateUI();
         }
     }
 
