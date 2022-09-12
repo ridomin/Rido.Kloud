@@ -10,9 +10,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-	<PackageReference Include="MQTTnet.Extensions.MultiCloud.AzureIoTClient" Version="0.0.25-g058254313a" />
-    <PackageReference Include="MQTTnet.Extensions.MultiCloud.AwsIoTClient" Version="0.0.25-g058254313a" />
-    <PackageReference Include="MQTTnet.Extensions.MultiCloud.BrokerIoTClient" Version="0.0.25-g058254313a" />
+	<PackageReference Include="MQTTnet.Extensions.MultiCloud.AzureIoTClient" Version="0.0.8" />
+    <PackageReference Include="MQTTnet.Extensions.MultiCloud.AwsIoTClient" Version="0.0.8" />
+    <PackageReference Include="MQTTnet.Extensions.MultiCloud.BrokerIoTClient" Version="0.0.8" />
   </ItemGroup>
 
   <ItemGroup>
