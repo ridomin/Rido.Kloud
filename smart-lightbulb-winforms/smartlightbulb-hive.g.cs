@@ -12,7 +12,6 @@ namespace smart_lightbulb_winforms_hive
     internal class smartlightbulb : PnPMqttClient, Ismartlightbulb
     {
         const string modelId = "dtmi:pnd:demo:smartlightbulb;1";
-        public string InitialState { get; set; }
         public ITelemetry<int> Telemetry_batteryLife { get; set; }
         public IReadOnlyProperty<DateTime> Property_lastBatteryReplacement { get; set; }
         public IWritableProperty<int> Property_lightState { get; set; }

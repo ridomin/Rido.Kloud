@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: mosq-device
-        image: ghcr.io/ridomin/memmon:latest
+        image: ghcr.io/iotmodels/memmon:latest
         env:
         - name: ConnectionStrings__cs
           value: HostName=mosquitto-service;TcpPort=1883;UseTls=false

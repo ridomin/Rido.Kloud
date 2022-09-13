@@ -15,7 +15,7 @@ public partial class LightbulbForm : Form
 
     CloudSelecterForm cloudSelecterForm;
 
-    Ismartlightbulb? client;
+    Ismartlightbulb client;
     int currentBattery = 100;
 
     public LightbulbForm()

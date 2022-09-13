@@ -14,12 +14,11 @@ spec:
     spec:
       containers:
       - name: central-device
-        image: ghcr.io/ridomin/memmon:x64
+        image: ghcr.io/iotmodels/memmon:x64
         env:
         - name: ConnectionStrings__cs
           value: IdScope=0ne006CAFFC;SasMinutes=10;SharedAccessKey=invalid
         - name: masterKey
           value: vyB2VqViNdAILXTw5SRiKNiSrrfgPLOy9/sDu2d2ZaP/NSD3Y/0NNrnJ2O7S6wjdxLTCYTIpb3kNsHpipts7ew==
-      hostNetwork: false
-      dnsPolicy: Default
+
         
