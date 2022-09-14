@@ -2,14 +2,15 @@
 
 
 using MQTTnet.Client;
+using MQTTnet.Extensions.MultiCloud;
 using MQTTnet.Extensions.MultiCloud.AzureIoTClient;
 using MQTTnet.Extensions.MultiCloud.AzureIoTClient.TopicBindings;
-using MQTTnet.Extensions.MultiCloud;
 
 namespace dtmi_rido_pnp_memmon.hub;
 
 public class memmon : HubMqttClient, Imemmon
 {
+
     public IReadOnlyProperty<DateTime> Property_started { get; set; }
     public IWritableProperty<bool> Property_enabled { get; set; }
     public IWritableProperty<int> Property_interval { get; set; }
