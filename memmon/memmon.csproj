@@ -12,8 +12,9 @@
 		<PackageReference Include="Microsoft.ApplicationInsights.WorkerService" Version="2.21.0" />
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
 		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0" />
-		<PackageReference Include="Rido.Mqtt.AzIoTClient" Version="0.4.*" />
-		<PackageReference Include="Rido.Mqtt.Client" Version="0.4.*" />
+		<PackageReference Include="MQTTnet.Extensions.MultiCloud.AwsIoTClient" Version="0.2.21" />
+		<PackageReference Include="MQTTnet.Extensions.MultiCloud.AzureIoTClient" Version="0.2.21" />
+		<PackageReference Include="MQTTnet.Extensions.MultiCloud.BrokerIoTClient" Version="0.2.21" />
 	</ItemGroup>
 	
 	<ItemGroup>
@@ -21,6 +22,9 @@
 			<DependentUpon>dtmi_rido_pnp_memmon-1.json</DependentUpon>
 		</Compile>
 		<Compile Update="dtmi_rido_pnp_memmon-1.hub.g.cs">
+			<DependentUpon>dtmi_rido_pnp_memmon-1.json</DependentUpon>
+		</Compile>
+		<Compile Update="dtmi_rido_pnp_memmon-1.aws.g.cs">
 			<DependentUpon>dtmi_rido_pnp_memmon-1.json</DependentUpon>
 		</Compile>
 		<Compile Update="dtmi_rido_pnp_memmon-1.g.cs">

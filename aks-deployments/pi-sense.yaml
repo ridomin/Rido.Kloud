@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: broker-device
+  name: pi-sense-sim
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: broker-device
+      app: pi-sense-sim
   template:
     metadata:
       labels:
-        app: broker-device
+        app: pi-sense-sim
     spec:
       containers:
-      - name: broker-device
-        image: ghcr.io/iotmodels/memmon:x64
+      - name: pi-sense-sim
+        image: ghcr.io/ridomin/pi-sense-device:x64
         env:
         - name: ConnectionStrings__cs
           value: HostName=mosquitto-service;TcpPort=1883;UseTls=false;Username=client2;Password=Pass@Word2

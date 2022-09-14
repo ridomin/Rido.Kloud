@@ -1,12 +1,11 @@
-using System.Text;
-using System.Diagnostics;
-using Microsoft.ApplicationInsights;
-using Humanizer;
-using Rido.MqttCore.PnP;
-
 using dtmi_rido_pnp_memmon;
-using Rido.MqttCore;
+using Humanizer;
+using Microsoft.ApplicationInsights;
+using MQTTnet.Extensions.MultiCloud;
+using MQTTnet.Extensions.MultiCloud.Connections;
+using System.Diagnostics;
 using System.Reflection;
+using System.Text;
 
 namespace memmon;
 
@@ -29,6 +28,8 @@ public class Device : BackgroundService
     private string lastDiscconectReason = string.Empty;
 
     private Imemmon client;
+    private ConnectionSettings connectionSettings;
+
     private string infoVersion = string.Empty;
 
     public Device(ILogger<Device> logger, IConfiguration configuration, TelemetryClient tc)
@@ -36,16 +37,21 @@ public class Device : BackgroundService
         _logger = logger;
         _configuration = configuration;
         _telemetryClient = tc;
-        infoVersion = typeof(ConnectionSettings).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
+        //infoVersion = typeof(ConnectionSettings).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        _logger.LogWarning("Connecting..");
-        client = await new MemMonFactory(_configuration).CreateMemMonClientAsync(_configuration.GetConnectionString("cs"), stoppingToken);
+        var cs = new ConnectionSettings(_configuration.GetConnectionString("cs"));
+        _logger.LogWarning($"Connecting to..{cs}");
+        var memmonFactory = new MemMonFactory(_configuration);
+        client = await memmonFactory.CreateMemMonClientAsync(_configuration.GetConnectionString("cs"), stoppingToken);
+        client.Connection.DisconnectedAsync += Connection_DisconnectedAsync;
+        connectionSettings = MemMonFactory.connectionSettings;
         _logger.LogWarning("Connected");
 
-        client.Connection.OnMqttClientDisconnected += Connection_OnMqttClientDisconnected;
+        Type baseClient = client.GetType().BaseType;
+        infoVersion = $"{baseClient.Namespace} {baseClient.Assembly.GetType("ThisAssembly")!.GetField("NuGetPackageVersion", BindingFlags.NonPublic | BindingFlags.Static)!.GetValue(null)}";
 
         client.Property_enabled.OnProperty_Updated = Property_enabled_UpdateHandler;
         client.Property_interval.OnProperty_Updated = Property_interval_UpdateHandler;
@@ -53,9 +59,12 @@ public class Device : BackgroundService
 
         await client.Property_enabled.InitPropertyAsync(client.InitialState, default_enabled, stoppingToken);
         await client.Property_interval.InitPropertyAsync(client.InitialState, default_interval, stoppingToken);
-        
+
         await client.Property_interval.ReportPropertyAsync(stoppingToken);
-        
+
+        client.Property_enabled.PropertyValue.SetDefault(default_enabled);
+        await client.Property_enabled.ReportPropertyAsync(stoppingToken);
+
         client.Property_started.PropertyValue = DateTime.Now;
         await client.Property_started.ReportPropertyAsync(stoppingToken);
 
@@ -75,14 +84,22 @@ public class Device : BackgroundService
         }
     }
 
-    private void Connection_OnMqttClientDisconnected(object sender, Rido.MqttCore.DisconnectEventArgs e)
+    private async Task Connection_DisconnectedAsync(MQTTnet.Client.MqttClientDisconnectedEventArgs arg)
     {
-        _telemetryClient.TrackTrace("Client Disconnected: " + e.ReasonInfo);
-        lastDiscconectReason = e.ReasonInfo;
+        _telemetryClient.TrackTrace("Client Disconnected: " + arg.ReasonString);
+        if (arg.Exception != null)
+        {
+            _telemetryClient.TrackException(arg.Exception);
+        }
+
+        lastDiscconectReason = arg.ReasonString;
         reconnectCounter++;
+        await Task.Yield();
     }
 
-    private async Task<PropertyAck<bool>> Property_enabled_UpdateHandler(PropertyAck<bool> p)
+
+
+    private PropertyAck<bool> Property_enabled_UpdateHandler(PropertyAck<bool> p)
     {
         twinRecCounter++;
         _telemetryClient.TrackEvent("DesiredPropertyReceived", new Dictionary<string, string>()
@@ -99,10 +116,10 @@ public class Device : BackgroundService
             Value = p.Value
         };
         client.Property_enabled.PropertyValue = ack;
-        return await Task.FromResult(ack);
+        return ack;
     }
 
-    private async Task<PropertyAck<int>> Property_interval_UpdateHandler(PropertyAck<int> p)
+    private  PropertyAck<int> Property_interval_UpdateHandler(PropertyAck<int> p)
     {
         ArgumentNullException.ThrowIfNull(client);
         twinRecCounter++;
@@ -131,10 +148,10 @@ public class Device : BackgroundService
                             default_interval;
         };
         client.Property_interval.PropertyValue = ack;
-        return await Task.FromResult(ack);
+        return ack;
     }
 
-    private async Task<Cmd_getRuntimeStats_Response> Command_getRuntimeStats_Handler(Cmd_getRuntimeStats_Request req)
+    private Cmd_getRuntimeStats_Response Command_getRuntimeStats_Handler(Cmd_getRuntimeStats_Request req)
     {
         commandCounter++;
         _telemetryClient.TrackEvent("CommandReceived", new Dictionary<string, string>()
@@ -150,12 +167,14 @@ public class Device : BackgroundService
         result.diagnosticResults.Add("machine name", Environment.MachineName);
         result.diagnosticResults.Add("os version", Environment.OSVersion.ToString());
         result.diagnosticResults.Add("started", TimeSpan.FromMilliseconds(clock.ElapsedMilliseconds).Humanize(3));
+
         if (req.DiagnosticsMode == DiagnosticsMode.complete)
         {
-            result.diagnosticResults.Add("this app:", System.Reflection.Assembly.GetExecutingAssembly()?.FullName ?? "");
+            result.diagnosticResults.Add("sdk info:", infoVersion);
         }
         if (req.DiagnosticsMode == DiagnosticsMode.full)
         {
+            result.diagnosticResults.Add("sdk info:", infoVersion);
             result.diagnosticResults.Add("interval: ", client.Property_interval.PropertyValue.Value.ToString());
             result.diagnosticResults.Add("enabled: ", client.Property_enabled.PropertyValue.Value.ToString());
             result.diagnosticResults.Add("twin receive: ", twinRecCounter.ToString());
@@ -164,7 +183,7 @@ public class Device : BackgroundService
             result.diagnosticResults.Add("command: ", commandCounter.ToString());
             result.diagnosticResults.Add("reconnects: ", reconnectCounter.ToString());
         }
-        return await Task.FromResult(result);
+        return result;
     }
 
 #pragma warning disable IDE0052 // Remove unread private members
@@ -180,8 +199,8 @@ public class Device : BackgroundService
             string interval_value = client?.Property_interval.PropertyValue?.Value.ToString();
             StringBuilder sb = new();
             AppendLineWithPadRight(sb, " ");
-            AppendLineWithPadRight(sb, client?.Connection.ConnectionSettings?.HostName);
-            AppendLineWithPadRight(sb, $"{client?.Connection.ConnectionSettings.ClientId} ({client.Connection.ConnectionSettings.Auth})");
+            AppendLineWithPadRight(sb, $"{connectionSettings?.HostName}:{connectionSettings?.TcpPort}");
+            AppendLineWithPadRight(sb, $"{connectionSettings.ClientId} (Auth:{connectionSettings.Auth}/ TLS:{connectionSettings.UseTls})");
             AppendLineWithPadRight(sb, " ");
             AppendLineWithPadRight(sb, string.Format("{0:8} | {1:15} | {2}", "Property", "Value".PadRight(15), "Version"));
             AppendLineWithPadRight(sb, string.Format("{0:8} | {1:15} | {2}", "--------", "-----".PadLeft(15, '-'), "------"));
@@ -199,7 +218,7 @@ public class Device : BackgroundService
             AppendLineWithPadRight(sb, " ");
             AppendLineWithPadRight(sb, $"Time Running: {TimeSpan.FromMilliseconds(clock.ElapsedMilliseconds).Humanize(3)}");
             AppendLineWithPadRight(sb, $"ConnectionStatus: {client.Connection.IsConnected} [{lastDiscconectReason}]");
-            AppendLineWithPadRight(sb, $"Rido.Mqtt version: {infoVersion}");
+            AppendLineWithPadRight(sb, $"NuGet: {infoVersion}");
             AppendLineWithPadRight(sb, " ");
             return sb.ToString();
         }

@@ -2,18 +2,20 @@
 
 using MQTTnet.Client;
 using MQTTnet.Extensions.MultiCloud;
-using MQTTnet.Extensions.MultiCloud.BrokerIoTClient;
-using MQTTnet.Extensions.MultiCloud.BrokerIoTClient.TopicBindings;
+using MQTTnet.Extensions.MultiCloud.AwsIoTClient;
+using MQTTnet.Extensions.MultiCloud.AwsIoTClient.TopicBindings;
 
-namespace dtmi_rido_pnp_memmon.mqtt;
+namespace dtmi_rido_pnp_memmon.aws;
 
-public class memmon : PnPMqttClient, Imemmon
+public class memmon : AwsMqttClient, Imemmon
 {
     public IReadOnlyProperty<DateTime> Property_started { get; set; }
     public IWritableProperty<bool> Property_enabled { get; set; }
     public IWritableProperty<int> Property_interval { get; set; }
     public ITelemetry<double> Telemetry_workingSet { get; set; }
     public ICommand<Cmd_getRuntimeStats_Request, Cmd_getRuntimeStats_Response> Command_getRuntimeStats { get; set; }
+
+    public string InitialState => String.Empty;
 
     internal memmon(IMqttClient c) : base(c, Imemmon.ModelId)
     {

@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: hub-device
-        image: ghcr.io/ridomin/memmon:latest
+        image: ghcr.io/iotmodels/memmon:x64
         env:
         - name: ConnectionStrings__cs
           value: IdScope=0ne006CCDE4;SasMinutes=100;SharedAccessKey=invalid

@@ -130,7 +130,7 @@ spec:
     spec:
       containers:
       - name: broker-device
-        image: ghcr.io/ridomin/memmon:latest
+        image: ghcr.io/iotmodels/memmon:latest
         env:
         - name: ConnectionStrings__cs
           value: HostName=mosquitto-service;TcpPort=8883;UseTls=false

@@ -1,5 +1,6 @@
-﻿using Rido.MqttCore;
-using Rido.MqttCore.PnP;
+﻿
+using MQTTnet.Client;
+using MQTTnet.Extensions.MultiCloud;
 
 namespace smart_lightbulb_winforms
 {
@@ -11,8 +12,9 @@ namespace smart_lightbulb_winforms
 
     internal interface Ismartlightbulb 
     {
+        const string modelId = "dtmi:pnd:demo:smartlightbulb;1";
         public string InitialState { get; set; }
-        public IMqttBaseClient Connection { get; }
+        public IMqttClient Connection { get; }
         IReadOnlyProperty<DateTime> Property_lastBatteryReplacement { get; set; }
         IWritableProperty<int> Property_lightState { get; set; }
         ITelemetry<int> Telemetry_batteryLife { get; set; }

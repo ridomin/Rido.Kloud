@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: iotux
-        image: ghcr.io/ridomin/iotux:latest
+        image: ghcr.io/iotmodels/iotux:latest
         imagePullPolicy: Always
         ports:
         - name: http
