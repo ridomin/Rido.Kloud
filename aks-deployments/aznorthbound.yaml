@@ -14,13 +14,13 @@ spec:
     spec:
       containers:
       - name: aznorthbound
-        image: ghcr.io/iotmodels/ridoaznorthbound:latest
+        image: ghcr.io/ridomin/ridoaznorthbound:latest
         env:
         - name: ConnectionStrings__cs
           value: HostName=mosquitto-service;ClientId=NorthBoundConnector;TcpPort=1883;UseTls=false;Username=client1;Password=Pass@Word1
-        - name: ConnectionStrings__eh
-          value: Endpoint=sb://iotconnectors.servicebus.windows.net/;SharedAccessKeyName=SendData;SharedAccessKey=qjeaOkZqGfvyMn11aAAo39fqukFtvQEqrv+k+KnqUx4=;EntityPath=frommosquitto
-        - name: eh-name
-          value: frommosquitto
+        - name: ConnectionStrings__memmon
+          value: Endpoint=sb://iotconnectors.servicebus.windows.net/;SharedAccessKeyName=memmonsend;SharedAccessKey=b6K8g472N+50xYXpwgQtR7AaXpftbRBqbUOFAeI61Yw=;EntityPath=memmon-sink
+        - name: ConnectionStrings__pisensehat
+          value: Endpoint=sb://iotconnectors.servicebus.windows.net/;SharedAccessKeyName=pisensehatSend;SharedAccessKey=X9j0bLWcLFKGLcBEQoQVGD3fe/FneYlEOszRK2YCi1A=;EntityPath=pisensehat-sink
         - name: APPLICATIONINSIGHTS_CONNECTION_STRING
           value: InstrumentationKey=065bcb1a-bf6d-43c8-b541-e374a92b082a;IngestionEndpoint=https://westus3-1.in.applicationinsights.azure.com/

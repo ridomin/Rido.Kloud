@@ -59,7 +59,7 @@ namespace Rido.AzNorthBound
                 if (cnx.IsConnected)
                 {
                     _logger.LogWarning(header);
-                    _logger.LogWarning("Worker running for: {time} NumMsg {msgSent}{numMSg} from {deviceCount} devices", 
+                    _logger.LogWarning("Worker running for: {time} NumMsg {msgSent}/{numMSg} from {deviceCount} devices", 
                         TimeSpan.FromMilliseconds(started.ElapsedMilliseconds).Humanize(3), msgSent, numMessages, devices.Count);
                 }
                 else
@@ -113,7 +113,7 @@ namespace Rido.AzNorthBound
                 memmonTelemetry = JsonSerializer.Deserialize<MemmonSchema>(jsonMsg);
 
                 _telemetryClient.TrackEvent("telemetry",
-                    new Dictionary<string, string> { { "deviceId", did} }, 
+                    new Dictionary<string, string> { { "deviceId", did}, { "modelId", modelId} }, 
                     new Dictionary<string, double> { { "workingSet", memmonTelemetry!.workingSet } }
                 );
 
@@ -139,7 +139,7 @@ namespace Rido.AzNorthBound
                 senseHatSchema = JsonSerializer.Deserialize<PiSenseHatSchema>(jsonMsg);
 
                 _telemetryClient.TrackEvent("telemetry",
-                    new Dictionary<string, string> { { "deviceId", did } },
+                    new Dictionary<string, string> { { "deviceId", did }, { "modelId", modelId } },
                     new Dictionary<string, double> { 
                         { "t1", senseHatSchema!.t1},
                         { "t2", senseHatSchema!.t2},
