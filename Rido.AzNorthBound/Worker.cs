@@ -32,11 +32,12 @@ namespace Rido.AzNorthBound
             _configuration = configuration;
             _telemetryClient = telemetryClient;
 
-            memMonproducerClient = new EventHubProducerClient(configuration.GetConnectionString("eh"), "memmon-sink");
-            pisensehatProducerClient = new EventHubProducerClient(configuration.GetConnectionString("eh"), "pisensehat-sink");
+            memMonproducerClient = new EventHubProducerClient(configuration.GetConnectionString("memmon"));
+            pisensehatProducerClient = new EventHubProducerClient(configuration.GetConnectionString("pisensehat"));
         }
 
         int numMessages = 0;
+        int msgSent = 0;
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
@@ -58,8 +59,8 @@ namespace Rido.AzNorthBound
                 if (cnx.IsConnected)
                 {
                     _logger.LogWarning(header);
-                    _logger.LogWarning("Worker running for: {time} NumMsg {numMSg} from {deviceCount} devices", 
-                        TimeSpan.FromMilliseconds(started.ElapsedMilliseconds).Humanize(3), numMessages, devices.Count);
+                    _logger.LogWarning("Worker running for: {time} NumMsg {msgSent}{numMSg} from {deviceCount} devices", 
+                        TimeSpan.FromMilliseconds(started.ElapsedMilliseconds).Humanize(3), msgSent, numMessages, devices.Count);
                 }
                 else
                 {
@@ -127,6 +128,7 @@ namespace Rido.AzNorthBound
                 {
                     await memMonproducerClient.SendAsync(batch);
                 }
+                msgSent++;
 
             }
 
@@ -157,6 +159,7 @@ namespace Rido.AzNorthBound
                 {
                     await pisensehatProducerClient.SendAsync(batch);
                 }
+                msgSent++;
             }
         }
     }
