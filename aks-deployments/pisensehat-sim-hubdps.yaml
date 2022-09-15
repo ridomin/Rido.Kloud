@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pi-sensehat-sim
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: pi-sensehat-sim
+  template:
+    metadata:
+      labels:
+        app: pi-sensehat-sim
+    spec:
+      containers:
+      - name: pi-sensehat-sim
+        image: ghcr.io/iotmodels/pi-sense-device:x64
+        env:
+        - name: ConnectionStrings__cs
+          value: IdScope=0ne006CCDE4;SasMinutes=100;SharedAccessKey=invalid
+        - name: masterKey
+          value: /nH1Y+J9WVTi1tyxgS0Yv9Y6yxSITLBiG1v9C/KvtvEPkfV7sCFaJVSCRiGVdslEPwGrf3K9VFo0S1xEicMPLw==
+      
+        

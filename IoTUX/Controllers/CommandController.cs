@@ -37,9 +37,9 @@ namespace IoTUX.Controllers
         }
 
         [HttpPost("{deviceId}")]
-        public async Task<string> Invoke(string deviceId, string cmdName, [FromBody] string value)
+        public async Task<string> Invoke(string deviceId, string cmdName, [FromBody] object value)
         {
-            var res = await dc.InvokeCommandAsync(deviceId, cmdName, value);
+            var res = await dc.InvokeCommandAsync(deviceId, cmdName, JsonSerializer.Serialize(value));
             return res.Body.Payload;
             //CloudToDeviceMethod c2d = new CloudToDeviceMethod(cmdName);
             //c2d.SetPayloadJson(JsonSerializer.Serialize(value));
