@@ -1,4 +1,7 @@
-﻿export default {
+﻿const isObject = obj => Object.prototype.toString.call(obj) === '[object Object]'
+const isJson = s => { try { return (JSON.parse(s) && !!s)} catch (e) { return false }
+}
+export default {
     data() {
         return {
             request: '',
@@ -8,7 +11,6 @@
     props: ['command', 'deviceId'],
     methods: {
         resolveSchema(s) {
-            const isObject = obj => Object.prototype.toString.call(obj) === '[object Object]'
             if (!isObject(s) && s.startsWith('dtmi:')) {
                 console.log('not supported schema', s)
                 return null
@@ -19,6 +21,9 @@
             }
         },
         async invoke() {
+
+            
+
             const url = `/api/Command/${this.deviceId}?cmdName=${this.command.name}`
 
             const reqSchema = this.resolveSchema(this.command.request.schema)
@@ -31,14 +36,22 @@
                 reqValue = new String(this.request)
             }
 
-
             this.response = '.. loading ..'
-            console.log(reqValue)
+            
             try {
                 const resp = await (await fetch(url, { method: 'POST', body: `\"${reqValue}\"`, headers: { 'Content-Type': 'application/json' } })).json()
-                this.response = JSON.stringify(resp, null, 2)
-            } catch {
-                this.response = "Offline"
+                if (isObject(resp)) {
+                    this.response = JSON.stringify(resp, null, 2)
+                } else if (isJson(resp)) {
+                    this.response = JSON.stringify(JSON.parse(resp), null, 2)
+                } else {
+                    this.response = new String(resp)
+
+                }
+            
+            } catch (e) {
+                console.log(e)
+                this.response = "Offline " + JSON.stringify(e)
             }
         }
     },
