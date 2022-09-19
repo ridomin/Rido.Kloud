@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mm-dpshub
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: mm-dpshub
+  template:
+    metadata:
+      labels:
+        app: mm-dpshub
+    spec:
+      containers:
+      - name: mm-dpshub
+        image: ghcr.io/iotmodels/memmon:x64
+        imagePullPolicy: Always
+        env:
+        - name: ConnectionStrings__cs
+          value: IdScope=0ne006CCDE4;SasMinutes=100;SharedAccessKey=invalid
+        - name: masterKey
+          value: /nH1Y+J9WVTi1tyxgS0Yv9Y6yxSITLBiG1v9C/KvtvEPkfV7sCFaJVSCRiGVdslEPwGrf3K9VFo0S1xEicMPLw==
+      
+        

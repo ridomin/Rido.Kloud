@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pi-dpshub
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: pi-dpshub
+  template:
+    metadata:
+      labels:
+        app: pi-dpshub
+    spec:
+      containers:
+      - name: pi-dpshub
+        image: ghcr.io/iotmodels/pi-sense-device:x64
+        imagePullPolicy: Always
+        env:
+        - name: ConnectionStrings__cs
+          value: IdScope=0ne006CCDE4;SasMinutes=100;SharedAccessKey=invalid
+        - name: masterKey
+          value: /nH1Y+J9WVTi1tyxgS0Yv9Y6yxSITLBiG1v9C/KvtvEPkfV7sCFaJVSCRiGVdslEPwGrf3K9VFo0S1xEicMPLw==
+      
+        

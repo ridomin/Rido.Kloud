@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mm-broker
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: mm-broker
+  template:
+    metadata:
+      labels:
+        app: mm-broker
+    spec:
+      containers:
+      - name: mm-broker
+        image: ghcr.io/iotmodels/memmon:x64
+        imagePullPolicy: Always
+        env:
+        - name: ConnectionStrings__cs
+          value: HostName=mosquitto-service;TcpPort=1883;UseTls=false;Username=client2;Password=Pass@Word2;ClientId={machineName}
+      
+        
