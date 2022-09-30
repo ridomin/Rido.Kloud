@@ -51,8 +51,8 @@ namespace Rido.AzNorthBound
 
             cnx.ApplicationMessageReceivedAsync += Cnx_ApplicationMessageReceivedAsync;
 
-            await cnx.SubscribeAsync(new MqttClientSubscribeOptionsBuilder().WithTopicFilter("pnp/+/telemetry").Build(), stoppingToken);
-            await cnx.SubscribeAsync(new MqttClientSubscribeOptionsBuilder().WithTopicFilter("pnp/+/birth").Build(), stoppingToken);
+            await cnx.SubscribeAsync(new MqttClientSubscribeOptionsBuilder().WithTopicFilter("device/+/telemetry").Build(), stoppingToken);
+            await cnx.SubscribeAsync(new MqttClientSubscribeOptionsBuilder().WithTopicFilter("registry/+/status").Build(), stoppingToken);
 
             while (!stoppingToken.IsCancellationRequested)
             {
@@ -79,7 +79,7 @@ namespace Rido.AzNorthBound
             var msgType = segments[2];
             _logger.LogInformation("New message from {0}", deviceId);
 
-            if (msgType == "birth")
+            if (msgType == "status")
             {
                 //var  birthMsg = JsonDocument.Parse(arg.ApplicationMessage.Payload);
                 string birthMsgJson = Encoding.UTF8.GetString(arg.ApplicationMessage.Payload);
@@ -94,7 +94,7 @@ namespace Rido.AzNorthBound
                 }
             }
 
-            if (msgType == "telemetry")
+            if (msgType.StartsWith("tel"))
             {
                 await SendToEHAsync(deviceId,arg.ApplicationMessage);
             }
