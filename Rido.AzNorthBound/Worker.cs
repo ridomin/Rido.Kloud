@@ -51,7 +51,7 @@ namespace Rido.AzNorthBound
 
             cnx.ApplicationMessageReceivedAsync += Cnx_ApplicationMessageReceivedAsync;
 
-            await cnx.SubscribeAsync(new MqttClientSubscribeOptionsBuilder().WithTopicFilter("device/+/telemetry").Build(), stoppingToken);
+            await cnx.SubscribeAsync(new MqttClientSubscribeOptionsBuilder().WithTopicFilter("device/+/telemetry/#").Build(), stoppingToken);
             await cnx.SubscribeAsync(new MqttClientSubscribeOptionsBuilder().WithTopicFilter("registry/+/status").Build(), stoppingToken);
 
             while (!stoppingToken.IsCancellationRequested)
