@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: iothubux-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: iothubux
+  template:
+    metadata:
+      labels:
+        app: iothubux
+    spec:
+      containers:
+      - name: iothubux
+        image: docker.io/ridomin/iothubux:latest
+        imagePullPolicy: Always
+        ports:
+        - name: http
+          containerPort: 80
+          protocol: TCP
+        env:
+        - name: IOTHUB_CONNECTION_STRING
+          value: "HostName=rido.azure-devices.net;SharedAccessKeyName=iothubowner;SharedAccessKey=7Fnf/DRygqQ6WxK77+5pIev5McFkfQfE53m2Oxav4Yk="
+        - name: PORT
+          value: "80"
+        
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: iothubuxn-svc
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+  selector:
+    app: iothubuxn
