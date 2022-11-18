@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: mosq-device
 spec:
-  replicas: 2
+  replicas: 4
   selector:
     matchLabels:
       app: mosq-device
@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: mosq-device
-        image: ghcr.io/iotmodels/memmon:latest
+        image: ghcr.io/iotmodels/memmon:x64
         env:
         - name: ConnectionStrings__cs
-          value: HostName=mosquitto-service;TcpPort=1883;UseTls=false
+          value: HostName=mosquitto-service;TcpPort=1883;UseTls=false;UserName=client2;Password=Pass@Word2;clientId={machineName}
