@@ -1,0 +1,71 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cool-config-file
+data:
+  brokers_configuration.xml: |-
+    <?xml version="1.0" encoding="UTF-8" ?>
+    <!-- Do not remove this line. File tag: mqtt.cool_brokers_config-2.1.0. -->
+
+    <mqttcool_brokers_config>
+        <configurations>
+            <param name="aps.server_address">ssl://rido-pubsub.centraluseuap-1.ts.eventgrid.azure.net:8883</param>
+            <param name="aps.connection_timeout">30</param>
+            <param name="aps.keep_alive">10</param>
+            <param name="aps.keystore_path">keys/app01.jks</param>
+            <param name="aps.keystore_password">123456</param>
+            <param name="aps.private_key_password">123456</param>
+        </configurations>
+    </mqttcool_brokers_config>
+    
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mqtt-cool
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: mqtt-cool
+  template:
+    metadata:
+      labels:
+        name: mqtt-cool
+    spec:
+      containers:
+        - name: mqtt-cool
+          image: mqttcool/mqtt.cool
+          #image: ubuntu:latest
+          #command: [ "/bin/bash", "-c", "--" ]
+          #args: [ "while true; do sleep 30; done;" ]
+          ports:
+          - containerPort: 8080
+          volumeMounts:
+          - name: cool-config
+            mountPath: /mqtt.cool/conf/brokers_configuration.xml
+            subPath: brokers_configuration.xml
+          - name: cool-keys
+            mountPath: /mqtt.cool/conf/keys
+      volumes:
+      - name: cool-config
+        configMap:
+          name: cool-config-file
+      - name: cool-keys
+        secret:
+          secretName: cool-kjs
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mqttcool-service
+spec:
+  type: LoadBalancer 
+  selector:
+    name: mqtt-cool
+  ports:
+    - name: mqttcool-tls
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+    
