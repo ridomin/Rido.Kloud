@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: azpubsub-device-11
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: azpubsub-device
+  template:
+    metadata:
+      labels:
+        app: azpubsub-device
+    spec:
+      containers:
+      - name: azpubsub-device-11
+        image: ghcr.io/iotmodels/memmon:azps
+        imagePullPolicy: Always
+        env:
+        - name: ConnectionStrings__cs
+          value: HostName=rido-pubsub.centraluseuap-1.ts.eventgrid.azure.net;X509Key=certs/tls.crt|certs/tls.key;ClientId=mm-11
+        volumeMounts:
+        - name: device-cert
+          mountPath: /app/certs
+      volumes:
+      - name: device-cert
+        secret:
+          secretName: rido-client-cert
+      

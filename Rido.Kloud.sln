@@ -17,6 +17,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IoTUX", "IoTUX\IoTUX.csproj
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rido.AzNorthBound", "Rido.AzNorthBound\Rido.AzNorthBound.csproj", "{189C6B25-99B3-4A02-8F93-FE1BE1DD27D3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MQTTWebApi", "MQTTWebApi\MQTTWebApi.csproj", "{B62EA20D-E1D8-4AC0-9ACF-8C63C8FF52EF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,6 +33,10 @@ Global
 		{189C6B25-99B3-4A02-8F93-FE1BE1DD27D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{189C6B25-99B3-4A02-8F93-FE1BE1DD27D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{189C6B25-99B3-4A02-8F93-FE1BE1DD27D3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B62EA20D-E1D8-4AC0-9ACF-8C63C8FF52EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B62EA20D-E1D8-4AC0-9ACF-8C63C8FF52EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B62EA20D-E1D8-4AC0-9ACF-8C63C8FF52EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B62EA20D-E1D8-4AC0-9ACF-8C63C8FF52EF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
