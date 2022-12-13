@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mm-my-device
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mm-my-device
+  template:
+    metadata:
+      labels:
+        app: mm-my-device
+    spec:
+      containers:
+      - name: mm-my-device
+        image: ghcr.io/iotmodels/memmon:x64
+        imagePullPolicy: Always
+        env:
+        - name: ConnectionStrings__cs
+          value: IdScope=0ne00890689;X509Key=certs/tls.crt|certs/tls.key
+        volumeMounts:
+          - name: my-device-x509
+            mountPath: /app/certs
+      volumes:
+      - name: my-device-x509
+        secret: 
+          secretName: my-device-cert
+      
+        

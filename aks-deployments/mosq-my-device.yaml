@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mosq-my-device
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mosq-my-device
+  template:
+    metadata:
+      labels:
+        app: mosq-my-device
+    spec:
+      containers:
+      - name: mosq-my-device
+        image: ghcr.io/iotmodels/memmon:x64
+        imagePullPolicy: Always
+        env:
+        - name: ConnectionStrings__cs
+          value: HostName=mosquitto-service;TcpPort=8884;X509Key=certs/tls.crt|certs/tls.key
+        volumeMounts:
+          - name: my-device-x509
+            mountPath: /app/certs
+      volumes:
+      - name: my-device-x509
+        secret: 
+          secretName: my-device-cert
+      
+        

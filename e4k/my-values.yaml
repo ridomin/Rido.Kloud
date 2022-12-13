@@ -1,16 +1,13 @@
 e4kdmqtt:
   broker:
     frontend:
-      replicas: 2
-    backend:
-      replicas: 2
-      chainCount: 2
-  authentication:
-    credentials:
-      configToml: |
-        [client1]
-        password = "$argon2i$v=19$m=16,t=2,p=1$MTIzNDU2Nzg$ZZ/eAcHRleU4ChG0EJ+2Mw"
+      ports:
+      - port: 1883
+      - port: 8883
+        tls:
+          secret: e4k-tls-cert
 
-        [client1.attributes]
-        floor = "floor1"
-        site = "site1"
+  authenticationMethods:
+    - method: x509
+    - method: username-password
+      password_database: credentials
