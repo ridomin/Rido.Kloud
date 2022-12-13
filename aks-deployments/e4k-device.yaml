@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: e4k-device
-        image: ghcr.io/iotmodels/memmon:latest
+        image: ghcr.io/iotmodels/memmon:e4k
         env:
         - name: ConnectionStrings__cs
-          value: HostName=e4k-frontend;TcpPort=1883;UseTls=false;Username=client1;Password=password
+          value: HostName=azedge-dmqtt-frontend;TcpPort=1883;UseTls=false;Username=client1;Password=password

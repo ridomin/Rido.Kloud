@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: e4k-x-device
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: e4k-x-device
+  template:
+    metadata:
+      labels:
+        app: e4k-x-device
+    spec:
+      containers:
+      - name: e4k-x-device
+        image: ghcr.io/iotmodels/mqtt-connection:latest
+        imagePullPolicy: Always
+        env:
+        - name: ConnectionStrings__cs
+          value: HostName=mosquitto.rido.dev;TcpPort=8884;X509Key=/app/certs/tls.crt|/app/certs/tls.key;CaFile=ca.pem
+        volumeMounts:
+        - name: ridoclientcert
+          mountPath: /app/certs
+      volumes:
+      - name: ridoclientcert
+        secret: 
+          secretName: rido-client-cert
