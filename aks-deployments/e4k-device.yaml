@@ -17,4 +17,4 @@ spec:
         image: ghcr.io/iotmodels/memmon:e4k
         env:
         - name: ConnectionStrings__cs
-          value: HostName=azedge-dmqtt-frontend;TcpPort=1883;UseTls=false;Username=client1;Password=password
+          value: HostName=azedge-dmqtt-frontend;TcpPort=1883;UseTls=false;Username=client1;Password=password;ClientId={machineName}
