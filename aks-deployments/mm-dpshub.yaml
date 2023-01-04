@@ -18,8 +18,8 @@ spec:
         imagePullPolicy: Always
         env:
         - name: ConnectionStrings__cs
-          value: IdScope=0ne00890689
+          value: IdScope=0ne008F06C0
         - name: masterKey
-          value: 9cJ1WVYTGHGl66hpUTuBE7+rRO9bCRBWQizbunttuRYN22tmoeQsPudFPTlVokFJ1pyTh0xGXeo2Gevsv3pG2Q==
+          value: xPjrnjldsxbN5sKexIVo4YVr7kN2Z7s0GAO4/d1Lgf2FIp1DJ65czs2QmG8K1zImQWy2h6gGSTLn79fJZGi5aQ==
       
         
