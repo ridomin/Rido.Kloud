@@ -19,6 +19,8 @@ spec:
         env:
         - name: ConnectionStrings__cs
           value: HostName=mosquitto-service;TcpPort=8884;X509Key=certs/tls.crt|certs/tls.key
+        - name: ApplicationInsights__ConnectionString
+          value: InstrumentationKey=216d32bc-3c75-41d2-8c5d-7fc55958fe9b;IngestionEndpoint=https://westus-0.in.applicationinsights.azure.com/;LiveEndpoint=https://westus.livediagnostics.monitor.azure.com/
         volumeMounts:
           - name: my-device-x509
             mountPath: /app/certs

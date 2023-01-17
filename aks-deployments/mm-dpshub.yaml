@@ -21,5 +21,7 @@ spec:
           value: IdScope=0ne008F06C0
         - name: masterKey
           value: xPjrnjldsxbN5sKexIVo4YVr7kN2Z7s0GAO4/d1Lgf2FIp1DJ65czs2QmG8K1zImQWy2h6gGSTLn79fJZGi5aQ==
+        - name: ApplicationInsights__ConnectionString
+          value: InstrumentationKey=216d32bc-3c75-41d2-8c5d-7fc55958fe9b;IngestionEndpoint=https://westus-0.in.applicationinsights.azure.com/;LiveEndpoint=https://westus.livediagnostics.monitor.azure.com/
       
         
