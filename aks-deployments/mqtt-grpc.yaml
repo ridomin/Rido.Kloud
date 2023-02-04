@@ -25,6 +25,6 @@ spec:
       volumes:
       - name: my-device-x509
         secret: 
-          secretName: mqtt-grpc-device
+          secretName: my-device-cert
       
         
