@@ -18,8 +18,10 @@ spec:
         imagePullPolicy: Always
         env:
         - name: ConnectionStrings__cs
-          value: IdScope=0ne006CCDE4;SasMinutes=100;SharedAccessKey=invalid
+          value: IdScope=0ne008F06C0
         - name: masterKey
-          value: /nH1Y+J9WVTi1tyxgS0Yv9Y6yxSITLBiG1v9C/KvtvEPkfV7sCFaJVSCRiGVdslEPwGrf3K9VFo0S1xEicMPLw==
+          value: xPjrnjldsxbN5sKexIVo4YVr7kN2Z7s0GAO4/d1Lgf2FIp1DJ65czs2QmG8K1zImQWy2h6gGSTLn79fJZGi5aQ==
+        - name: ApplicationInsights__ConnectionString
+          value: InstrumentationKey=216d32bc-3c75-41d2-8c5d-7fc55958fe9b;IngestionEndpoint=https://westus-0.in.applicationinsights.azure.com/;LiveEndpoint=https://westus.livediagnostics.monitor.azure.com/
       
         
