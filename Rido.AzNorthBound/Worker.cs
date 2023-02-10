@@ -4,9 +4,7 @@ using Humanizer;
 using Microsoft.ApplicationInsights;
 using MQTTnet;
 using MQTTnet.Client;
-using MQTTnet.Extensions.MultiCloud;
 using MQTTnet.Extensions.MultiCloud.Connections;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Text;
 using System.Text.Json;
@@ -21,8 +19,8 @@ namespace Rido.AzNorthBound
         private readonly IConfiguration _configuration;
         private TelemetryClient _telemetryClient;
 
-        EventHubProducerClient memMonproducerClient;
-        EventHubProducerClient pisensehatProducerClient;
+        EventHubProducerClient ehClient;
+        
 
         Dictionary<string, string> devices = new Dictionary<string, string>();
 
@@ -31,9 +29,7 @@ namespace Rido.AzNorthBound
             _logger = logger;
             _configuration = configuration;
             _telemetryClient = telemetryClient;
-
-            memMonproducerClient = new EventHubProducerClient(configuration.GetConnectionString("memmon"));
-            pisensehatProducerClient = new EventHubProducerClient(configuration.GetConnectionString("pisensehat"));
+            ehClient = new EventHubProducerClient(configuration.GetConnectionString("eh"));
         }
 
         int numMessages = 0;
@@ -41,9 +37,9 @@ namespace Rido.AzNorthBound
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            var cs = new ConnectionSettings(_configuration.GetConnectionString("cs"));
+            var cs = new ConnectionSettings(_configuration.GetConnectionString("cs")!);
             
-            string header = $"AZ Northbound connector, reading from broker {cs.HostName}, writing to {memMonproducerClient.EventHubName} {pisensehatProducerClient.EventHubName}";
+            string header = $"AZ Northbound connector, reading from broker {cs.HostName}, writing to {ehClient.EventHubName}";
 
             MqttClient? cnx = new MQTTnet.MqttFactory().CreateMqttClient() as MqttClient;
             await cnx!.ConnectAsync(new MqttClientOptionsBuilder().WithConnectionSettings(cs, false).Build());
@@ -105,62 +101,37 @@ namespace Rido.AzNorthBound
         {
             var jsonMsg = Encoding.UTF8.GetString(m.Payload);
             var modelId = devices[did];
+            string ehJsonMsg = string.Empty;
 
             MemmonSchema? memmonTelemetry;
-            if (modelId == "dtmi:rido:pnp:memmon;1")
+            if (modelId == "dtmi:rido:memmon;3")
             {
-                string ehJsonMsg = string.Empty;
-                memmonTelemetry = JsonSerializer.Deserialize<MemmonSchema>(jsonMsg);
-
-                _telemetryClient.TrackEvent("telemetry",
-                    new Dictionary<string, string> { { "deviceId", did}, { "modelId", modelId} }, 
-                    new Dictionary<string, double> { { "workingSet", memmonTelemetry!.workingSet } }
-                );
-
+                memmonTelemetry = Json.FromString<MemmonSchema>(jsonMsg);
                 memmonTelemetry!.DeviceId = did;
                 memmonTelemetry!.ModelId = modelId;
-                ehJsonMsg = JsonSerializer.Serialize(memmonTelemetry);
-
-                var batch = await memMonproducerClient.CreateBatchAsync();
-                var ed = new EventData(ehJsonMsg);
-
-                if (batch.TryAdd(ed))
-                {
-                    await memMonproducerClient.SendAsync(batch);
-                }
-                msgSent++;
-
+                ehJsonMsg = Json.Stringify(memmonTelemetry);
             }
 
             PiSenseHatSchema? senseHatSchema;
             if (modelId == "dtmi:rido:pnp:sensehat;1")
             {
-                string ehJsonMsg = string.Empty;
-                senseHatSchema = JsonSerializer.Deserialize<PiSenseHatSchema>(jsonMsg);
-
-                _telemetryClient.TrackEvent("telemetry",
-                    new Dictionary<string, string> { { "deviceId", did }, { "modelId", modelId } },
-                    new Dictionary<string, double> { 
-                        { "t1", senseHatSchema!.t1},
-                        { "t2", senseHatSchema!.t2},
-                        { "h", senseHatSchema!.h},
-                        { "m", senseHatSchema!.m}
-                    }
-                );
-
+                senseHatSchema = Json.FromString<PiSenseHatSchema>(jsonMsg);
                 senseHatSchema!.DeviceId = did;
                 senseHatSchema!.ModelId = modelId;
-                ehJsonMsg = JsonSerializer.Serialize(senseHatSchema);
-
-                var batch = await pisensehatProducerClient.CreateBatchAsync();
-                var ed = new EventData(ehJsonMsg);
-
-                if (batch.TryAdd(ed))
-                {
-                    await pisensehatProducerClient.SendAsync(batch);
-                }
-                msgSent++;
+                ehJsonMsg = Json.Stringify(senseHatSchema);
             }
+
+            var batch = await ehClient.CreateBatchAsync();
+            var ed = new EventData(ehJsonMsg);
+            ed.ContentType = "application/json";
+            ed.Properties.Add("model-id", modelId);
+            ed.Properties.Add("device-id", did);
+
+            if (batch.TryAdd(ed))
+            {
+                await ehClient.SendAsync(batch);
+            }
+            msgSent++;
         }
     }
 }
