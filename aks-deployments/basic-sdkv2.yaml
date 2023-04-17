@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: basic-sdkv2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: basic-sdkv2
+  template:
+    metadata:
+      labels:
+        app: basic-sdkv2
+    spec:
+      containers:
+      - name: basic-sdkv2
+        image: ghcr.io/iotmodels/basic-sdkv2:1.0.0
+        imagePullPolicy: Always
+        env:
+        - name: ConnectionStrings__cs
+          value: HostName=rido.azure-devices.net;DeviceId=basic-sdkv2;SharedAccessKey=8DGCT2pLJ946+YdPeavgNA1ayWvxv1kZjIze7/8gxlY=
+        
+      
+        
