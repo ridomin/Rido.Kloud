@@ -18,7 +18,7 @@ spec:
         imagePullPolicy: Always
         env:
         - name: ConnectionStrings__cs
-          value: HostName=mosquitto.rido.dev;TcpPort=8884;X509Key=certs/tls.crt|certs/tls.key;CaFile=ca.pem
+          value: HostName=mosquitto.rido.dev;TcpPort=8883;UserName=client2;Password=Pass@Word2;clientId={machineName}
         volumeMounts:
           - name: my-device-x509
             mountPath: /app/certs

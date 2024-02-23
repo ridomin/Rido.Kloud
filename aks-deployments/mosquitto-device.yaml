@@ -17,6 +17,6 @@ spec:
         image: ghcr.io/iotmodels/memmon:x64
         env:
         - name: ConnectionStrings__cs
-          value: HostName=mosquitto-service;TcpPort=1883;UseTls=false;UserName=client2;Password=Pass@Word2;clientId={machineName}
+          value: HostName=mosquitto.rido.dev;TcpPort=8883;UserName=client2;Password=Pass@Word2;clientId={machineName}
         - name: ApplicationInsights__ConnectionString
           value: InstrumentationKey=216d32bc-3c75-41d2-8c5d-7fc55958fe9b;IngestionEndpoint=https://westus-0.in.applicationinsights.azure.com/;LiveEndpoint=https://westus.livediagnostics.monitor.azure.com/
